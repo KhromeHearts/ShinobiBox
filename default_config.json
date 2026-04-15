@@ -1,0 +1,28 @@
+{
+  "mod_config_title": [
+    {
+      "Id": "config_enable_shinobi_clan_name",
+      "Type": "SWITCH",
+      "BoolVal": true,
+      "Callback": "ShinobiBox.ShinobiConfig:SetClanNames"
+    },
+    {
+      "Id": "config_enable_shinobi_auto_ranking",
+      "Type": "SWITCH",
+      "BoolVal": true,
+      "Callback": "ShinobiBox.ShinobiConfig:SetAutoRanking"
+    },
+    {
+      "Id": "config_enable_shinobi_auto_favorite",
+      "Type": "SWITCH",
+      "BoolVal": true,
+      "Callback": "ShinobiBox.ShinobiConfig:SetAutoFavorite"
+    },
+    {
+      "Id": "config_enable_world_tips",
+      "Type": "SWITCH",
+      "BoolVal": true,
+      "Callback": "ShinobiBox.ShinobiConfig:SetWorldTips"
+    }
+  ]
+}
