@@ -1396,7 +1396,7 @@ namespace ShinobiBox
             rasenshurikenJ.action_special_effect = new WorldAction(JutsuLibrary.AutoRasenshurikenAtTarget);
             rasenshurikenJ.special_effect_interval = 7f;
             addTraitToGame(rasenshurikenJ);
-
+  
             #endregion
 
             #region Chidori

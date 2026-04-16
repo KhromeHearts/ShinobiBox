@@ -82,14 +82,17 @@ namespace ShinobiBox
         {
             if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
             if (pTarget == null || pTarget.a == null || !pTarget.a.isAlive()) return false;
+            if (pSelf.a.has_attack_target)
+            {
+                if (UnityEngine.Random.value > 0.10f) return false;
 
-            if (UnityEngine.Random.value > 0.10f) return false;
+                // 50 Chakra Cost
+                if (!CheckAndConsumeChakra(pSelf.a, 50f)) return false;
 
-            // 50 Chakra Cost
-            if (!CheckAndConsumeChakra(pSelf.a, 50f)) return false;
-
-            pSelf.a.addStatusEffect("status_rasengan", 5f);
-            return true;
+                pSelf.a.addStatusEffect("status_rasengan", 5f);
+                return true;
+            }
+            return false;
         }
 
         public static bool AutoRasenganAtTarget(BaseSimObject pSelf, WorldTile pTile = null)
@@ -1032,15 +1035,15 @@ namespace ShinobiBox
         #endregion
 
 
-                public static bool AutoTailedBeastBombAtTarget(BaseSimObject pSelf, WorldTile pTile = null)
-                {
-                    if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
+        public static bool AutoTailedBeastBombAtTarget(BaseSimObject pSelf, WorldTile pTile = null)
+        {
+            if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
 
-                    Actor target = GetValidAttackTarget(pSelf.a, 24f);
-                    if (target == null) return false;
+            Actor target = GetValidAttackTarget(pSelf.a, 24f);
+            if (target == null) return false;
 
-                    return TailedBeastBombAction(pSelf, target, target.current_tile);
-                }
+            return TailedBeastBombAction(pSelf, target, target.current_tile);
+        }
         #region Avatar: Bijuu Bite
         // Bijuu Bite (Avatar)
         /*public static bool BijuuBiteAction(BaseSimObject pSelf, BaseSimObject pTarget, WorldTile pTile)

@@ -97,54 +97,57 @@ namespace ShinobiBox
             #endregion
 
             #region Rasengan and Chidori Statuses
-            StatusAsset rasenganBuff = new StatusAsset();
-            rasenganBuff.id = "status_rasengan";
-            rasenganBuff.path_icon = "ui/icons/jutsuA";
-            rasenganBuff.duration = 4f;
-            rasenganBuff.base_stats = new BaseStats();
-            rasenganBuff.base_stats.set("speed", 6f);
-            rasenganBuff.base_stats.set("multiplier_speed", 0.05f);
-            rasenganBuff.base_stats.set
+            StatusAsset rasengan = new StatusAsset();
+            rasengan.id = "status_rasengan";
+            rasengan.path_icon = "ui/icons/jutsuA";
+            rasengan.duration = 5f;
+            rasengan.base_stats = new BaseStats();
+            rasengan.base_stats.set("speed", 10f);
+            rasengan.base_stats.set("multiplier_damage", 0.30f);
+            rasengan.base_stats.set("knockback", 2f);
+            rasengan.base_stats.set
             ("knockback", 1.8f);
 
-            rasenganBuff.animated = true;
-            rasenganBuff.texture = "fx_rasengan";
-            rasenganBuff.material = material;
-            rasenganBuff.sprite_list = SpriteTextureLoader.getSpriteList($"effects/{rasenganBuff.texture}", false);
+            rasengan.animated = true;
+            rasengan.texture = "fx_rasengan";
+            rasengan.material = material;
+            rasengan.sprite_list = SpriteTextureLoader.getSpriteList($"effects/{rasengan.texture}", false);
 
-            rasenganBuff.need_visual_render = true;
-            rasenganBuff.removed_on_damage = false;
-            rasenganBuff.use_parent_rotation = true;
-            rasenganBuff.is_animated_in_pause = false;
-            rasenganBuff.can_be_flipped = true;
-            rasenganBuff.scale = 0.5f;
+            rasengan.need_visual_render = true;
+            rasengan.removed_on_damage = false;
+            rasengan.use_parent_rotation = true;
+            rasengan.is_animated_in_pause = false;
+            rasengan.can_be_flipped = true;
+            rasengan.scale = 0.35f;
 
-            rasenganBuff.locale_id = "status_title_rasengan";
-            rasenganBuff.locale_description = "status_description_rasengan";
-            AssetManager.status.add(rasenganBuff);
+            rasengan.locale_id = "status_title_rasengan";
+            rasengan.locale_description = "status_description_rasengan";
+            rasengan.action_attack_target = new AttackAction(RasenganAA);
+            AssetManager.status.add(rasengan);
 
-            StatusAsset chidoriBuff = new StatusAsset();
-            chidoriBuff.id = "status_chidori";
-            chidoriBuff.path_icon = "ui/icons/jutsuA";
-            chidoriBuff.duration = 4f;
-            chidoriBuff.base_stats = new BaseStats();
-            chidoriBuff.base_stats.set("speed", 8f);
-            chidoriBuff.base_stats.set("multiplier_speed", 0.08f);
+            StatusAsset chidori = new StatusAsset();
+            chidori.id = "status_chidori";
+            chidori.path_icon = "ui/icons/jutsuA";
+            chidori.duration = 4f;
+            chidori.base_stats = new BaseStats();
+            chidori.base_stats.set("speed", 8f);
+            chidori.base_stats.set("multiplier_speed", 0.08f);
 
-            chidoriBuff.animated = true;
-            chidoriBuff.texture = "fx_chidori";
-            chidoriBuff.material = material;
-            chidoriBuff.sprite_list = SpriteTextureLoader.getSpriteList($"effects/{chidoriBuff.texture}", false);
+            chidori.animated = true;
+            chidori.texture = "fx_chidori";
+            chidori.material = material;
+            chidori.sprite_list = SpriteTextureLoader.getSpriteList($"effects/{chidori.texture}", false);
 
-            chidoriBuff.need_visual_render = true;
-            chidoriBuff.removed_on_damage = false;
-            chidoriBuff.use_parent_rotation = true;
-            chidoriBuff.is_animated_in_pause = false;
-            chidoriBuff.can_be_flipped = true;
+            chidori.need_visual_render = true;
+            chidori.removed_on_damage = false;
+            chidori.use_parent_rotation = true;
+            chidori.is_animated_in_pause = false;
+            chidori.can_be_flipped = true;
 
-            chidoriBuff.locale_id = "status_title_chidori";
-            chidoriBuff.locale_description = "status_description_chidori";
-            AssetManager.status.add(chidoriBuff);
+            chidori.locale_id = "status_title_chidori";
+            chidori.locale_description = "status_description_chidori";
+            chidori.action_attack_target = new AttackAction(ChidoriAA);
+            AssetManager.status.add(chidori);
             #endregion
 
             #region Rinne-Cooldown
@@ -1726,6 +1729,24 @@ namespace ShinobiBox
             if (UnityEngine.Random.value > 0.10f) return false;
 
             pSelf.a.addStatusEffect("status_tso_shield", 2f);
+            return true;
+        }
+
+        public static bool RasenganAA(BaseSimObject pSelf, BaseSimObject pTarget, WorldTile pTile)
+        {
+            if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
+            if (!pSelf.a.hasStatus("status_rasengan")) return false;
+
+            pSelf.a.finishStatusEffect("status_rasengan");
+            return true;
+        }
+
+        public static bool ChidoriAA(BaseSimObject pSelf, BaseSimObject pTarget, WorldTile pTile)
+        {
+            if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
+            if (!pSelf.a.hasStatus("status_chidori")) return false;
+
+            pSelf.a.finishStatusEffect("status_chidori");
             return true;
         }
 
