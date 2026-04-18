@@ -107,20 +107,20 @@ namespace ShinobiBox
             AddProjectileIfMissing(new ProjectileAsset
             {
                 id = "projectile_tailed_beast_bomb",
-                speed = 16f,
+                speed = 28f,
                 texture = "projectile_TBB",
-                look_at_target = true,
+                look_at_target = false,
                 texture_shadow = "shadows/projectiles/shadow_arrow",
                 end_effect = "fx_shinobi_antimatter",
                 hit_shake = true,
-                scale_start = 0.05f,
-                scale_target = 0.20f,
+                scale_start = 0.16f,
                 draw_light_area = true,
                 draw_light_size = 0.50f,
                 sound_launch = "event:/SFX/WEAPONS/WeaponStartArrow",
                 sound_impact = "event:/SFX/EXPLOSIONS/ExplosionAntimatterBomb",
                 can_be_blocked = false,
                 can_be_collided = true,
+                animation_speed = 10f,
                 world_actions = new AttackAction(TailedBeastBombImpact)
             });
 

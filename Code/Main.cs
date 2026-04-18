@@ -41,6 +41,7 @@ namespace ShinobiBox
             ShinobiTab.Init();
             ShinobiStatus.Init();
             ShinobiEffects.Init();
+            ShinobiSounds.Init();
             ShinobiKingdoms.Init();
 
 

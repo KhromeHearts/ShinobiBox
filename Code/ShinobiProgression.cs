@@ -335,6 +335,29 @@ namespace ShinobiBox
 
             bool hasAnySenjutsu = actor.hasTrait("frog_sage_mode") || actor.hasTrait("slug_sage_mode") || actor.hasTrait("snake_sage_mode") || actor.hasTrait("wood_sage_mode") || actor.hasTrait("six_paths_sage_mode");
 
+            int sageProgressionOptOut = 0;
+            actor.data.get("sage_progression_opt_out", out sageProgressionOptOut);
+            int hadSageTraitBefore = 0;
+            actor.data.get("sage_progression_had_trait", out hadSageTraitBefore);
+
+            if (hasAnySenjutsu)
+            {
+                actor.data.set("sage_progression_had_trait", 1);
+            }
+            else
+            {
+                if (hadSageTraitBefore > 0 && sageProgressionOptOut == 0)
+                {
+                    actor.data.set("sage_progression_opt_out", 1);
+                    sageProgressionOptOut = 1;
+                }
+
+                if (sageProgressionOptOut > 0)
+                {
+                    return;
+                }
+            }
+
             if (!actor.hasTrait("wood_sage_mode") && actor.hasTrait("wood_release") && actor.hasTrait("hashi_cells"))
             {
                 if (JutsuLibrary.GetNatureExp(actor, "wood") >= 600f)

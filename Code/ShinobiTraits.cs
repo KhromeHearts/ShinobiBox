@@ -152,11 +152,12 @@ namespace ShinobiBox
             uzumaki.base_stats = new BaseStats();
             uzumaki.base_stats.set("health", 250f);
             uzumaki.base_stats.set("multiplier_health", 0.05f);
-            uzumaki.base_stats.set("multiplier_lifespan", 0.50f);
+            uzumaki.base_stats.set("multiplier_lifespan", 0.35f);
             uzumaki.base_stats.set("intelligence", 10f);
             uzumaki.base_stats.set("stamina", 50f);
             uzumaki.base_stats.set("experience", 15f);
-            uzumaki.base_stats.set("chakra", 250f);
+            uzumaki.base_stats.set("chakra", 100f);
+            uzumaki.base_stats.set("multiplier_chakra", 0.75f);
 
             uzumaki.action_attack_target = new AttackAction(JutsuLibrary.AdamantiteChainsAction);
 
@@ -490,6 +491,7 @@ namespace ShinobiBox
 
             madaraEternalMangekyo.action_attack_target = new AttackAction(JutsuLibrary.MadaraTengaiShinsei);
             madaraEternalMangekyo.action_attack_target = (AttackAction)Delegate.Combine(madaraEternalMangekyo.action_attack_target, new AttackAction(JutsuLibrary.MadaraPerfectSusanoo));
+            madaraEternalMangekyo.action_attack_target = (AttackAction)Delegate.Combine(madaraEternalMangekyo.action_attack_target, new AttackAction(JutsuLibrary.MadaraEMSGenjutsu));
             madaraEternalMangekyo.action_special_effect = (WorldAction)Delegate.Combine(madaraEternalMangekyo.action_special_effect, new WorldAction(JutsuLibrary.MadaraSusanooRibcage));
 
 
@@ -1261,6 +1263,7 @@ namespace ShinobiBox
             ninetailsjinchuriki.base_stats.set("multiplier_lifespan", 0.30f);
             ninetailsjinchuriki.base_stats.set("health", 128f);
             ninetailsjinchuriki.base_stats.set("chakra", 106f);
+            ninetailsjinchuriki.action_attack_target = new AttackAction(JutsuLibrary.TailedBeastBombAction);
             ninetailsjinchuriki.action_get_hit = new GetHitAction(JutsuLibrary.NineTailsJinchuriki);
             addTraitToGame(ninetailsjinchuriki);
             #endregion
@@ -1282,8 +1285,6 @@ namespace ShinobiBox
             tentailsjinchuriki.action_attack_target = (AttackAction)Delegate.Combine(tentailsjinchuriki.action_attack_target, new AttackAction(JutsuLibrary.TailedBeastBombAction));
             tentailsjinchuriki.action_attack_target = (AttackAction)Delegate.Combine(tentailsjinchuriki.action_attack_target, new AttackAction(JutsuLibrary.ArmorBreakAction));
             tentailsjinchuriki.action_get_hit = new GetHitAction(JutsuLibrary.TenTailsJinchuriki);
-            tentailsjinchuriki.action_special_effect = new WorldAction(JutsuLibrary.AutoTailedBeastBombAtTarget);
-            tentailsjinchuriki.special_effect_interval = 7f;
 
             addTraitToGame(tentailsjinchuriki);
             #endregion
@@ -1379,7 +1380,7 @@ namespace ShinobiBox
                 can_be_given = true,
                 needs_to_be_explored = false
             };
-            rasenganJ.action_attack_target = new AttackAction(JutsuLibrary.RasenganAction);
+            rasenganJ.action_special_effect = new WorldAction(JutsuLibrary.RasenganAction);
             addTraitToGame(rasenganJ);
 
             #endregion

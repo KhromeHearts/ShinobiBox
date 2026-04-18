@@ -4,6 +4,7 @@ using NCMS.Utils;
 using UnityEngine;
 using NeoModLoader.services;
 using NeoModLoader.api;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ShinobiBox
 {
@@ -19,6 +20,7 @@ namespace ShinobiBox
         public static void Init()
         {
             loadAssets();
+            loadActions();
         }
 
         public static void loadAssets()
@@ -90,6 +92,7 @@ namespace ShinobiBox
                 hashirama.actor_size = ActorSize.S13_Human;
                 hashirama.can_edit_equipment = true;
                 hashirama.inspect_home = true;
+                hashirama.can_level_up = false;
 
                 hashirama.base_stats["lifespan"] = 125f;
                 hashirama.base_stats["health"] = 1200f;
@@ -178,6 +181,7 @@ namespace ShinobiBox
                 madara.render_heads_for_babies = false;
                 madara.body_separate_part_hands = true;
                 madara.shadow = false;
+                madara.can_level_up = false;
 
                 madara.force_land_creature = true;
                 madara.force_ocean_creature = false;
@@ -243,9 +247,10 @@ namespace ShinobiBox
                 kurama.name_template_sets = new string[] { "human_default_set" };
 
                 kurama.job = new string[] { "random_move" };
-                kurama.kingdom_id_wild = "rouge";
+                kurama.kingdom_id_wild = ShinobiKingdoms.TailedBeastsKingdomId;
                 kurama.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
                 kurama.animation_walk_speed = 5f;
+                kurama.animation_speed_based_on_walk_speed = false;
                 kurama.animation_swim = ActorAnimationSequences.walk_0;
                 kurama.texture_asset = new ActorTextureSubAsset("actors/kurama/", kurama.has_advanced_textures);
                 kurama._cached_sprite = Resources.Load<Sprite>("GameResources/actors/kurama/Main/walk_0");
@@ -271,6 +276,7 @@ namespace ShinobiBox
                 kurama.render_heads_for_babies = false;
                 kurama.body_separate_part_hands = true;
                 kurama.shadow = false;
+                kurama.can_level_up = false;
 
                 kurama.force_land_creature = true;
                 kurama.force_ocean_creature = false;
@@ -300,7 +306,7 @@ namespace ShinobiBox
                 kurama.base_stats["critical_chance"] = 0.40f;
                 kurama.base_stats["knockback"] = 0.2f;
                 kurama.base_stats["accuracy"] = 6f;
-                kurama.base_stats["range"] = 1.2f;
+                kurama.base_stats["range"] = 80f;
                 kurama.base_stats["targets"] = 5f;
                 kurama.base_stats["scale"] = 0.15f;
                 kurama.base_stats["chakra"] = 100000f;
@@ -330,9 +336,10 @@ namespace ShinobiBox
                 juubi.name_template_sets = new string[] { "human_default_set" };
 
                 juubi.job = new string[] { "random_move" };
-                juubi.kingdom_id_wild = "rouge";
+                juubi.kingdom_id_wild = ShinobiKingdoms.TailedBeastsKingdomId;
                 juubi.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
                 juubi.animation_walk_speed = 5f;
+                juubi.animation_speed_based_on_walk_speed = false;
                 juubi.animation_swim = ActorAnimationSequences.walk_0;
                 juubi.texture_asset = new ActorTextureSubAsset("actors/juubi/", juubi.has_advanced_textures);
                 juubi._cached_sprite = Resources.Load<Sprite>("GameResources/actors/juubi/Main/walk_0");
@@ -358,6 +365,7 @@ namespace ShinobiBox
                 juubi.render_heads_for_babies = false;
                 juubi.body_separate_part_hands = true;
                 juubi.shadow = false;
+                juubi.can_level_up = false;
 
                 juubi.force_land_creature = true;
                 juubi.force_ocean_creature = false;
@@ -387,7 +395,7 @@ namespace ShinobiBox
                 juubi.base_stats["critical_chance"] = 0.45f;
                 juubi.base_stats["knockback"] = 0.25f;
                 juubi.base_stats["accuracy"] = 6f;
-                juubi.base_stats["range"] = 1.3f;
+                juubi.base_stats["range"] = 80f;
                 juubi.base_stats["targets"] = 6f;
                 juubi.base_stats["scale"] = 0.20f;
                 juubi.base_stats["chakra"] = 120000f;
@@ -402,6 +410,22 @@ namespace ShinobiBox
 
                 AssetManager.actor_library.loadTexturesAndSprites(juubi);
             }
+        }
+
+        public static void loadActions()
+        {
+            #region KuramaOnDeath
+            public static bool KuramaOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
+            {
+            if (pSelf == null || pSelf.a == null || pSelf.a.data == null) return false;
+
+            pTarget.a.addTrait("nine_tails_jinchuriki");
+            pTarget.a.restoreHealth(pTarget.a.getMaxHealth());
+
+            ShinobiWorldLogs.AddWorldLog("log_kurama_sealed", "worldlog_kurama_sealed", "ui/icons/nine_tails", pTarget.a);
+
+        }
+            #endregion
         }
 
     }

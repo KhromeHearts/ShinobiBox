@@ -262,7 +262,7 @@ namespace ShinobiBox
 
                     if (!gaveReward)
                     {
-                        ShinobiItems.EquipItem(pAttacker.a, "armor_warring_states");
+                        gaveReward = ShinobiItems.EquipItem(pAttacker.a, "armor_warring_states");
                     }
                 }
 
@@ -316,6 +316,8 @@ namespace ShinobiBox
                     {
                         pAttacker.a.addTrait("nine_tails_jinchuriki");
                         pAttacker.a.restoreHealth(pAttacker.a.getMaxHealth());
+
+                        ShinobiWorldLogs.AddWorldLog("log_kurama_sealed", "worldlog_kurama_sealed", "ui/icons/nine_tails", pAttacker.a);
                     }
                 }
 

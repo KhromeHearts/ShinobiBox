@@ -16,32 +16,57 @@ namespace ShinobiBox
 {
     public static class ShinobiKingdoms
     {
+        public const string RougeKingdomId = "rouge";
+        public const string TailedBeastsKingdomId = "tailed_beasts";
+
         public static void Init()
         {
-            KingdomAsset shinobiMobs = AssetManager.kingdoms.get("rouge");
-            bool createdKingdom = false;
+            KingdomAsset shinobiMobs = AssetManager.kingdoms.get(RougeKingdomId);
+            bool createdRougeKingdom = false;
 
             if (shinobiMobs == null)
             {
                 shinobiMobs = new KingdomAsset();
-                shinobiMobs.id = "rouge";
-                shinobiMobs.mobs = true;
-                shinobiMobs.addTag("rouge");
-                shinobiMobs.addFriendlyTag("animal");
-                shinobiMobs.addFriendlyTag("neutral_animals");
-                shinobiMobs.addEnemyTag("civ");
-                shinobiMobs.addEnemyTag("good");
-                shinobiMobs.addEnemyTag("neutral");
-                shinobiMobs.addEnemyTag("nature_creature");
-                shinobiMobs.addEnemyTag("nature");
-                shinobiMobs.default_kingdom_color = new ColorAsset("#c45b16");
+                shinobiMobs.id = RougeKingdomId;
                 AssetManager.kingdoms.add(shinobiMobs);
-                createdKingdom = true;
+                createdRougeKingdom = true;
             }
 
-            if (createdKingdom && World.world != null && World.world.kingdoms_wild != null)
+            shinobiMobs.mobs = true;
+            shinobiMobs.addTag(RougeKingdomId);
+            shinobiMobs.addFriendlyTag("animal");
+            shinobiMobs.addFriendlyTag("neutral_animals");
+            shinobiMobs.addEnemyTag(TailedBeastsKingdomId);
+            shinobiMobs.addEnemyTag("civ");
+            shinobiMobs.default_kingdom_color = new ColorAsset("#c45b16");
+
+            KingdomAsset tailedBeasts = AssetManager.kingdoms.get(TailedBeastsKingdomId);
+            bool createdTailedBeastKingdom = false;
+            if (tailedBeasts == null)
             {
-                World.world.kingdoms_wild.newWildKingdom(shinobiMobs);
+                tailedBeasts = new KingdomAsset();
+                tailedBeasts.id = TailedBeastsKingdomId;
+                AssetManager.kingdoms.add(tailedBeasts);
+                createdTailedBeastKingdom = true;
+            }
+
+            tailedBeasts.mobs = true;
+            tailedBeasts.addTag(TailedBeastsKingdomId);
+            tailedBeasts.addFriendlyTag(TailedBeastsKingdomId);
+            tailedBeasts.addEnemyTag("civ");
+            tailedBeasts.addEnemyTag("human");
+            tailedBeasts.default_kingdom_color = new ColorAsset("#5a1f1f");
+
+            if (World.world != null && World.world.kingdoms_wild != null)
+            {
+                if (createdRougeKingdom)
+                {
+                    World.world.kingdoms_wild.newWildKingdom(shinobiMobs);
+                }
+                if (createdTailedBeastKingdom)
+                {
+                    World.world.kingdoms_wild.newWildKingdom(tailedBeasts);
+                }
             }
 
         }

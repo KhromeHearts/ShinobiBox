@@ -122,7 +122,7 @@ namespace ShinobiBox
 
             rasengan.locale_id = "status_title_rasengan";
             rasengan.locale_description = "status_description_rasengan";
-            rasengan.action_attack_target = new AttackAction(RasenganAA);
+            //rasengan.action_attack_target = new AttackAction(RasenganAA);
             AssetManager.status.add(rasengan);
 
             StatusAsset chidori = new StatusAsset();
@@ -146,7 +146,7 @@ namespace ShinobiBox
 
             chidori.locale_id = "status_title_chidori";
             chidori.locale_description = "status_description_chidori";
-            chidori.action_attack_target = new AttackAction(ChidoriAA);
+            //chidori.action_attack_target = new AttackAction(ChidoriAA);
             AssetManager.status.add(chidori);
             #endregion
 
@@ -176,6 +176,17 @@ namespace ShinobiBox
             rinneganControlled.locale_id = "status_title_rinnegan_controlled";
             rinneganControlled.locale_description = "status_description_rinnegan_controlled";
             AssetManager.status.add(rinneganControlled);
+
+            StatusAsset madaraTamed = new StatusAsset();
+            madaraTamed.id = "status_madara_tamed";
+            madaraTamed.duration = 15f;
+            madaraTamed.animated = false;
+            madaraTamed.path_icon = "ui/icons/madara_ems";
+            madaraTamed.base_stats = new BaseStats();
+            madaraTamed.locale_id = "status_title_madara_tamed";
+            madaraTamed.locale_description = "status_description_madara_tamed";
+            madaraTamed.action_finish = (WorldAction)Delegate.Combine(madaraTamed.action_finish, new WorldAction(JutsuLibrary.RestoreKingdom));
+            AssetManager.status.add(madaraTamed);
 
             #endregion
 
