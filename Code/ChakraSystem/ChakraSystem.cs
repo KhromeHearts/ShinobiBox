@@ -78,9 +78,9 @@ namespace ShinobiBox
         {
             if (actor == null || actor.data == null || !actor.isAlive()) return false;
 
-            if (CalculateBaseMaxChakra(actor) > 0f) return true;
-
-            if (GetTraitChakraValue(actor) > 0f) return true;
+            float chakraStat = GetActorStatValue(actor, "chakra");
+            float chakraMultiplier = GetActorStatValue(actor, "multiplier_chakra");
+            if (chakraStat > 0f || chakraMultiplier > 0f) return true;
 
             if (chakraData.TryGetValue(actor.data.id, out var state))
             {
@@ -158,14 +158,12 @@ namespace ShinobiBox
             if (chakra != null) chakra.current = Mathf.Clamp(chakra.current - Mathf.Abs(amount), 0f, chakra.max);
         }
 
-        public static void RefillToMax(Actor actor)
-        {
-            var chakra = Get(actor);
-            if (chakra != null) chakra.current = chakra.max;
-        }
-
         public static bool TryConsume(Actor actor, float cost)
         {
+            if (actor == null || !actor.isAlive()) return false;
+            if (!IsChakraUser(actor)) return false;
+            if (cost <= 0f) return true;
+
             var chakra = Get(actor);
             if (chakra == null) return false;
 
@@ -175,9 +173,11 @@ namespace ShinobiBox
                 cost *= 0.4f;
             }
 
-            if (chakra.current < cost) return false;
+            cost = Mathf.Max(0f, cost);
 
-            chakra.current -= cost;
+            if (chakra.current + 0.001f < cost) return false;
+
+            chakra.current = Mathf.Max(0f, chakra.current - cost);
             return true;
         }
 
@@ -218,9 +218,9 @@ namespace ShinobiBox
         public static float CalculateBaseMaxChakra(Actor actor)
         {
             if (actor == null || actor.data == null) return 0f;
-
-            float traitChakra = GetTraitChakraValue(actor);
-            float traitChakraMultiplier = GetTraitChakraMultiplier(actor);
+            float traitChakra = GetActorStatValue(actor, "chakra");
+            float traitChakraMultiplier = GetActorStatValue(actor, "multiplier_chakra");
+            if (traitChakra <= 0f && traitChakraMultiplier <= 0f) return 0f;
 
             float total = 25f;
             total += traitChakra;
@@ -261,23 +261,11 @@ namespace ShinobiBox
             return Mathf.Max(0f, total);
         }
 
-        private static float GetTraitChakraValue(Actor actor)
+        private static float GetActorStatValue(Actor actor, string statId)
         {
             try
             {
-                return actor.stats["chakra"];
-            }
-            catch
-            {
-                return 0f;
-            }
-        }
-
-        private static float GetTraitChakraMultiplier(Actor actor)
-        {
-            try
-            {
-                return actor.stats["multiplier_chakra"];
+                return actor.stats[statId];
             }
             catch
             {
@@ -309,7 +297,7 @@ namespace ShinobiBox
             else if (actor.hasStatus("status_jinchuriki_avatar")) { drainPerSecond = 40f; drainsChakra = true; }
             else if (actor.hasStatus("status_jinchuriki_baryon_mode")) { drainPerSecond = 60f; drainsChakra = true; }
 
-            if (actor.hasTrait("sharingan_3t")) { drainPerSecond += 1f; drainsChakra = true; }
+            if (actor.hasStatus("status_sharingan_3t")) { drainPerSecond += 1f; drainsChakra = true; }
             if (actor.hasTrait("mangekyo_sharingan")) { drainPerSecond += 3f; drainsChakra = true; }
             if (actor.hasTrait("rinnegan")) { drainPerSecond += 5f; drainsChakra = true; }
 

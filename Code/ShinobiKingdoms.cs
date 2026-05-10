@@ -18,6 +18,7 @@ namespace ShinobiBox
     {
         public const string RougeKingdomId = "rouge";
         public const string TailedBeastsKingdomId = "tailed_beasts";
+        public const string KonohaKingdomId = "konoha";
 
         public static void Init()
         {
@@ -57,6 +58,25 @@ namespace ShinobiBox
             tailedBeasts.addEnemyTag("human");
             tailedBeasts.default_kingdom_color = new ColorAsset("#5a1f1f");
 
+            KingdomAsset konoha = AssetManager.kingdoms.get(KonohaKingdomId);
+            bool createdKonohaKingdom = false;
+            if (konoha == null)
+            {
+                konoha = new KingdomAsset();
+                konoha.id = KonohaKingdomId;
+                AssetManager.kingdoms.add(konoha);
+                createdKonohaKingdom = true;
+            }
+
+            konoha.mobs = false;
+            konoha.addTag(KonohaKingdomId);
+            konoha.addFriendlyTag(KonohaKingdomId);
+            konoha.addFriendlyTag("civ");
+            konoha.addFriendlyTag("human");
+            konoha.addEnemyTag(RougeKingdomId);
+            konoha.addEnemyTag(TailedBeastsKingdomId);
+            konoha.default_kingdom_color = new ColorAsset("#ff0000");
+
             if (World.world != null && World.world.kingdoms_wild != null)
             {
                 if (createdRougeKingdom)
@@ -66,6 +86,10 @@ namespace ShinobiBox
                 if (createdTailedBeastKingdom)
                 {
                     World.world.kingdoms_wild.newWildKingdom(tailedBeasts);
+                }
+                if (createdKonohaKingdom)
+                {
+                    World.world.kingdoms_wild.newWildKingdom(konoha);
                 }
             }
 

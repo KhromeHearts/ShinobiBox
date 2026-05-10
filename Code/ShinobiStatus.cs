@@ -33,6 +33,7 @@ namespace ShinobiBox
         private static void loadStatusEffects()
         {
             Material material = LibraryMaterials.instance.dict["mat_world_object_lit"];
+            NineTailsJinchuriki(material);
 
             #region Will of Fire
             // Will of fire
@@ -78,7 +79,7 @@ namespace ShinobiBox
             kuramaSage.duration = 60f;
 
             AssetManager.status.add(kuramaSage);
-            loadJinchurikiFormStatuses(material);
+            
 
             #endregion
 
@@ -149,6 +150,26 @@ namespace ShinobiBox
             //chidori.action_attack_target = new AttackAction(ChidoriAA);
             AssetManager.status.add(chidori);
             #endregion
+
+            #region Shadow Clone Status
+            StatusAsset shadowClone = new StatusAsset();
+            shadowClone.id = "shadow_clone";
+            shadowClone.duration = 20f;
+            shadowClone.animated = false;
+            shadowClone.path_icon = "ui/icons/jutsuB";
+            shadowClone.base_stats = new BaseStats();
+            shadowClone.base_stats.set("multiplier_health", 0.10f);
+            shadowClone.base_stats.set("multiplier_damage", 0.10f);
+
+            shadowClone.action_get_hit = new GetHitAction(ShadowCloneGetHit);
+            shadowClone.action_finish = (WorldAction)Delegate.Combine(shadowClone.action_finish, new WorldAction(ShadowCloneFinish));
+
+            shadowClone.locale_id = "status_title_shadow_clone";
+            shadowClone.locale_description = "status_description_shadow_clone";
+            AssetManager.status.add(shadowClone);
+
+            #endregion
+
 
             #region Rinne-Cooldown
             // Rinnegan Cooldown
@@ -287,6 +308,63 @@ namespace ShinobiBox
 
             genjutsu3.action_on_receive = (WorldAction)Delegate.Combine(genjutsu3.action_on_receive, new WorldAction(action_freeze));
             AssetManager.status.add(genjutsu3);
+            #endregion
+
+            #region Sharingan 1 - 3 Tomoe
+            StatusAsset sharingan1 = new StatusAsset();
+            sharingan1.id = "status_sharingan_1t";
+            sharingan1.base_stats = new BaseStats();
+            sharingan1.base_stats.set("damage", 31f);
+            sharingan1.base_stats.set("multiplier_damage", 0.02f);
+            sharingan1.base_stats.set("health", 48f);
+            sharingan1.base_stats.set("intelligence", 10f);
+            sharingan1.base_stats.set("speed", 5f);
+            sharingan1.base_stats.set("critical_chance", 0.05f);
+            sharingan1.base_stats.set("accuracy", 0.5f);
+            sharingan1.base_stats.set("chakra", 32f);
+            sharingan1.duration = 30f;
+            sharingan1.path_icon = "ui/icons/sharingan_1t";
+            sharingan1.locale_id = "status_title_sharingan_1t";
+            sharingan1.locale_description = "status_description_sharingan_1t";
+            AssetManager.status.add(sharingan1);
+
+            StatusAsset sharingan2 = new StatusAsset();
+            sharingan2.id = "status_sharingan_2t";
+            sharingan2.base_stats = new BaseStats();
+            sharingan2.base_stats.set("damage", 65f);
+            sharingan2.base_stats.set("multiplier_damage", 0.07f);
+            sharingan2.base_stats.set("health", 98f);
+            sharingan2.base_stats.set("multiplier_health", 0.05f);
+            sharingan2.base_stats.set("intelligence", 20f);
+            sharingan2.base_stats.set("speed", 7f);
+            sharingan2.base_stats.set("critical_chance", 0.10f);
+            sharingan2.base_stats.set("critical_damage_multiplier", 0.05f);
+            sharingan2.base_stats.set("accuracy", 1f);
+            sharingan2.base_stats.set("chakra", 64f);
+            sharingan2.duration = 30f;
+            sharingan2.path_icon = "ui/icons/sharingan_2t";
+            sharingan2.locale_id = "status_title_sharingan_2t";
+            sharingan2.locale_description = "status_description_sharingan_2t";
+            AssetManager.status.add(sharingan2);
+
+            StatusAsset sharingan3 = new StatusAsset();
+            sharingan3.id = "status_sharingan_3t";
+            sharingan3.base_stats = new BaseStats();
+            sharingan3.base_stats.set("damage", 91f);
+            sharingan3.base_stats.set("multiplier_damage", 0.10f);
+            sharingan3.base_stats.set("health", 136f);
+            sharingan3.base_stats.set("multiplier_health", 0.10f);
+            sharingan3.base_stats.set("intelligence", 40f);
+            sharingan3.base_stats.set("speed", 10f);
+            sharingan3.base_stats.set("critical_chance", 0.15f);
+            sharingan3.base_stats.set("critical_damage_multiplier", 0.10f);
+            sharingan3.base_stats.set("accuracy", 1.5f);
+            sharingan3.base_stats.set("chakra", 96f);
+            sharingan3.duration = 30f;
+            sharingan3.path_icon = "ui/icons/sharingan_3t";
+            sharingan3.locale_id = "status_title_sharingan_3t";
+            sharingan3.locale_description = "status_description_sharingan_3t";
+            AssetManager.status.add(sharingan3);
             #endregion
 
             #region Amaterasu Effect
@@ -661,10 +739,12 @@ namespace ShinobiBox
             #region Kamui
             // Kamui
             StatusAsset kamui = new StatusAsset();
-            kamui.id = "status_kamui_phase";
+            kamui.id = "kamui_intangibility";
             kamui.base_stats = new BaseStats();
-            kamui.base_stats.set("armor", 250f);
-            kamui.duration = 2f;
+            kamui.base_stats.set("armor", 999f);
+            kamui.base_stats.set("speed", -999f);
+            kamui.base_stats.set("multiplier_speed", -1f);
+            kamui.duration = 6f;
             kamui.path_icon = "effects/kamui";
 
             kamui.animated = true;
@@ -680,8 +760,9 @@ namespace ShinobiBox
             kamui.need_visual_render = true;
             kamui.scale = 0.8f;
 
-            kamui.locale_id = "status_title_kamui_phase";
-            kamui.locale_description = "status_description_kamui_phase";
+            kamui.locale_id = "status_title_kamui_intangibility";
+            kamui.locale_description = "status_description_kamui_intangibility";
+            kamui.action = (WorldAction)Delegate.Combine(kamui.action, new WorldAction(action_freeze));
 
             AssetManager.status.add(kamui);
             #endregion
@@ -1121,7 +1202,7 @@ namespace ShinobiBox
             akimichiGrown.is_animated_in_pause = false;
             akimichiGrown.use_parent_rotation = true;
             akimichiGrown.removed_on_damage = false;
-            akimichiGrown.cancel_actor_job = true;
+            akimichiGrown.cancel_actor_job = false;
             akimichiGrown.can_be_flipped = true;
             akimichiGrown.render_priority = 5;
             akimichiGrown.loop = false;
@@ -1191,6 +1272,7 @@ namespace ShinobiBox
             sixPathsSenjutsu.can_be_flipped = true;
             sixPathsSenjutsu.action_get_hit = (GetHitAction)Delegate.Combine(sixPathsSenjutsu.action_get_hit, new GetHitAction(TruthSeekingOrbShield));
             sixPathsSenjutsu.action = (WorldAction)Delegate.Combine(sixPathsSenjutsu.action, new WorldAction(JutsuLibrary.AutoTruthSeekingOrbAtTarget));
+            sixPathsSenjutsu.action = (WorldAction)Delegate.Combine(sixPathsSenjutsu.action, new WorldAction(SixPathsFlightAction));
             sixPathsSenjutsu.action_interval = 5f;
 
             sixPathsSenjutsu.locale_id = "status_title_six_paths_senjutsu";
@@ -1416,7 +1498,7 @@ namespace ShinobiBox
             StatusAsset kamuiCD = new StatusAsset();
             kamuiCD.id = "kamui_cooldown";
             kamuiCD.path_icon = "effects/abilitycooldown";
-            kamuiCD.duration = 25f;
+            kamuiCD.duration = 60f;
             kamuiCD.animated = false;
 
             kamuiCD.locale_id = "status_title_ability_cooldown";
@@ -1458,7 +1540,7 @@ namespace ShinobiBox
             weightRock.base_stats.set("multiplier_speed", -0.90f);
             weightRock.base_stats.set("attack_speed", -0.40f);
             weightRock.base_stats.set("multiplier_damage", 0.60f);
-            
+
 
             weightRock.animated = true;
             weightRock.texture = "fx_weighted";
@@ -1481,7 +1563,7 @@ namespace ShinobiBox
 
         }
 
-        private static void loadJinchurikiFormStatuses(Material material)
+        private static void NineTailsJinchuriki(Material material)
         {
             StatusAsset initialReleaseForm = new StatusAsset();
             initialReleaseForm.id = "status_jinchuriki_initial_release";
@@ -1712,13 +1794,37 @@ namespace ShinobiBox
             baryonModeForm.base_stats.set("intelligence", 70f);
             baryonModeForm.base_stats.set("multiplier_lifespan", -0.25f);
             baryonModeForm.base_stats.set("experience", 40f);
-            baryonModeForm.base_stats.set("chakra", 1324f);
+            baryonModeForm.base_stats.set("chakra", 5000f);
             baryonModeForm.locale_id = "status_title_jinchuriki_baryon_mode";
             baryonModeForm.locale_description = "status_description_jinchuriki_baryon_mode";
             baryonModeForm.action = (WorldAction)Delegate.Combine(baryonModeForm.action, new WorldAction(JutsuLibrary.NineTailsStatusMoves));
             baryonModeForm.action_interval = 0.95f;
             baryonModeForm.action_finish = (WorldAction)Delegate.Combine(baryonModeForm.action_finish, new WorldAction(BaryonModeEnded));
             AssetManager.status.add(baryonModeForm);
+
+            #region Jutsu Use Status
+            StatusAsset jutsuuse = new StatusAsset();
+            jutsuuse.id = "jutsuuse";
+            jutsuuse.path_icon = "effects/baseseal";
+            jutsuuse.duration = 1f;
+
+            jutsuuse.animated = true;
+            jutsuuse.texture = "fx_baseseal";
+            jutsuuse.sprite_list = SpriteTextureLoader.getSpriteList($"effects/{jutsuuse.texture}", false);
+            jutsuuse.material = material;
+
+            jutsuuse.need_visual_render = true;
+            jutsuuse.use_parent_rotation = false;
+            jutsuuse.is_animated_in_pause = false;
+            jutsuuse.can_be_flipped = true;
+            jutsuuse.scale = 0.3f;
+            jutsuuse.render_priority = 5;
+
+            jutsuuse.locale_id = "status_title_jutsuuse";
+            jutsuuse.locale_description = "status_description_jutsuuse";
+
+            AssetManager.status.add(jutsuuse);
+            #endregion
         }
 
         public static bool BaryonModeEnded(BaseSimObject pTarget, WorldTile pTile)
@@ -1743,6 +1849,14 @@ namespace ShinobiBox
             return true;
         }
 
+        public static bool SixPathsFlightAction(BaseSimObject pTarget, WorldTile pTile)
+        {
+            if (pTarget == null || pTarget.a == null || pTarget.a.data == null || !pTarget.a.isAlive()) return false;
+
+            pTarget.a._flying = true;
+            return true;
+        }
+
         public static bool RasenganAA(BaseSimObject pSelf, BaseSimObject pTarget, WorldTile pTile)
         {
             if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
@@ -1760,6 +1874,38 @@ namespace ShinobiBox
             pSelf.a.finishStatusEffect("status_chidori");
             return true;
         }
+
+        #region Shadow Clone Jutsu
+        public static bool ShadowCloneGetHit(BaseSimObject pSelf, BaseSimObject pAttackedBy, WorldTile pTile = null)
+        {
+            if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
+
+            if (Randy.randomChance(0.15f))
+            {
+                pSelf.finishStatusEffect("shadow_clone");
+                
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool ShadowCloneFinish(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            if (pTarget == null || pTarget.a == null || !pTarget.a.isAlive()) return false;
+            Actor actor = pTarget.a;
+            WorldTile targetTile = pTarget.current_tile;
+
+            actor.die();
+            if (targetTile != null)
+            {
+                EffectsLibrary.spawnAtTile("fx_smoke", targetTile, 0.05f);
+                JutsuLibrary.PlayWavSound("shadow_clone_spawn.wav", targetTile.posV3);
+            }
+
+            return true;
+        }
+        #endregion
 
         public static bool WeightRockTerraformAction(BaseSimObject pTarget, WorldTile pTile)
         {

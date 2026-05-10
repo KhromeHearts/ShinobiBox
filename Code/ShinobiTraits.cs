@@ -20,6 +20,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine;
 
 namespace ShinobiBox
 {
@@ -35,6 +36,7 @@ namespace ShinobiBox
         private static string GroupId_SpecialChakra = "Shinobi_Box_Special_Chakra";
         private static string GroupId_Jutsus = "Shinobi_Box_Jutsus";
         private static string GroupId_Senjutsu = "Shinobi_Box_Senjutsu";
+        private static string GroupId_FightingStyles = "Shinobi_Box_Fighting_Styles";
 
         private static List<ActorTrait> myListTraits = new List<ActorTrait>();
 
@@ -57,6 +59,7 @@ namespace ShinobiBox
             populateListOppositeTraits();
         }
 
+        #region Trait Groups
         private static void loadCustomTraitGroup()
         {
             ActorTraitGroupAsset shinobiArts = new ActorTraitGroupAsset();
@@ -113,7 +116,7 @@ namespace ShinobiBox
             senjutsuGroup.color = "#6FAF7C";
             AssetManager.trait_groups.add(senjutsuGroup);
         }
-
+        #endregion
         private static void loadClans()
         {
 
@@ -351,91 +354,24 @@ namespace ShinobiBox
             addTraitToGame(rinnesharingan);
             #endregion
 
-            #region Sharingan Stages
-
-            #region Sharingan 1
-            ActorTrait sharingan_1t = new ActorTrait
+            #region Sharingan
+            ActorTrait sharingan = new ActorTrait
             {
-                id = "sharingan_1t",
-                group_id = GroupId_Dojutsu,
-                path_icon = "ui/icons/sharingan_1t",
-                can_be_given = true,
-                needs_to_be_explored = false,
-                rarity = Rarity.R2_Epic
-
-            };
-            sharingan_1t.base_stats = new BaseStats();
-            sharingan_1t.base_stats.set("damage", 31f);
-            sharingan_1t.base_stats.set("multiplier_damage", 0.02f);
-            sharingan_1t.base_stats.set("health", 48f);
-            sharingan_1t.base_stats.set("intelligence", 10f);
-            sharingan_1t.base_stats.set("speed", 5f);
-            sharingan_1t.base_stats.set("critical_chance", 0.05f);
-            sharingan_1t.base_stats.set("accuracy", 0.5f);
-            sharingan_1t.base_stats.set("chakra", 32f);
-
-            sharingan_1t.action_attack_target = new AttackAction(JutsuLibrary.Sharingan1Action);
-
-            addTraitToGame(sharingan_1t);
-            #endregion
-
-            #region Sharingan 2
-            ActorTrait sharingan_2t = new ActorTrait
-            {
-                id = "sharingan_2t",
-                group_id = GroupId_Dojutsu,
-                path_icon = "ui/icons/sharingan_2t",
-                can_be_given = true,
-                needs_to_be_explored = false,
-                rarity = Rarity.R2_Epic
-
-            };
-            sharingan_2t.base_stats = new BaseStats();
-            sharingan_2t.base_stats.set("damage", 65f);
-            sharingan_2t.base_stats.set("multiplier_damage", 0.07f);
-            sharingan_2t.base_stats.set("health", 98f);
-            sharingan_2t.base_stats.set("multiplier_health", 0.05f);
-            sharingan_2t.base_stats.set("intelligence", 20f);
-            sharingan_2t.base_stats.set("speed", 7f);
-            sharingan_2t.base_stats.set("critical_chance", 0.10f);
-            sharingan_2t.base_stats.set("critical_damage_multiplier", 0.05f);
-            sharingan_2t.base_stats.set("accuracy", 1f);
-            sharingan_2t.base_stats.set("chakra", 64f);
-
-            sharingan_2t.action_attack_target = new AttackAction(JutsuLibrary.Sharingan2Action);
-
-            addTraitToGame(sharingan_2t);
-            #endregion
-
-            #region Sharingan 3
-            ActorTrait sharingan_3t = new ActorTrait
-            {
-                id = "sharingan_3t",
+                id = "sharingan",
                 group_id = GroupId_Dojutsu,
                 path_icon = "ui/icons/sharingan_3t",
                 can_be_given = true,
                 needs_to_be_explored = false,
-                rarity = Rarity.R2_Epic
-
+                rarity = Rarity.R3_Legendary
             };
-            sharingan_3t.base_stats = new BaseStats();
-            sharingan_3t.base_stats.set("damage", 91f);
-            sharingan_3t.base_stats.set("multiplier_damage", 0.10f);
-            sharingan_3t.base_stats.set("health", 136f);
-            sharingan_3t.base_stats.set("multiplier_health", 0.10f);
-            sharingan_3t.base_stats.set("intelligence", 40f);
-            sharingan_3t.base_stats.set("speed", 10f);
-            sharingan_3t.base_stats.set("critical_chance", 0.15f);
-            sharingan_3t.base_stats.set("critical_damage_multiplier", 0.10f);
-            sharingan_3t.base_stats.set("accuracy", 1.5f);
-            sharingan_3t.base_stats.set("chakra", 96f);
+            sharingan.action_attack_target = new AttackAction(JutsuLibrary.SharinganActions);
+            sharingan.action_special_effect = (WorldAction)Delegate.Combine(sharingan.action_special_effect, new WorldAction(JutsuLibrary.SharinganProgression));
+            sharingan.special_effect_interval = 1f;
 
-            sharingan_3t.action_attack_target = new AttackAction(JutsuLibrary.Sharingan3Action);
+            addTraitToGame(sharingan);
 
-            addTraitToGame(sharingan_3t);
             #endregion
 
-            // Mangekyo
             #region Mangekyo
             ActorTrait mangekyo = new ActorTrait
             {
@@ -459,9 +395,27 @@ namespace ShinobiBox
             mangekyo.base_stats.set("accuracy", 2.5f);
             mangekyo.base_stats.set("chakra", 120f);
 
-            mangekyo.action_attack_target = new AttackAction(JutsuLibrary.AmaterasuAction);
-            mangekyo.action_special_effect = (WorldAction)Delegate.Combine(mangekyo.action_special_effect, new WorldAction(JutsuLibrary.SusanooRibcage));
-            mangekyo.action_attack_target = (AttackAction)Delegate.Combine(mangekyo.action_attack_target, new AttackAction(JutsuLibrary.BaseSusanooAction));
+            bool sharinganRoll = false;
+
+            if (!sharinganRoll && Randy.randomChance(0.50f))
+            {
+                mangekyo.action_attack_target = new AttackAction(JutsuLibrary.AmaterasuAction);
+                mangekyo.action_special_effect = (WorldAction)Delegate.Combine(mangekyo.action_special_effect, new WorldAction(JutsuLibrary.SusanooRibcage));
+                mangekyo.action_attack_target = (AttackAction)Delegate.Combine(mangekyo.action_attack_target, new AttackAction(JutsuLibrary.BaseSusanooAction));
+                mangekyo.action_get_hit = (GetHitAction)Delegate.Combine(mangekyo.action_get_hit, new GetHitAction(JutsuLibrary.KamuiAction));
+                sharinganRoll = true;
+            }
+            else
+            {
+                /* mangekyo.action_attack_target = new AttackAction(JutsuLibrary.YasakaMagatamaAction);
+                mangekyo.action_attack_target = (AttackAction)Delegate.Combine(mangekyo.action_attack_target, new AttackAction(JutsuLibrary.ItachiSusanooAction));
+                mangekyo.action_attack_target = (AttackAction)Delegate.Combine(mangekyo.action_attack_target, new AttackAction(JutsuLibrary.AmaterasuAction));
+                mangekyo.action_special_effect = (WorldAction)Delegate.Combine(mangekyo.action_special_effect, new WorldAction(JutsuLibrary.ItachiSusanooRibcage));
+                */
+                Debug.Log("itachi mangekyo was picked");
+                
+            }
+
 
             addTraitToGame(mangekyo);
             #endregion
@@ -498,7 +452,6 @@ namespace ShinobiBox
             addTraitToGame(madaraEternalMangekyo);
             #endregion
 
-            // Eternal Mangekyo
             #region Eternal Mangekyo
             ActorTrait ems = new ActorTrait
             {
@@ -526,11 +479,81 @@ namespace ShinobiBox
             ems.action_attack_target = new AttackAction(JutsuLibrary.AmaterasuAction);
             ems.action_attack_target = (AttackAction)Delegate.Combine(ems.action_attack_target, new AttackAction(JutsuLibrary.PerfectSusanooAction));
             ems.action_special_effect = (WorldAction)Delegate.Combine(ems.action_special_effect, new WorldAction(JutsuLibrary.SusanooRibcage));
+            ems.action_get_hit = (GetHitAction)Delegate.Combine(ems.action_get_hit, new GetHitAction(JutsuLibrary.KamuiAction));
 
 
             addTraitToGame(ems);
             #endregion
 
+            #region Sasuke's Rinnegan
+            // sasukes rinnegan has the same abilities as rinnegan and eternal mangekyo, but with different stats and a unique icon
+            ActorTrait sasukeRinnegan = new ActorTrait
+            {
+                id = "sasuke_rinnegan",
+                group_id = GroupId_Dojutsu,
+                path_icon = "ui/icons/sasuke_rinnegan",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rarity = Rarity.R3_Legendary
+            };
+            sasukeRinnegan.base_stats = new BaseStats();
+            sasukeRinnegan.base_stats.set("damage", 202f);
+            sasukeRinnegan.base_stats.set("health", 222f);
+            sasukeRinnegan.base_stats.set("multiplier_damage", 0.40f);
+            sasukeRinnegan.base_stats.set("multiplier_health", 0.40f);
+            sasukeRinnegan.base_stats.set("intelligence", 80f);
+            sasukeRinnegan.base_stats.set("multiplier_speed", 0.25f);
+            sasukeRinnegan.base_stats.set("accuracy", 4f);
+            sasukeRinnegan.base_stats.set("critical_chance", 0.40f);
+            sasukeRinnegan.base_stats.set("critical_damage_multiplier", 0.40f);
+            sasukeRinnegan.base_stats.set("chakra", 282f);
+            // All abilities from rinnegan + base EMS moves + tailed beast genjutsu.
+            sasukeRinnegan.action_attack_target = new AttackAction(JutsuLibrary.RinneganMeteorAction);
+            sasukeRinnegan.action_attack_target = (AttackAction)Delegate.Combine(sasukeRinnegan.action_attack_target, new AttackAction(JutsuLibrary.NarakaPathHealAction));
+            sasukeRinnegan.action_attack_target = (AttackAction)Delegate.Combine(sasukeRinnegan.action_attack_target, new AttackAction(JutsuLibrary.SixPathsTechnique));
+            sasukeRinnegan.action_attack_target = (AttackAction)Delegate.Combine(sasukeRinnegan.action_attack_target, new AttackAction(JutsuLibrary.AmaterasuAction));
+            sasukeRinnegan.action_attack_target = (AttackAction)Delegate.Combine(sasukeRinnegan.action_attack_target, new AttackAction(JutsuLibrary.PerfectSusanooAction));
+            sasukeRinnegan.action_attack_target = (AttackAction)Delegate.Combine(sasukeRinnegan.action_attack_target, new AttackAction(JutsuLibrary.MadaraEMSGenjutsu));
+            sasukeRinnegan.action_attack_target = (AttackAction)Delegate.Combine(sasukeRinnegan.action_attack_target, new AttackAction(JutsuLibrary.Amenotejikara));
+
+            sasukeRinnegan.action_special_effect = (WorldAction)Delegate.Combine(sasukeRinnegan.action_special_effect, new WorldAction(JutsuLibrary.SusanooRibcage));
+            sasukeRinnegan.action_get_hit = (GetHitAction)Delegate.Combine(sasukeRinnegan.action_get_hit, new GetHitAction(JutsuLibrary.DevaShinraTensei));
+            sasukeRinnegan.action_get_hit = (GetHitAction)Delegate.Combine(sasukeRinnegan.action_get_hit, new GetHitAction(JutsuLibrary.KamuiAction));
+
+            addTraitToGame(sasukeRinnegan);
+    
+            /*
+            #region Itachi Mangekyo Sharingan
+            ActorTrait itachiMangekyo = new ActorTrait
+            {
+                id = "itachi_mangekyo",
+                group_id = GroupId_Dojutsu,
+                path_icon = "ui/icons/itachi_mangekyo",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rarity = Rarity.R3_Legendary
+            };
+            itachiMangekyo.base_stats = new BaseStats();
+            itachiMangekyo.base_stats.set("damage", 180f);
+            itachiMangekyo.base_stats.set("multiplier_damage", 0.20f);
+            itachiMangekyo.base_stats.set("health", 250f);
+            itachiMangekyo.base_stats.set("multiplier_health", 0.10f);
+            itachiMangekyo.base_stats.set("intelligence", 50f);
+            itachiMangekyo.base_stats.set("speed", 12f);
+            itachiMangekyo.base_stats.set("critical_chance", 0.30f);
+            itachiMangekyo.base_stats.set("critical_damage_multiplier", 0.25f);
+            itachiMangekyo.base_stats.set("attack_speed", 0.15f);
+            itachiMangekyo.base_stats.set("accuracy", 2.0f);
+            itachiMangekyo.base_stats.set("chakra", 140f);
+
+            itachiMangekyo.action_attack_target = new AttackAction(JutsuLibrary.YasakaMagatamaAction);
+            itachiMangekyo.action_attack_target = (AttackAction)Delegate.Combine(itachiMangekyo.action_attack_target, new AttackAction(JutsuLibrary.ItachiSusanooAction));
+            itachiMangekyo.action_attack_target = (AttackAction)Delegate.Combine(itachiMangekyo.action_attack_target, new AttackAction(JutsuLibrary.AmaterasuAction));
+            itachiMangekyo.action_special_effect = (WorldAction)Delegate.Combine(itachiMangekyo.action_special_effect, new WorldAction(JutsuLibrary.ItachiSusanooRibcage));
+
+            addTraitToGame(itachiMangekyo);
+            #endregion
+            */
             #endregion
         }
 
@@ -781,7 +804,7 @@ namespace ShinobiBox
             will_of_fire.base_stats.set("chakra", 20f);
             will_of_fire.base_stats.set("experience", 5f);
 
-
+            will_of_fire.action_death = new WorldAction(JutsuLibrary.WOFDeathAction);
             addTraitToGame(will_of_fire);
             #endregion
 
@@ -805,6 +828,7 @@ namespace ShinobiBox
             curse_of_hatred.base_stats.set("chakra", 20f);
             curse_of_hatred.base_stats.set("experience", 5f);
 
+            curse_of_hatred.action_death = new WorldAction(JutsuLibrary.COHDeathAction);
             addTraitToGame(curse_of_hatred);
             #endregion
 
@@ -1153,7 +1177,6 @@ namespace ShinobiBox
             wood.base_stats.set("multiplier_speed", 0.10f);
             wood.base_stats.set("critical_chance", 0.10f);
             wood.base_stats.set("critical_damage_multiplier", 0.10f);
-            wood.base_stats.set("multiplier_speed", 0.10f);
             wood.base_stats.set("chakra", 20f);
             wood.base_stats.set("experience", 7f);
 
@@ -1181,7 +1204,6 @@ namespace ShinobiBox
             yin.base_stats.set("multiplier_damage", 0.10f);
             yin.base_stats.set("multiplier_speed", 0.10f);
             yin.base_stats.set("critical_damage_multiplier", 0.25f);
-            yin.base_stats.set("multiplier_speed", 0.10f);
             yin.base_stats.set("chakra", 25f);
             yin.base_stats.set("experience", 7f);
             yin.action_special_effect = new WorldAction(YinYangFuse);
@@ -1208,7 +1230,6 @@ namespace ShinobiBox
             yang.base_stats.set("multiplier_damage", 0.10f);
             yang.base_stats.set("multiplier_speed", 0.10f);
             yang.base_stats.set("critical_damage_multiplier", 0.25f);
-            yang.base_stats.set("multiplier_speed", 0.10f);
             yang.base_stats.set("chakra", 25f);
             yang.base_stats.set("experience", 7f);
 
@@ -1234,7 +1255,6 @@ namespace ShinobiBox
             yinyang.base_stats.set("multiplier_damage", 0.15f);
             yinyang.base_stats.set("multiplier_speed", 0.15f);
             yinyang.base_stats.set("critical_damage_multiplier", 0.40f);
-            yinyang.base_stats.set("multiplier_speed", 0.15f);
             yinyang.base_stats.set("chakra", 50f);
             yinyang.base_stats.set("experience", 12f);
             //yinyang.action_attack_target = new AttackAction(JutsuLibrary.YinYangReleaseAction);
@@ -1245,7 +1265,7 @@ namespace ShinobiBox
             #endregion
 
             #region Jinchuriki Progression
-            // Jinchuriki Base
+
             #region Nine-Tails Jinchuriki
             ActorTrait ninetailsjinchuriki = new ActorTrait
             {
@@ -1254,6 +1274,7 @@ namespace ShinobiBox
                 path_icon = "ui/icons/9Tails",
                 can_be_given = true,
                 needs_to_be_explored = false,
+   
             };
             ninetailsjinchuriki.base_stats = new BaseStats();
             ninetailsjinchuriki.base_stats.set("damage", 10f);
@@ -1265,10 +1286,11 @@ namespace ShinobiBox
             ninetailsjinchuriki.base_stats.set("chakra", 106f);
             ninetailsjinchuriki.action_attack_target = new AttackAction(JutsuLibrary.TailedBeastBombAction);
             ninetailsjinchuriki.action_get_hit = new GetHitAction(JutsuLibrary.NineTailsJinchuriki);
+            ninetailsjinchuriki.action_death = new WorldAction(JutsuLibrary.BaryonMode);
+
+
             addTraitToGame(ninetailsjinchuriki);
             #endregion
-
-
 
             // Ten-Tails Jinchuriki
             #region Ten Tails Jinchuriki
@@ -1335,7 +1357,7 @@ namespace ShinobiBox
             eight_inner_gates.base_stats.set("multiplier_speed", 0.10f);
             eight_inner_gates.base_stats.set("multiplier_attack_speed", 0.10f);
             eight_inner_gates.base_stats.set("chakra", 28f);
-            eight_inner_gates.action_get_hit = new GetHitAction (JutsuLibrary.EightInnerGates);
+            eight_inner_gates.action_get_hit = new GetHitAction(JutsuLibrary.EightInnerGates);
 
             addTraitToGame(eight_inner_gates);
             #endregion
@@ -1397,10 +1419,10 @@ namespace ShinobiBox
             rasenshurikenJ.action_special_effect = new WorldAction(JutsuLibrary.AutoRasenshurikenAtTarget);
             rasenshurikenJ.special_effect_interval = 7f;
             addTraitToGame(rasenshurikenJ);
-  
+
             #endregion
 
-            #region Chidori
+            #region Chidori 
             ActorTrait chidoriJ = new ActorTrait
             {
                 id = "chidoriJ",
@@ -1411,6 +1433,19 @@ namespace ShinobiBox
             };
             chidoriJ.action_attack_target = new AttackAction(JutsuLibrary.ChidoriAction);
             addTraitToGame(chidoriJ);
+            #endregion
+
+            #region Shadow Clone Jutsu
+            ActorTrait shadowCloneJ = new ActorTrait
+            {
+                id = "shadow_clonej",
+                group_id = GroupId_Jutsus,
+                path_icon = "ui/icons/jutsuB",
+                can_be_given = true,
+                needs_to_be_explored = false
+            };
+            shadowCloneJ.action_get_hit = new GetHitAction(JutsuLibrary.ShadowCloneAction);
+            addTraitToGame(shadowCloneJ);
 
             #endregion
         }
@@ -1485,7 +1520,7 @@ namespace ShinobiBox
             };
             sixPathsSage.base_stats = new BaseStats();
             sixPathsSage.base_stats.set("damage", 100f);
-            sixPathsSage.base_stats.set("health", 0.1000f);
+            sixPathsSage.base_stats.set("health", 1000f);
             sixPathsSage.base_stats.set("speed", 25f);
             sixPathsSage.base_stats.set("armor", 25f);
             sixPathsSage.base_stats.set("multiplier_damage", 0.25f);
@@ -1499,7 +1534,7 @@ namespace ShinobiBox
         #region Helpers
 
         public static bool AkatsukiAwaken(BaseSimObject pTarget, WorldTile pTile)
-        {   
+        {
             if (pTarget == null || pTarget.a == null || !pTarget.a.isAlive()) return false;
 
             if (pTarget.a.hasTrait("evil") && !pTarget.a.hasTrait("trait_akatsuki") && pTarget.a.getAge() >= 28)
@@ -1583,9 +1618,9 @@ namespace ShinobiBox
 
             // Dojutsu
             string[] allDojutsu = {
-            "sharingan_1t", "sharingan_2t", "sharingan_3t",
+            "sharingan",
             "mangekyo_sharingan", "madara_eternal_mangekyo", "eternal_mangekyo",
-            "byakugan", "trait_blind"
+            "byakugan", "trait_blind", "sasuke_rinnegan"
             };
             setGroupOpposites(allDojutsu);
 

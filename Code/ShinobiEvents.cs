@@ -76,68 +76,6 @@ namespace ShinobiBox
     }
 
 
-    #region Will Of Fire Patch
-    [HarmonyPatch(typeof(Actor), "getHit")]
-    public static class WillOfFireDeathPatch
-    {
-        [HarmonyPostfix]
-        public static void Postfix(Actor __instance, float pDamage)
-        {
-            if (__instance == null || !__instance.isAlive()) return;
-
-            if (!__instance.hasTrait("will_of_fire")) return;
-
-            float healthPct = (float)__instance.data.health / __instance.getMaxHealth();
-            if (healthPct < 0.01f)
-            {
-                if (__instance.city != null && __instance.current_tile != null)
-                {
-                    var nearby = Finder.getUnitsFromChunk(__instance.current_tile, 1);
-                    foreach (var u in nearby)
-                    {
-                        if (u.a != null && u.a.isAlive() && u.a != __instance && u.a.city == __instance.city)
-                        {
-                            u.a.addStatusEffect("power_up");
-                        }
-                    }
-                }
-            }
-        }
-    }
-    #endregion
-
-    #region Curse Of Hatred Patch
-    [HarmonyPatch(typeof(Actor), "getHit")]
-    public static class CurseOfHatredPatch
-    {
-        [HarmonyPostfix]
-        public static void Postfix(Actor __instance, float pDamage)
-        {
-            if (__instance == null || !__instance.isAlive()) return;
-            if (!__instance.hasTrait("curse_of_hatred")) return;
-
-            float healthPct = (float)__instance.data.health / __instance.getMaxHealth();
-            if (healthPct < 0.01f && __instance.current_tile != null)
-            {
-                var nearby = Finder.getUnitsFromChunk(__instance.current_tile, 1);
-                foreach (var u in nearby)
-                {
-                    if (u.a == null || !u.a.isAlive() || u.a == __instance) continue;
-
-                    bool isEnemy = false;
-                    if (__instance.city != null && u.a.city != __instance.city) isEnemy = true;
-                    else if (__instance.city == null && __instance.kingdom != null && u.a.kingdom != __instance.kingdom) isEnemy = true;
-
-                    if (isEnemy)
-                    {
-                        u.a.addStatusEffect("cursed", 10f);
-                    }
-                }
-            }
-        }
-    }
-    #endregion
-
     #region JinchurikiStressPatch
     [HarmonyPatch(typeof(Actor), "getHit")]
     public static class JinchurikiStressPatch
@@ -180,46 +118,12 @@ namespace ShinobiBox
     }
     #endregion
 
-    #region Baryon and Incomplete Beast Awaken
-    [HarmonyPatch(typeof(Actor), "getHit")]
-    public static class LastStandPatch
-    {
-        [HarmonyPrefix]
-        public static bool Prefix(Actor __instance, float pDamage)
-        {
-            if (__instance == null || !__instance.isAlive()) return true;
-
-            bool wouldDie = (__instance.data.health - pDamage) <= 0f;
-            if (!wouldDie) return true;
-
-            bool hasKcmOrHigher =
-                __instance.hasStatus("status_jinchuriki_kcm2") ||
-                __instance.hasStatus("status_jinchuriki_avatar");
-
-            if (!hasKcmOrHigher) return true;
-            if (__instance.hasStatus("status_jinchuriki_baryon_mode")) return true;
-            if (UnityEngine.Random.value > 0.30f) return true;
-
-            ShinobiProgression.RemoveLowerForms(__instance);
-            __instance.addStatusEffect("status_jinchuriki_baryon_mode", 60f);
-            __instance.restoreHealth(__instance.getMaxHealth());
-
-            if (ShinobiConfig.EnableWorldTips)
-            {
-                ShinobiWorldLogs.AddWorldLog("log_baryon_mode", "worldlog_baryon_mode", "ui/icons/baryon_mode", __instance);
-            }
-
-            return false;
-        }
-    }
-    #endregion
-
     #region Mangekyo To EMS
     // Mangekyo To EMS
     [HarmonyPatch(typeof(Actor), "getHit")]
     public static class EMSKillPatch
     {
-        private const float EyeStealChance = 0.001f;
+        private const float EyeStealChance = 0.009f;
 
         [HarmonyPrefix]
         public static void Prefix(Actor __instance, float pDamage, bool pFlash, AttackType pAttackType, BaseSimObject pAttacker)
@@ -228,107 +132,6 @@ namespace ShinobiBox
 
             if (__instance.data.health - pDamage <= 0)
             {
-                bool killedHashiramaActor =
-                    __instance.asset != null &&
-                    __instance.asset.id == ShinobiActors.HashiramaActorId;
-                bool killedMadaraActor =
-                    __instance.asset != null &&
-                    __instance.asset.id == ShinobiActors.MadaraActorId;
-                bool killedKuramaActor =
-                    __instance.asset != null &&
-                    __instance.asset.id == ShinobiActors.KuramaActorId;
-                bool killedJuubiActor =
-                    __instance.asset != null &&
-                    __instance.asset.id == ShinobiActors.JuubiActorId;
-
-                // Killing Hashirama always grants either Hashirama Cells or Warring States armor.
-                if (killedHashiramaActor)
-                {
-                    bool gaveReward = false;
-
-                    if (UnityEngine.Random.value < 0.5f)
-                    {
-                        if (!pAttacker.a.hasTrait("hashi_cells"))
-                        {
-                            pAttacker.a.addTrait("hashi_cells");
-                            gaveReward = true;
-                        }
-                    }
-
-                    if (!gaveReward)
-                    {
-                        gaveReward = ShinobiItems.EquipItem(pAttacker.a, "armor_warring_states");
-                    }
-
-                    if (!gaveReward)
-                    {
-                        gaveReward = ShinobiItems.EquipItem(pAttacker.a, "armor_warring_states");
-                    }
-                }
-
-                // Killing Madara always grants one reward: armor, gunbai, or Madara's Eternal Mangekyo.
-                if (killedMadaraActor)
-                {
-                    int rewardRoll = UnityEngine.Random.Range(0, 3);
-                    bool gaveMadaraReward = false;
-
-                    if (rewardRoll == 0)
-                    {
-                        gaveMadaraReward = ShinobiItems.EquipItem(pAttacker.a, "weapon_gunbai");
-                    }
-                    else if (rewardRoll == 1)
-                    {
-                        if (!pAttacker.a.hasTrait("madara_eternal_mangekyo"))
-                        {
-                            pAttacker.a.addTrait("madara_eternal_mangekyo");
-                            gaveMadaraReward = true;
-                        }
-                    }
-                    else
-                    {
-                        gaveMadaraReward = ShinobiItems.EquipItem(pAttacker.a, "armor_warring_states");
-                    }
-
-                    if (!gaveMadaraReward)
-                    {
-                        gaveMadaraReward = ShinobiItems.EquipItem(pAttacker.a, "weapon_gunbai");
-                    }
-                    if (!gaveMadaraReward)
-                    {
-                        gaveMadaraReward = ShinobiItems.EquipItem(pAttacker.a, "armor_warring_states");
-                    }
-                    if (!gaveMadaraReward && !pAttacker.a.hasTrait("madara_eternal_mangekyo"))
-                    {
-                        pAttacker.a.addTrait("madara_eternal_mangekyo");
-                    }
-
-                    pAttacker.a.removeTrait("mangekyo_sharingan");
-                    pAttacker.a.removeTrait("eternal_mangekyo");
-                    if (!pAttacker.a.hasTrait("madara_eternal_mangekyo"))
-                    {
-                        pAttacker.a.addTrait("madara_eternal_mangekyo");
-                    }
-                }
-
-                if (killedKuramaActor)
-                {
-                    if (!pAttacker.a.hasTrait("nine_tails_jinchuriki"))
-                    {
-                        pAttacker.a.addTrait("nine_tails_jinchuriki");
-                        pAttacker.a.restoreHealth(pAttacker.a.getMaxHealth());
-
-                        ShinobiWorldLogs.AddWorldLog("log_kurama_sealed", "worldlog_kurama_sealed", "ui/icons/nine_tails", pAttacker.a);
-                    }
-                }
-
-                if (killedJuubiActor)
-                {
-                    if (!pAttacker.a.hasTrait("ten_tails_jinchuriki"))
-                    {
-                        pAttacker.a.addTrait("ten_tails_jinchuriki");
-                        pAttacker.a.restoreHealth(pAttacker.a.getMaxHealth());
-                    }
-                }
 
                 if (UnityEngine.Random.value < EyeStealChance)
                 {
@@ -337,9 +140,10 @@ namespace ShinobiBox
                     {
                         RemoveAllSharinganTiers(pAttacker.a);
                         pAttacker.a.addTrait(stolenSharinganTier);
+
                         pAttacker.a.removeTrait("trait_blind");
                         pAttacker.a.data.set("stolen_sharingan_eye", 1);
-                        pAttacker.a.addStatusEffect("weak_eye", 999f);
+                        pAttacker.a.addStatusEffect("weak_eye", 450f);
                     }
                 }
 
@@ -350,9 +154,10 @@ namespace ShinobiBox
                         pAttacker.a.addTrait("byakugan");
                     }
                     pAttacker.a.data.set("stolen_byakugan_eye", 1);
-                    pAttacker.a.addStatusEffect("weak_eye", 999f);
+                    pAttacker.a.addStatusEffect("weak_eye", 450f);
                 }
 
+                // EMS Awaken.
                 if (__instance.hasTrait("mangekyo_sharingan") || __instance.hasTrait("trait_blind"))
                 {
                     if (pAttacker.a.hasTrait("mangekyo_sharingan") || pAttacker.a.hasTrait("trait_blind"))
@@ -377,9 +182,8 @@ namespace ShinobiBox
             if (victim.hasTrait("madara_eternal_mangekyo")) return "madara_eternal_mangekyo";
             if (victim.hasTrait("eternal_mangekyo")) return "eternal_mangekyo";
             if (victim.hasTrait("mangekyo_sharingan")) return "mangekyo_sharingan";
-            if (victim.hasTrait("sharingan_3t")) return "sharingan_3t";
-            if (victim.hasTrait("sharingan_2t")) return "sharingan_2t";
-            if (victim.hasTrait("sharingan_1t")) return "sharingan_1t";
+            if (victim.hasStatus("status_sharingan_3t") || victim.hasStatus("status_sharingan_2t") || victim.hasStatus("status_sharingan_1t")) return "sharingan";
+            if (victim.hasTrait("sharingan")) return "sharingan";
 
             return null;
         }
@@ -388,44 +192,15 @@ namespace ShinobiBox
         {
             if (actor == null) return;
 
-            actor.removeTrait("sharingan_1t");
-            actor.removeTrait("sharingan_2t");
-            actor.removeTrait("sharingan_3t");
+            actor.finishStatusEffect("status_sharingan_1t");
+            actor.finishStatusEffect("status_sharingan_2t");
+            actor.finishStatusEffect("status_sharingan_3t");
+
             actor.removeTrait("mangekyo_sharingan");
             actor.removeTrait("madara_eternal_mangekyo");
             actor.removeTrait("eternal_mangekyo");
         }
 
-    }
-    #endregion
-
-    #region KamuiPhasePatch
-    [HarmonyPatch(typeof(Actor), "getHit")]
-    public static class KamuiPhasePatch
-    {
-        [HarmonyPrefix]
-        public static bool Prefix(Actor __instance)
-        {
-            if (__instance == null || !__instance.isAlive()) return true;
-
-            if (__instance.hasStatus("status_kamui_phase")) return false;
-
-            if (__instance.hasTrait("eternal_mangekyo") || __instance.hasTrait("mangekyo_sharingan"))
-            {
-                if (UnityEngine.Random.value < 0.03f)
-                {
-                    __instance.addStatusEffect("status_kamui_phase");
-                    __instance.addStatusEffect("kamui_cooldown", 25f);
-                    JutsuLibrary.AddNatureProgressExp(__instance, 10f);
-                    int currentUsage = 0;
-                    __instance.a.data.get("ms_usage", out currentUsage);
-                    __instance.a.data.set("ms_usage", currentUsage + 1);
-
-                    return false;
-                }
-            }
-            return true;
-        }
     }
     #endregion
 

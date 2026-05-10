@@ -120,6 +120,15 @@ namespace ShinobiBox
             AssetManager.effects_library.add(beastCharge);
             #endregion
 
+            #region Naruto Smoke
+            EffectAsset substitutionSmoke = new EffectAsset();
+            substitutionSmoke.id = "fx_smoke";
+            substitutionSmoke.use_basic_prefab = true;
+            substitutionSmoke.draw_light_size = 1.0f;
+            substitutionSmoke.sorting_layer_id = "EffectsTop";
+            substitutionSmoke.sprite_path = "effects/fx_smoke";
+            AssetManager.effects_library.add(substitutionSmoke);
+            #endregion
         }
     }
 }

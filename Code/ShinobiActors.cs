@@ -13,18 +13,25 @@ namespace ShinobiBox
         public const string HashiramaActorId = "hashirama_senju";
         public const string MadaraActorId = "madara_uchiha";
         public const string KuramaActorId = "kurama";
-
         public const string JuubiActorId = "juubi";
+        public const string SasukeActorId = "sasuke_uchiha";
+        public const string NarutoActorId = "naruto_uzumaki";
+        public const string SakuraActorId = "sakura_haruno";
+        public const string ItachiActorId = "itachi_uchiha";
+        public const string JinchurikiObitoActorId = "jinchuriki_obito";
+        public const string JinchurikiMadaraActorId = "jinchuriki_madara";
 
 
         public static void Init()
         {
             loadAssets();
-            loadActions();
         }
 
         public static void loadAssets()
         {
+            #region Shinobi Actors
+
+            #region Hashirama
             if (AssetManager.actor_library.get(HashiramaActorId) == null)
             {
                 ActorAsset hashirama = AssetManager.actor_library.clone(HashiramaActorId, "$mob$");
@@ -48,14 +55,6 @@ namespace ShinobiBox
                 hashirama.texture_id = "hashirama";
                 hashirama.icon = "units/hashirama";
 
-                hashirama.name_taxonomic_kingdom = "animalia";
-                hashirama.name_taxonomic_phylum = "chordata";
-                hashirama.name_taxonomic_class = "mammalia";
-                hashirama.name_taxonomic_order = "primates";
-                hashirama.name_taxonomic_family = "hominidae";
-                hashirama.name_taxonomic_genus = "homo";
-                hashirama.name_taxonomic_species = "sapiens";
-
                 hashirama.can_be_killed_by_stuff = true;
                 hashirama.can_be_killed_by_life_eraser = true;
                 hashirama.can_attack_buildings = true;
@@ -64,7 +63,7 @@ namespace ShinobiBox
                 hashirama.can_be_inspected = true;
                 hashirama.visible_on_minimap = true;
                 hashirama.use_items = true;
-                hashirama.take_items = true;
+                hashirama.take_items = false;
                 hashirama.can_talk_with = false;
                 hashirama.control_can_talk = false;
                 hashirama.can_evolve_into_new_species = false;
@@ -127,8 +126,13 @@ namespace ShinobiBox
                 hashirama.addTrait("windN");
                 hashirama.addTrait("god_of_shinobi");
 
+                hashirama.action_death = new WorldAction(HashiramaOnDeath);
                 AssetManager.actor_library.loadTexturesAndSprites(hashirama);
             }
+
+            #endregion
+
+            #region Madara
 
             if (AssetManager.actor_library.get(MadaraActorId) == null)
             {
@@ -154,14 +158,6 @@ namespace ShinobiBox
                 madara.texture_id = "madara";
                 madara.icon = "units/madara";
 
-                madara.name_taxonomic_kingdom = "animalia";
-                madara.name_taxonomic_phylum = "chordata";
-                madara.name_taxonomic_class = "mammalia";
-                madara.name_taxonomic_order = "primates";
-                madara.name_taxonomic_family = "hominidae";
-                madara.name_taxonomic_genus = "homo";
-                madara.name_taxonomic_species = "sapiens";
-
                 madara.can_be_killed_by_stuff = true;
                 madara.can_be_killed_by_life_eraser = true;
                 madara.can_attack_buildings = true;
@@ -170,7 +166,7 @@ namespace ShinobiBox
                 madara.can_be_inspected = true;
                 madara.visible_on_minimap = true;
                 madara.use_items = true;
-                madara.take_items = true;
+                madara.take_items = false;
                 madara.can_talk_with = false;
                 madara.control_can_talk = false;
                 madara.can_evolve_into_new_species = false;
@@ -229,8 +225,401 @@ namespace ShinobiBox
                 madara.addTrait("windN");
                 madara.addTrait("ghost_of_uchiha");
 
+                madara.action_death = new WorldAction(MadaraOnDeath);
                 AssetManager.actor_library.loadTexturesAndSprites(madara);
             }
+
+            #endregion
+
+            #region Sasuke
+
+            if (AssetManager.actor_library.get(SasukeActorId) == null)
+            {
+                ActorAsset sasuke = AssetManager.actor_library.clone(SasukeActorId, "$mob$");
+                sasuke.id = SasukeActorId;
+                sasuke.name_locale = "sasuke uchiha";
+                sasuke.power_id = "spawn_sasuke_uchiha";
+
+                sasuke.is_humanoid = true;
+                sasuke.use_phenotypes = false;
+                sasuke.unit_other = true;
+                sasuke.has_advanced_textures = false;
+                sasuke.check_flip = delegate { return true; };
+                sasuke.name_template_sets = new string[] { "human_default_set" };
+
+                sasuke.job = new string[] { "random_move" };
+                sasuke.kingdom_id_wild = ShinobiKingdoms.RougeKingdomId;
+                sasuke.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
+                sasuke.animation_swim = ActorAnimationSequences.walk_0;
+                sasuke.texture_asset = new ActorTextureSubAsset("actors/sasuke/", sasuke.has_advanced_textures);
+                sasuke._cached_sprite = Resources.Load<Sprite>("GameResources/actors/sasuke/Main/walk_0");
+                sasuke.default_weapons = new string[] { "weapon_kusanagi" };
+                sasuke.texture_id = "sasuke";
+                sasuke.icon = "units/sasuke";
+
+                sasuke.can_be_killed_by_stuff = true;
+                sasuke.can_be_killed_by_life_eraser = true;
+                sasuke.can_attack_buildings = true;
+                sasuke.can_be_moved_by_powers = true;
+                sasuke.can_be_hurt_by_powers = true;
+                sasuke.can_be_inspected = true;
+                sasuke.visible_on_minimap = true;
+                sasuke.use_items = true;
+                sasuke.take_items = false;
+                sasuke.can_talk_with = false;
+                sasuke.control_can_talk = false;
+                sasuke.can_evolve_into_new_species = false;
+                sasuke.can_have_subspecies = false;
+                sasuke.disable_jump_animation = true;
+                sasuke.has_soul = true;
+                sasuke.has_baby_form = false;
+                sasuke.render_heads_for_babies = false;
+                sasuke.body_separate_part_hands = true;
+                sasuke.shadow = false;
+                sasuke.can_level_up = false;
+
+                sasuke.force_land_creature = true;
+                sasuke.force_ocean_creature = false;
+                sasuke.flying = false;
+                sasuke.very_high_flyer = false;
+                sasuke.run_to_water_when_on_fire = true;
+
+                sasuke.can_turn_into_zombie = false;
+                sasuke.can_turn_into_demon_in_age_of_chaos = false;
+                sasuke.can_turn_into_ice_one = false;
+                sasuke.can_turn_into_tumor = false;
+                sasuke.can_turn_into_mush = false;
+                sasuke.can_be_killed_by_divine_light = true;
+                sasuke.ignored_by_infinity_coin = false;
+                sasuke.actor_size = ActorSize.S13_Human;
+                sasuke.can_edit_equipment = true;
+
+                sasuke.base_stats["lifespan"] = 125f;
+                sasuke.base_stats["health"] = 1500f;
+                sasuke.base_stats["damage"] = 28f;
+                sasuke.base_stats["speed"] = 26f;
+                sasuke.base_stats["attack_speed"] = 1.5f;
+                sasuke.base_stats["intelligence"] = 180f;
+                sasuke.base_stats["stamina"] = 620f;
+                sasuke.base_stats["mana"] = 3600f;
+                sasuke.base_stats["armor"] = 13f;
+                sasuke.base_stats["critical_chance"] = 0.40f;
+                sasuke.base_stats["knockback"] = 0.2f;
+                sasuke.base_stats["accuracy"] = 5f;
+                sasuke.base_stats["targets"] = 1f;
+                sasuke.base_stats["scale"] = 0.15f;
+                sasuke.base_stats["chakra"] = 500f;
+                sasuke.base_stats["mass_2"] = 40f;
+
+                sasuke.addTrait("regeneration");
+                sasuke.addTrait("uchiha_clan");
+                sasuke.addTrait("sasuke_rinnegan");
+                sasuke.addTrait("vast_chakra_reserve");
+                sasuke.addTrait("fireN");
+                sasuke.addTrait("earthN");
+                sasuke.addTrait("waterN");
+                sasuke.addTrait("lightningN");
+                sasuke.addTrait("windN");
+
+                sasuke.action_death = new WorldAction(SasukeOnDeath);
+                AssetManager.actor_library.loadTexturesAndSprites(sasuke);
+            }
+
+            #endregion
+
+            #region Itachi
+
+            if (AssetManager.actor_library.get(ItachiActorId) == null)
+            {
+                ActorAsset itachi = AssetManager.actor_library.clone(ItachiActorId, "$mob$");
+                itachi.id = ItachiActorId;
+                itachi.name_locale = "itachi uchiha";
+                itachi.power_id = "spawn_itachi_uchiha";
+
+                itachi.is_humanoid = true;
+                itachi.use_phenotypes = false;
+                itachi.unit_other = true;
+                itachi.has_advanced_textures = false;
+                itachi.check_flip = delegate { return true; };
+                itachi.name_template_sets = new string[] { "human_default_set" };
+
+                itachi.job = new string[] { "random_move" };
+                itachi.kingdom_id_wild = ShinobiKingdoms.RougeKingdomId;
+                itachi.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
+                itachi.animation_swim = ActorAnimationSequences.walk_0;
+                itachi.texture_asset = new ActorTextureSubAsset("actors/itachi/", itachi.has_advanced_textures);
+                itachi._cached_sprite = Resources.Load<Sprite>("GameResources/actors/itachi/Main/walk_0");
+                itachi.texture_id = "itachi";
+                itachi.icon = "units/itachi";
+
+                itachi.can_be_killed_by_stuff = true;
+                itachi.can_be_killed_by_life_eraser = true;
+                itachi.can_attack_buildings = true;
+                itachi.can_be_moved_by_powers = true;
+                itachi.can_be_hurt_by_powers = true;
+                itachi.can_be_inspected = true;
+                itachi.visible_on_minimap = true;
+                itachi.use_items = true;
+                itachi.take_items = false;
+                itachi.can_talk_with = false;
+                itachi.control_can_talk = false;
+                itachi.can_evolve_into_new_species = false;
+                itachi.can_have_subspecies = false;
+                itachi.disable_jump_animation = true;
+                itachi.has_soul = true;
+                itachi.has_baby_form = false;
+                itachi.render_heads_for_babies = false;
+                itachi.body_separate_part_hands = true;
+                itachi.shadow = false;
+                itachi.can_level_up = false;
+
+                itachi.force_land_creature = true;
+                itachi.force_ocean_creature = false;
+                itachi.flying = false;
+                itachi.very_high_flyer = false;
+                itachi.run_to_water_when_on_fire = true;
+
+                itachi.can_turn_into_zombie = false;
+                itachi.can_turn_into_demon_in_age_of_chaos = false;
+                itachi.can_turn_into_ice_one = false;
+                itachi.can_turn_into_tumor = false;
+                itachi.can_turn_into_mush = false;
+                itachi.can_be_killed_by_divine_light = true;
+                itachi.ignored_by_infinity_coin = false;
+                itachi.actor_size = ActorSize.S13_Human;
+                itachi.can_edit_equipment = true;
+
+                itachi.base_stats["lifespan"] = 125f;
+                itachi.base_stats["health"] = 980f;
+                itachi.base_stats["damage"] = 24f;
+                itachi.base_stats["speed"] = 25f;
+                itachi.base_stats["attack_speed"] = 2.3f;
+                itachi.base_stats["intelligence"] = 190f;
+                itachi.base_stats["stamina"] = 580f;
+                itachi.base_stats["mana"] = 3400f;
+                itachi.base_stats["armor"] = 24f;
+                itachi.base_stats["critical_chance"] = 0.40f;
+                itachi.base_stats["knockback"] = 0.2f;
+                itachi.base_stats["accuracy"] = 5f;
+                itachi.base_stats["targets"] = 1f;
+                itachi.base_stats["scale"] = 0.15f;
+                itachi.base_stats["chakra"] = 420f;
+                itachi.base_stats["mass_2"] = 38f;
+
+                itachi.addTrait("fire_proof");
+                itachi.addTrait("regeneration");
+                itachi.addTrait("uchiha_clan");
+                itachi.addTrait("mangekyo_sharingan");
+                itachi.addTrait("vast_chakra_reserve");
+                itachi.addTrait("trait_akatsuki");
+                itachi.addTrait("fireN");
+                itachi.addTrait("waterN");
+
+                itachi.action_death = new WorldAction(ItachiOnDeath);
+                AssetManager.actor_library.loadTexturesAndSprites(itachi);
+            }
+
+            #endregion
+
+            #region Naruto
+
+            if (AssetManager.actor_library.get(NarutoActorId) == null)
+            {
+                ActorAsset naruto = AssetManager.actor_library.clone(NarutoActorId, "$mob$");
+                naruto.id = NarutoActorId;
+                naruto.name_locale = "naruto uzumaki";
+                naruto.power_id = "spawn_naruto_uzumaki";
+
+                naruto.is_humanoid = true;
+                naruto.use_phenotypes = false;
+                naruto.unit_other = true;
+                naruto.has_advanced_textures = false;
+                naruto.check_flip = delegate { return true; };
+                naruto.name_template_sets = new string[] { "human_default_set" };
+
+                naruto.job = new string[] { "random_move" };
+                naruto.kingdom_id_wild = ShinobiKingdoms.KonohaKingdomId;
+                naruto.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
+                naruto.animation_swim = ActorAnimationSequences.walk_0;
+                naruto.texture_asset = new ActorTextureSubAsset("actors/naruto/", naruto.has_advanced_textures);
+                naruto._cached_sprite = Resources.Load<Sprite>("GameResources/actors/naruto/Main/walk_0");
+                naruto.texture_id = "naruto";
+                naruto.icon = "units/naruto";
+
+                naruto.can_be_killed_by_stuff = true;
+                naruto.can_be_killed_by_life_eraser = true;
+                naruto.can_attack_buildings = true;
+                naruto.can_be_moved_by_powers = true;
+                naruto.can_be_hurt_by_powers = true;
+                naruto.can_be_inspected = true;
+                naruto.visible_on_minimap = true;
+                naruto.use_items = true;
+                naruto.take_items = false;
+                naruto.can_talk_with = false;
+                naruto.control_can_talk = false;
+                naruto.can_evolve_into_new_species = false;
+                naruto.can_have_subspecies = false;
+                naruto.disable_jump_animation = true;
+                naruto.has_soul = true;
+                naruto.has_baby_form = false;
+                naruto.render_heads_for_babies = false;
+                naruto.body_separate_part_hands = true;
+                naruto.shadow = false;
+                naruto.can_level_up = false;
+
+                naruto.force_land_creature = true;
+                naruto.force_ocean_creature = false;
+                naruto.flying = false;
+                naruto.very_high_flyer = false;
+                naruto.run_to_water_when_on_fire = true;
+
+                naruto.can_turn_into_zombie = false;
+                naruto.can_turn_into_demon_in_age_of_chaos = false;
+                naruto.can_turn_into_ice_one = false;
+                naruto.can_turn_into_tumor = false;
+                naruto.can_turn_into_mush = false;
+                naruto.can_be_killed_by_divine_light = true;
+                naruto.ignored_by_infinity_coin = false;
+                naruto.actor_size = ActorSize.S13_Human;
+                naruto.can_edit_equipment = true;
+
+                naruto.base_stats["lifespan"] = 125f;
+                naruto.base_stats["health"] = 1200f;
+                naruto.base_stats["damage"] = 28f;
+                naruto.base_stats["speed"] = 25f;
+                naruto.base_stats["attack_speed"] = 2.5f;
+                naruto.base_stats["intelligence"] = 170f;
+                naruto.base_stats["stamina"] = 700f;
+                naruto.base_stats["mana"] = 3700f;
+                naruto.base_stats["armor"] = 27f;
+                naruto.base_stats["critical_chance"] = 0.40f;
+                naruto.base_stats["knockback"] = 0.2f;
+                naruto.base_stats["accuracy"] = 4f;
+                naruto.base_stats["targets"] = 1f;
+                naruto.base_stats["scale"] = 0.15f;
+                naruto.base_stats["chakra"] = 520f;
+                naruto.base_stats["mass_2"] = 40f;
+
+                naruto.addTrait("regeneration");
+                naruto.addTrait("uzumaki_clan");
+                naruto.addTrait("will_of_fire");
+                naruto.addTrait("vast_chakra_reserve");
+                naruto.addTrait("windN");
+                naruto.addTrait("rasenganJ");
+                naruto.addTrait("shadow_clone_jutsu");
+                naruto.addTrait("rasenshuriken");
+                naruto.addTrait("nine_tails_jinchuriki");
+
+                naruto.action_death = new WorldAction(NarutoOnDeath);
+                AssetManager.actor_library.loadTexturesAndSprites(naruto);
+            }
+
+            #endregion
+
+            #region Sakura
+
+            if (AssetManager.actor_library.get(SakuraActorId) == null)
+            {
+                ActorAsset sakura = AssetManager.actor_library.clone(SakuraActorId, "$mob$");
+                sakura.id = SakuraActorId;
+                sakura.name_locale = "sakura haruno";
+                sakura.power_id = "spawn_sakura_haruno";
+
+                sakura.is_humanoid = true;
+                sakura.use_phenotypes = false;
+                sakura.unit_other = true;
+                sakura.has_advanced_textures = false;
+                sakura.check_flip = delegate { return true; };
+                sakura.name_template_sets = new string[] { "human_default_set" };
+
+                sakura.job = new string[] { "random_move" };
+                sakura.kingdom_id_wild = ShinobiKingdoms.KonohaKingdomId;
+                sakura.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
+                sakura.animation_swim = ActorAnimationSequences.walk_0;
+                sakura.texture_asset = new ActorTextureSubAsset("actors/sakura/", sakura.has_advanced_textures);
+                sakura._cached_sprite = Resources.Load<Sprite>("GameResources/actors/sakura/Main/walk_0");
+                sakura.texture_id = "sakura";
+                sakura.icon = "units/sakura";
+
+                sakura.name_taxonomic_kingdom = "animalia";
+                sakura.name_taxonomic_phylum = "chordata";
+                sakura.name_taxonomic_class = "mammalia";
+                sakura.name_taxonomic_order = "primates";
+                sakura.name_taxonomic_family = "hominidae";
+                sakura.name_taxonomic_genus = "homo";
+                sakura.name_taxonomic_species = "sapiens";
+
+                sakura.can_be_killed_by_stuff = true;
+                sakura.can_be_killed_by_life_eraser = true;
+                sakura.can_attack_buildings = true;
+                sakura.can_be_moved_by_powers = true;
+                sakura.can_be_hurt_by_powers = true;
+                sakura.can_be_inspected = true;
+                sakura.visible_on_minimap = true;
+                sakura.use_items = true;
+                sakura.take_items = false;
+                sakura.can_talk_with = false;
+                sakura.control_can_talk = false;
+                sakura.can_evolve_into_new_species = false;
+                sakura.can_have_subspecies = false;
+                sakura.disable_jump_animation = true;
+                sakura.has_soul = true;
+                sakura.has_baby_form = false;
+                sakura.render_heads_for_babies = false;
+                sakura.body_separate_part_hands = true;
+                sakura.shadow = false;
+                sakura.can_level_up = false;
+
+                sakura.force_land_creature = true;
+                sakura.force_ocean_creature = false;
+                sakura.flying = false;
+                sakura.very_high_flyer = false;
+                sakura.run_to_water_when_on_fire = true;
+
+                sakura.can_turn_into_zombie = false;
+                sakura.can_turn_into_demon_in_age_of_chaos = false;
+                sakura.can_turn_into_ice_one = false;
+                sakura.can_turn_into_tumor = false;
+                sakura.can_turn_into_mush = false;
+                sakura.can_be_killed_by_divine_light = true;
+                sakura.ignored_by_infinity_coin = false;
+                sakura.actor_size = ActorSize.S13_Human;
+                sakura.can_edit_equipment = true;
+
+                sakura.base_stats["lifespan"] = 125f;
+                sakura.base_stats["health"] = 950f;
+                sakura.base_stats["damage"] = 22f;
+                sakura.base_stats["speed"] = 24f;
+                sakura.base_stats["attack_speed"] = 2.2f;
+                sakura.base_stats["intelligence"] = 150f;
+                sakura.base_stats["stamina"] = 560f;
+                sakura.base_stats["mana"] = 3000f;
+                sakura.base_stats["armor"] = 24f;
+                sakura.base_stats["critical_chance"] = 0.30f;
+                sakura.base_stats["knockback"] = 0.2f;
+                sakura.base_stats["accuracy"] = 4f;
+                sakura.base_stats["targets"] = 1f;
+                sakura.base_stats["scale"] = 0.15f;
+                sakura.base_stats["chakra"] = 350f;
+                sakura.base_stats["mass_2"] = 36f;
+
+                sakura.addTrait("immortal");
+                sakura.addTrait("fire_proof");
+                sakura.addTrait("regeneration");
+                sakura.addTrait("will_of_fire");
+                sakura.addTrait("vast_chakra_reserve");
+                sakura.addTrait("waterN");
+                sakura.addTrait("earthN");
+
+                sakura.action_death = new WorldAction(SakuraOnDeath);
+                AssetManager.actor_library.loadTexturesAndSprites(sakura);
+            }
+
+            #endregion
+
+            #endregion
+
+            #region Tailed Beasts
 
             if (AssetManager.actor_library.get(KuramaActorId) == null)
             {
@@ -318,6 +707,7 @@ namespace ShinobiBox
                 kurama.addTrait("vast_chakra_reserve");
                 kurama.addTrait("nine_tails_jinchuriki");
 
+                kurama.action_death = new WorldAction(KuramaOnDeath);
                 AssetManager.actor_library.loadTexturesAndSprites(kurama);
             }
 
@@ -408,25 +798,141 @@ namespace ShinobiBox
                 juubi.addTrait("hagoromo_chakra");
                 juubi.addTrait("ten_tails_jinchuriki");
 
+                juubi.action_death = new WorldAction(JuubiOnDeath);
                 AssetManager.actor_library.loadTexturesAndSprites(juubi);
             }
-        }
 
-        public static void loadActions()
-        {
-            #region KuramaOnDeath
-            public static bool KuramaOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
-            {
-            if (pSelf == null || pSelf.a == null || pSelf.a.data == null) return false;
-
-            pTarget.a.addTrait("nine_tails_jinchuriki");
-            pTarget.a.restoreHealth(pTarget.a.getMaxHealth());
-
-            ShinobiWorldLogs.AddWorldLog("log_kurama_sealed", "worldlog_kurama_sealed", "ui/icons/nine_tails", pTarget.a);
-
-        }
             #endregion
         }
 
+        #region On Death Actions
+        public static bool SasukeOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            Actor sasuke = pTarget.a;
+            BaseSimObject attackerObject = sasuke.attackedBy;
+            if (attackerObject == null || attackerObject.a == null || !attackerObject.a.isAlive()) return false;
+
+            Actor attacker = attackerObject.a;
+            if (attacker == sasuke) return false;
+
+            if (!attacker.hasTrait("sasuke_rinnegan"))
+            {
+                attacker.addTrait("sasuke_rinnegan");
+            }
+            else
+            {
+                ShinobiItems.EquipItem(attacker, "weapon_kusanagi");
+            }
+
+            return true;
+        }
+
+        public static bool ItachiOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            return true;
+        }
+
+        public static bool NarutoOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            return true;
+        }
+
+        public static bool SakuraOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            return true;
+        }
+
+        public static bool HashiramaOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            if (pTarget == null || pTarget.a == null || pTarget.a.data == null) return false;
+
+            Actor hashirama = pTarget.a;
+            BaseSimObject attackerObject = hashirama.attackedBy;
+            if (attackerObject == null || attackerObject.a == null || !attackerObject.a.isAlive()) return false;
+
+            Actor attacker = attackerObject.a;
+            if (attacker == hashirama) return false;
+
+            if (!attacker.hasTrait("hashi_cells") && Randy.randomChance(0.7f))
+            {
+                attacker.addTrait("hashi_cells");
+            }
+            else
+            {
+                ShinobiItems.EquipItem(attacker, "armor_warring_states");
+            }
+
+            return true;
+        }
+
+        public static bool MadaraOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            if (pTarget == null || pTarget.a == null || pTarget.a.data == null) return false;
+
+            Actor madara = pTarget.a;
+            BaseSimObject attackerObject = madara.attackedBy;
+            if (attackerObject == null || attackerObject.a == null || !attackerObject.a.isAlive()) return false;
+
+            Actor attacker = attackerObject.a;
+            if (attacker == madara) return false;
+
+            if (!attacker.hasTrait("madara_eternal_mangekyo") || !attacker.hasTrait("eternal_mangekyo"))
+            {
+                attacker.addTrait("madara_eternal_mangekyo");
+            }
+            else
+            {
+                ShinobiItems.EquipItem(attacker, "weapon_gunbai");
+                ShinobiItems.EquipItem(attacker, "armor_warring_states");
+            }
+
+            return true;
+        }
+        
+        public static bool KuramaOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            if (pTarget == null || pTarget.a == null || pTarget.a.data == null) return false;
+
+            Actor kurama = pTarget.a;
+            BaseSimObject attackerObject = kurama.attackedBy;
+            if (attackerObject == null || attackerObject.a == null || !attackerObject.a.isAlive()) return false;
+
+            Actor attacker = attackerObject.a;
+            if (attacker == kurama) return false;
+
+            if (!attacker.hasTrait("nine_tails_jinchuriki"))
+            {
+                attacker.addTrait("nine_tails_jinchuriki");
+            }
+
+            attacker.restoreHealth(attacker.getMaxHealth());
+            ShinobiWorldLogs.AddWorldLog("log_kurama_sealed", "worldlog_kurama_sealed", "ui/icons/nine_tails", attacker);
+
+            return true;
+        }
+
+        public static bool JuubiOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            if (pTarget == null || pTarget.a == null || pTarget.a.data == null) return false;
+
+            Actor juubi = pTarget.a;
+            BaseSimObject attackerObject = juubi.attackedBy;
+            if (attackerObject == null || attackerObject.a == null || !attackerObject.a.isAlive()) return false;
+
+            Actor attacker = attackerObject.a;
+            if (attacker == juubi) return false;
+
+            if (!attacker.hasTrait("ten_tails_jinchuriki"))
+            {
+                attacker.addTrait("ten_tails_jinchuriki");
+            }
+
+            attacker.restoreHealth(attacker.getMaxHealth());
+            ShinobiWorldLogs.AddWorldLog("log_juubi_sealed", "worldlog_juubi_sealed", "ui/icons/ten_tails", attacker);
+
+            return true;
+        }
+        #endregion
+    
     }
 }

@@ -127,7 +127,7 @@ namespace ShinobiBox
 
             if (actor.hasTrait("hagoromo_chakra") && !actor.hasStatus("status_six_paths_senjutsu"))
             {
-                actor.addStatusEffect("status_six_paths_senjutsu", -1f);
+                actor.addStatusEffect("status_six_paths_senjutsu", 30f);
             }
 
             if (actor.hasTrait("ten_tails_jinchuriki") && actor.hasTrait("rinnegan") && !actor.hasTrait("rinnesharingan"))
@@ -214,14 +214,14 @@ namespace ShinobiBox
             // Sharingan Progression
             if (actor.hasTrait("uchiha_clan"))
             {
+                bool hasThreeTomoe = actor.hasStatus("status_sharingan_3t");
+
                 // Mangekyo Awakening
-                if (!actor.hasTrait("mangekyo_sharingan") && !actor.hasTrait("trait_blind") && !hasEternalEyes && (actor.hasTrait("sharingan_3t")))
+                if (!actor.hasTrait("mangekyo_sharingan") && !actor.hasTrait("trait_blind") && !hasEternalEyes && hasThreeTomoe)
                 {
                     if (HasTrauma(actor))
                     {
-                        actor.removeTrait("sharingan_1t");
-                        actor.removeTrait("sharingan_2t");
-                        actor.removeTrait("sharingan_3t");
+                        JutsuLibrary.ClearSharinganTomoeStatuses(actor);
 
                         actor.addTrait("mangekyo_sharingan");
                         actor.addStatusEffect("power_up");
@@ -229,26 +229,9 @@ namespace ShinobiBox
                     }
                 }
 
-                // Normal Sharingan
-                if (!actor.hasTrait("sharingan_1t") && !HasBetterEye(actor, 1))
+                if (!actor.hasTrait("sharingan") && !HasBetterEye(actor, 1))
                 {
-                    if (kills >= 1 || (age >= 12 && UnityEngine.Random.value < 0.001f)) actor.addTrait("sharingan_1t");
-                }
-                else if (actor.hasTrait("sharingan_1t"))
-                {
-                    if (kills >= 4 || (age >= 24 && UnityEngine.Random.value < 0.001f))
-                    {
-                        actor.removeTrait("sharingan_1t");
-                        actor.addTrait("sharingan_2t");
-                    }
-                }
-                else if (actor.hasTrait("sharingan_2t"))
-                {
-                    if (kills >= 7 || (age >= 38 && UnityEngine.Random.value < 0.001f))
-                    {
-                        actor.removeTrait("sharingan_2t");
-                        actor.addTrait("sharingan_3t");
-                    }
+                    if (kills >= 1 || (age >= 12 && UnityEngine.Random.value < 0.001f)) actor.addTrait("sharingan");
                 }
 
             }
@@ -648,8 +631,8 @@ namespace ShinobiBox
         #region HasBetterEye
         private static bool HasBetterEye(Actor a, int currentTier)
         {
-            if (currentTier < 2 && (a.hasTrait("sharingan_2t") || a.hasTrait("sharingan_3t") || a.hasTrait("mangekyo_sharingan") || a.hasTrait("trait_blind"))) return true;
-            if (currentTier < 3 && (a.hasTrait("sharingan_3t") || a.hasTrait("mangekyo_sharingan") || a.hasTrait("trait_blind"))) return true;
+            if (currentTier < 2 && (a.hasStatus("status_sharingan_2t") || a.hasStatus("status_sharingan_3t") || a.hasTrait("mangekyo_sharingan") || a.hasTrait("trait_blind"))) return true;
+            if (currentTier < 3 && (a.hasStatus("status_sharingan_3t") || a.hasTrait("mangekyo_sharingan") || a.hasTrait("trait_blind"))) return true;
             if (currentTier < 4 && (a.hasTrait("mangekyo_sharingan") || a.hasTrait("trait_blind"))) return true;
             return false;
         }

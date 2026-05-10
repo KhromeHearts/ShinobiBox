@@ -17,11 +17,7 @@ namespace ShinobiBox
                 harmony.PatchAll(typeof(ChakraValuePatch));
                 harmony.PatchAll(typeof(HagoromoBirthPatch));
                 harmony.PatchAll(typeof(GuaranteedInheritancePatch));
-                harmony.PatchAll(typeof(WillOfFireDeathPatch));
-                harmony.PatchAll(typeof(CurseOfHatredPatch));
-                harmony.PatchAll(typeof(LastStandPatch));
                 harmony.PatchAll(typeof(EMSKillPatch));
-                harmony.PatchAll(typeof(KamuiPhasePatch));
                 harmony.PatchAll(typeof(JinchurikiStressPatch));
                 harmony.PatchAll(typeof(BlindnessIconPatch));
                 harmony.PatchAll(typeof(RealTimeChakraUpdate));
@@ -35,13 +31,12 @@ namespace ShinobiBox
             }
 
             ShinobiTraits.Init();
+            ShinobiActors.Init();
             ShinobiProjectiles.Init();
             ShinobiItems.Init();
-            ShinobiActors.Init();
             ShinobiTab.Init();
             ShinobiStatus.Init();
             ShinobiEffects.Init();
-            ShinobiSounds.Init();
             ShinobiKingdoms.Init();
 
 
