@@ -26,6 +26,7 @@ namespace ShinobiBox
 {
     internal static class ShinobiTraits
     {
+        #region Group IDs
         // Group IDs
         private static string GroupId_Abilities = "Shinobi_Box_Abilities";
         private static string GroupId_Bloodlines = "Shinobi_Box_Clans";
@@ -38,7 +39,7 @@ namespace ShinobiBox
         private static string GroupId_Jutsus = "Shinobi_Box_Jutsus";
         private static string GroupId_Senjutsu = "Shinobi_Box_Senjutsu";
         private static string GroupId_FightingStyles = "Shinobi_Box_Fighting_Styles";
-
+        #endregion
         private static List<ActorTrait> myListTraits = new List<ActorTrait>();
 
         private static int veryRare = 2;
@@ -145,6 +146,9 @@ namespace ShinobiBox
             hyuga.base_stats.set("intelligence", 10f);
             hyuga.base_stats.set("chakra", 25f);
             hyuga.base_stats.set("experience", 10f);
+
+            hyuga.action_special_effect = new WorldAction(ClanProgression.Hyuga);
+
             addTraitToGame(hyuga);
             #endregion
 

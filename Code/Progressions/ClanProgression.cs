@@ -34,7 +34,7 @@ namespace ShinobiBox
                 }
             }
         }
-
+        
         public static void HyugaProgression(Actor actor)
         {
             if (actor == null || !actor.isAlive()) return;

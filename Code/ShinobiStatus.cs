@@ -1932,18 +1932,39 @@ namespace ShinobiBox
             byakuganP.can_be_flipped = true;
             //byakuganP.scale = 0.3f;
             byakuganP.render_priority = 5;
+            byakuganP.get_override_sprite = delegate(BaseSimObject pActor, int pIndex)
+            {
+                if (pActor == null || pActor.a == null) return null;
+                if (pActor.a.animation_container == null) return null;
+
+                Sprite pMainSprite = pActor.a.animation_container.walking.frames[0];
+                return pActor.a.calculateColoredSprite(pMainSprite, pUpdateFrameData: false);
+            };
+
             byakuganP.get_override_sprite_position = delegate (BaseSimObject pActor, int pIndex)
             {
                 if (pActor == null || pActor.a == null) return Vector2.zero;
+
+                AnimationFrameData animationFrameData = pActor.a.getAnimationFrameData();
+                Vector3 current_scale = pActor.a.current_scale;
 
                 float bob = 0f;
                 if (pActor.a.is_moving)
                 {
                     float scale = Mathf.Max(0.15f, pActor.a.stats["scale"]);
-                    bob = Mathf.Sin(Time.time * 12f) * 0.06f * scale;
+                    bob = Mathf.Sin(Time.time * 12f) * 0.06f * scale * current_scale.y;
                 }
 
-                return new Vector2(0f, bob);
+                if (animationFrameData != null && animationFrameData.show_head)
+                {
+                    Vector2 pos_head_new = animationFrameData.pos_head_new;
+                    float scaleMod = pActor.a.getScaleMod();
+                    return new Vector2(-0.4f * scaleMod + pos_head_new.x * current_scale.x, -0.25f * scaleMod + pos_head_new.y * current_scale.y + bob);
+                }
+
+                float num3 = Mathf.Max((float)pActor.a.asset.actor_size, 3f) / 13f;
+                float num4 = (!pActor.a.isInLiquid()) ? 5f : 1f;
+                return new Vector2(0f, num4 * num3 * current_scale.y + bob);
             };
             byakuganP.opposite_status = new[] {"byakugan", "byakuganG"};
 
