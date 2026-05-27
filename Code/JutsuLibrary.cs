@@ -28,23 +28,6 @@ namespace ShinobiBox
         private static readonly Dictionary<long, Kingdom> MadaraTamedOriginalKingdoms = new Dictionary<long, Kingdom>();
         private static bool _chaosRevertPending;
         private static float _chaosRevertTimer;
-        private static readonly string[] InnerGateStatusIds =
-        {
-            "inner_gate_1",
-            "inner_gate_2",
-            "inner_gate_3",
-            "inner_gate_4",
-            "inner_gate_5",
-            "inner_gate_6",
-            "inner_gate_7",
-            "inner_gate_8"
-        };
-
-        private static readonly int[] InnerGateLevelRequirements = { 1, 2, 3, 4, 5, 6, 7, 8 };
-        private static readonly float[] InnerGateChakraRequirements = { 100f, 150f, 225f, 300f, 350f, 400f, 450f, 500f };
-        private static readonly float[] InnerGateHealthDrainPct = { 0f, 0f, 0f, 0.01f, 0.03f, 0.05f, 0.08f, 0.13f };
-        private static readonly float[] InnerGateChakraDrainPct = { 0f, 0f, 0f, 0.01f, 0.01f, 0.01f, 0.03f, 0.05f };
-
         #region Sharingan Genjutsu 1-3
         // Genjutsu 1
         public static bool Sharingan1Action(BaseSimObject pSelf, BaseSimObject pTarget, WorldTile pTile)
@@ -180,7 +163,6 @@ namespace ShinobiBox
             if (pTarget.a.has_attack_target)
             {
                 if (UnityEngine.Random.value > 0.90f) return false;
-
                 // 50 Chakra Cost
                 if (!CheckAndConsumeChakra(pTarget.a, 50f)) return false;
 
@@ -232,14 +214,12 @@ namespace ShinobiBox
         #region Rasenshuriken
         public static bool RasenshurikenAction(BaseSimObject pSelf, BaseSimObject pTarget, WorldTile pTile)
         {
-            if (pTarget == null || pTarget.a == null || !pTarget.a.isAlive()) return false;
-
+            if (pTarget.a == null || !pTarget.a.isAlive()) return false;
             if (UnityEngine.Random.value > 0.10f) return false;
-
-            // 100 Chakra Cost
             if (!CheckAndConsumeChakra(pSelf.a, 100f)) return false;
+            bool hasAttackTarget = pSelf.a.has_attack_target;
 
-            if (pTarget.current_tile != null && pSelf.current_tile != null)
+            if (pTarget.current_tile != null && pSelf.current_tile != null && hasAttackTarget)
             {
                 World.world.projectiles.spawn(pSelf, pTarget, "projectile_rasenshuriken", pSelf.current_tile.posV3, pTarget.current_tile.posV3);
                 return true;
@@ -516,54 +496,74 @@ namespace ShinobiBox
                 {
                     ClearLowerForms(actor);
                     actor.addStatusEffect("status_jinchuriki_avatar", 45f);
-                    if (!bsStuff.ava)
+                    if (!ShinobiShi.ava)
                     {
                         actor.restoreHealth(actor.getMaxHealth());
-                        bsStuff.ava = true;
+                        ShinobiShi.ava = true;
                     }
                     return true;
+                }
+
+                if (actor.hasStatus("status_jinchuriki_avatar"))
+                {
+                    return false;
                 }
 
                 if (level >= 9 && (actor.intelligence >= 20f || actor.diplomacy >= 20f) && !actor.hasStatus("status_jinchuriki_kcm2"))
                 {
                     ClearLowerForms(actor);
                     actor.addStatusEffect("status_jinchuriki_kcm2", 45f);
-                    if (!bsStuff.kura2)
+                    if (!ShinobiShi.kura2)
                     {
                         actor.restoreHealth(actor.getMaxHealth());
                         if (ShinobiConfig.EnableWorldTips)
                             ShinobiWorldLogs.AddWorldLog("log_mastered_kurama", "worldlog_mastered_kurama", "ui/icons/kcm2", actor);
-                        bsStuff.kura2 = true;
+                        ShinobiShi.kura2 = true;
                     }
                     return true;
+                }
+
+                if (actor.hasStatus("status_jinchuriki_kcm2"))
+                {
+                    return false;
                 }
 
                 if (level >= 7 && (actor.intelligence >= 20f || actor.diplomacy >= 20f) && !actor.hasStatus("status_jinchuriki_kcm1"))
                 {
                     ClearLowerForms(actor);
                     actor.addStatusEffect("status_jinchuriki_kcm1", 120f);
-                    if (!bsStuff.kura1)
+                    if (!ShinobiShi.kura1)
                     {
                         actor.restoreHealth(actor.getMaxHealth());
                         if (ShinobiConfig.EnableWorldTips)
                             ShinobiWorldLogs.AddWorldLog("log_controlled_kurama", "worldlog_controlled_kurama", "ui/icons/kcm1", actor);
-                        bsStuff.kura1 = true;
+                        ShinobiShi.kura1 = true;
                     }
                     return true;
+                }
+
+                if (actor.hasStatus("status_jinchuriki_kcm1"))
+                {
+                    return false;
                 }
 
                 if (level >= 5 && !actor.hasStatus("status_jinchuriki_incomplete_beast"))
                 {
                     ClearLowerForms(actor);
                     actor.addStatusEffect("status_jinchuriki_incomplete_beast", 120f);
-                    if (!bsStuff.incomp)
+                    if (!ShinobiShi.incomp)
                     {
                         actor.restoreHealth(actor.getMaxHealth());
                         if (ShinobiConfig.EnableWorldTips)
                             ShinobiWorldLogs.AddWorldLog("log_beast_awakens", "worldlog_beast_awakens", "ui/icons/incomplete", actor);
-                        bsStuff.incomp = true;
+                        ShinobiShi.incomp = true;
                     }
                     return true;
+                }
+
+                if (actor.hasStatus("status_jinchuriki_incomplete_beast"))
+                {
+                    return false;
                 }
 
                 if (level >= 4 && !actor.hasStatus("status_jinchuriki_v2_cloak"))
@@ -571,22 +571,27 @@ namespace ShinobiBox
                     ClearLowerForms(actor);
                     actor.addStatusEffect("status_jinchuriki_v2_cloak", 120f);
                     actor.restoreHealth(actor.getMaxHealth());
-                    if (ShinobiConfig.EnableWorldTips && !bsStuff.beastAwk)
+                    if (ShinobiConfig.EnableWorldTips && !ShinobiShi.beastAwk)
                     {
                         ShinobiWorldLogs.AddWorldLog("log_beast_awakens", "worldlog_beast_awakens", "ui/icons/v2", actor);
-                        bsStuff.beastAwk = true;
+                        ShinobiShi.beastAwk = true;
                     }
                     return true;
+                }
+
+                if (actor.hasStatus("status_jinchuriki_v2_cloak"))
+                {
+                    return false;
                 }
 
                 if (level >= 3 && !actor.hasStatus("status_jinchuriki_v1_cloak"))
                 {
                     ClearLowerForms(actor);
                     actor.addStatusEffect("status_jinchuriki_v1_cloak", 120f);
-                    if (ShinobiConfig.EnableWorldTips && !bsStuff.demShroud)
+                    if (ShinobiConfig.EnableWorldTips && !ShinobiShi.demShroud)
                     {
                         ShinobiWorldLogs.AddWorldLog("log_demon_shroud", "worldlog_demon_shroud", "ui/icons/v1", actor);
-                        bsStuff.demShroud = true;
+                        ShinobiShi.demShroud = true;
                     }
                     return true;
                 }
@@ -594,10 +599,10 @@ namespace ShinobiBox
                 if (level >= 2 && !actor.hasStatus("status_jinchuriki_initial_release"))
                 {
                     actor.addStatusEffect("status_jinchuriki_initial_release", 120f);
-                    if (ShinobiConfig.EnableWorldTips && !bsStuff.sealWeak)
+                    if (ShinobiConfig.EnableWorldTips && !ShinobiShi.sealWeak)
                     {
                         ShinobiWorldLogs.AddWorldLog("log_seal_weakens", "worldlog_seal_weakens", "ui/icons/initial_release", actor);
-                        bsStuff.sealWeak = true;
+                        ShinobiShi.sealWeak = true;
                     }
                     return true;
                 }
@@ -614,6 +619,7 @@ namespace ShinobiBox
             actor.finishStatusEffect("status_jinchuriki_incomplete_beast");
             actor.finishStatusEffect("status_jinchuriki_kcm1");
             actor.finishStatusEffect("status_jinchuriki_kcm2");
+            actor.finishStatusEffect("status_jinchuriki_avatar");
         }
         #endregion
 
@@ -622,23 +628,36 @@ namespace ShinobiBox
         {
             if (pSelf?.a == null || !pSelf.a.isAlive()) return false;
             Actor actor = pSelf.a;
-            Actor baryonUnit = World.world.units.createNewUnit(actor.asset.id, actor.current_tile, true, 1f);
+
             if (actor.data.level < 7) return false;
             if (actor.hasStatus("status_jinchuriki_baryon_mode")) return false;
             if (UnityEngine.Random.value > 0.30f) return false;
+            //Actor baryonUnit = World.world.units.createNewUnit(actor.asset.id, actor.current_tile, true, 1f);
             ClearLowerForms(actor);
 
+            /*
             ActorTool.copyUnitToOtherUnit(actor, baryonUnit, true);
             baryonUnit.setKingdom(actor.kingdom);
+
+                if (actor.hasStatus("status_jinchuriki_v1_cloak"))
+                {
+                    return false;
+                }
             baryonUnit.joinCity(actor.city);
+            baryonUnit.data.name = actor.data.name;
+            baryonUnit.data.level = actor.data.level;
+            baryonUnit.data.kills = actor.data.kills;
+            baryonUnit.data.health = (int)(actor.getMaxHealth());
 
+            baryonUnit.addStatusEffect("status_jinchuriki_baryon_mode", 60f);
+            baryonUnit.restoreHealth(actor.getMaxHealth());
+            */
 
-            actor.addStatusEffect("status_jinchuriki_baryon_mode", 100f);
-            actor.restoreHealth(actor.getMaxHealth());
-
+            actor.addStatusEffect("status_jinchuriki_baryon_mode", 60f);
+            actor.restoreHealth((int)(actor.getMaxHealth() * 0.5f));
             if (ShinobiConfig.EnableWorldTips)
             {
-                ShinobiWorldLogs.AddWorldLog("log_baryon_mode", "worldlog_baryon_mode", "ui/icons/baryon_mode", actor);
+                ShinobiWorldLogs.AddWorldLog("log_baryon_mode", "worldlog_baryon_mode", "ui/icons/Baryon", actor);
             }
 
             return true;
@@ -798,7 +817,7 @@ namespace ShinobiBox
                 return TailedBeastBombAction(pSelf, target, target.current_tile);
             }
 
-            if (actor.hasStatus("status_jinchuriki_baryon_mode") || actor.hasStatus("status_jinchuriki_avatar"))
+            if (actor.hasStatus("status_jinchuriki_avatar"))
             {
                 if (isClose)
                 {
@@ -953,35 +972,32 @@ namespace ShinobiBox
         }
 
         #region Amenotejikara
-        public static bool Amenotejikara(BaseSimObject pSelf, BaseSimObject pTarget, WorldTile pTile)
-        {
-            if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
 
-            Actor actor = pSelf.a;
+        public static bool Amenotejikara(BaseSimObject pTarget, WorldTile pTile = null)
+        {
+            if (pTarget == null || pTarget.a == null || !pTarget.a.isAlive()) return false;
+
+            Actor actor = pTarget.a;
             WorldTile actorTile = actor.current_tile;
             if (actorTile == null) return false;
             if (!actor.isTask("run_away")) return false;
+            if (!CheckAndConsumeChakra(actor, 25f)) return false;
 
-            Actor swapTarget = null;
-            if (pTarget != null && pTarget.a != null && pTarget.a.isAlive() && pTarget.a != actor && pTarget.current_tile != null && actorTile.distanceTo(pTarget.current_tile) <= 2f)
-                swapTarget = pTarget.a;
 
-            if (swapTarget == null)
+            List<Actor> nearbyUnits = new List<Actor>();
+            foreach (var unit in Finder.getUnitsFromChunk(actorTile, 151))
             {
-                List<Actor> randomUnits = new List<Actor>();
-                foreach (var unit in Finder.getUnitsFromChunk(actorTile, 2))
-                {
-                    if (unit == null || unit.a == null) continue;
-                    if (!unit.a.isAlive() || unit.a == actor) continue;
-                    if (unit.current_tile == null) continue;
-                    if (actorTile.distanceTo(unit.current_tile) > 2f) continue;
+                if (unit == null || unit.a == null) continue;
+                if (!unit.a.isAlive() || unit.a == actor) continue;
+                if (unit.current_tile == null) continue;
+                if (actorTile.distanceTo(unit.current_tile) > 151f) continue;
 
-                    randomUnits.Add(unit.a);
-                }
-
-                if (randomUnits.Count == 0) return false;
-                swapTarget = randomUnits[UnityEngine.Random.Range(0, randomUnits.Count)];
+                nearbyUnits.Add(unit.a);
             }
+
+            if (nearbyUnits.Count == 0) return false;
+
+            Actor swapTarget = nearbyUnits[UnityEngine.Random.Range(0, nearbyUnits.Count)];
 
             if (swapTarget == null || swapTarget.current_tile == null) return false;
 
@@ -1189,6 +1205,18 @@ namespace ShinobiBox
 
             pTarget.a.addStatusEffect("chakra_break");
             pTarget.a.addTrait("crippled");
+            return true;
+        }
+
+        public static bool OrochimaruCursedMarkAttackAction(BaseSimObject pSelf, BaseSimObject pTarget, WorldTile pTile)
+        {
+            if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
+            if (pTarget == null || pTarget.a == null || !pTarget.a.isAlive()) return false;
+
+            if (pTarget.a.hasTrait("cursed_mark")) return false;
+            if (UnityEngine.Random.value > 0.01f) return false;
+
+            pTarget.a.addTrait("cursed_mark");
             return true;
         }
 
@@ -1612,6 +1640,8 @@ namespace ShinobiBox
         }
         #endregion
 
+        
+
         #region Helpers
         private static bool SetWorldAgeChaos()
         {
@@ -1694,176 +1724,20 @@ namespace ShinobiBox
 
         public static bool EightInnerGates(BaseSimObject pSelf, BaseSimObject pAttackedBy = null, WorldTile pTile = null)
         {
-            if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
-            Actor actor = pSelf.a;
-
-            if (!actor.hasTrait("eight_inner_gates")) return false;
-            if (actor.hasStatus("status_ability_cooldown")) return false;
-
-            float maxHealth = actor.getMaxHealth();
-            float health = actor.data.health;
-            if (health > maxHealth / 1.5f) return false;
-            if (ChakraSystem.GetMax(actor) < 100f) return false;
-
-            if (UnityEngine.Random.value > 0.20f) return false;
-
-            int currentGate = GetActiveInnerGate(actor);
-            int nextGate = Mathf.Clamp(currentGate + 1, 1, 8);
-            if (currentGate >= 8) return false;
-
-            int idx = nextGate - 1;
-            if (actor.data.level < InnerGateLevelRequirements[idx]) return false;
-            if (ChakraSystem.GetMax(actor) < InnerGateChakraRequirements[idx]) return false;
-            if (!ChakraSystem.TryConsume(actor, InnerGateChakraRequirements[idx])) return false;
-
-            ClearInnerGateStatuses(actor);
-            actor.addStatusEffect(InnerGateStatusIds[idx], 25f + idx * 5f);
-            actor.data.set("inner_gates_active_gate", nextGate);
-            actor.data.set("inner_gates_pulse_t", Time.time);
-
-            if (nextGate == 2)
-            {
-                actor.restoreHealth((int)(actor.getMaxHealth() * 0.20f));
-            }
-
-            if (nextGate >= 5 && UnityEngine.Random.value < 0.25f && !actor.hasTrait("crippled"))
-            {
-                actor.addTrait("crippled");
-            }
-
-            return true;
+            return EightGatesProgression.EightInnerGates(pSelf, pAttackedBy, pTile);
         }
 
         public static void TickEightInnerGates(Actor actor)
         {
-            if (actor == null || !actor.isAlive()) return;
-
-            int activeGate = 0;
-            actor.data.get("inner_gates_active_gate", out activeGate);
-            if (activeGate <= 0) return;
-
-            int currentGate = GetActiveInnerGate(actor);
-            if (currentGate <= 0)
-            {
-                ApplyInnerGateEndEffects(actor, activeGate);
-                actor.data.set("inner_gates_active_gate", 0);
-                return;
-            }
-
-            actor.data.set("inner_gates_active_gate", currentGate);
-
-            if (ChakraSystem.GetCurrent(actor) <= 0f)
-            {
-                StopEightInnerGates(actor, true);
-            }
+            EightGatesProgression.TickEightInnerGates(actor);
         }
 
         public static bool InnerGatesPulseAction(BaseSimObject pSelf, WorldTile pTile)
         {
-            if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
-            Actor actor = pSelf.a;
-
-            if (!actor.hasTrait("eight_inner_gates")) return false;
-
-            int gate = GetActiveInnerGate(actor);
-            if (gate <= 0) return false;
-
-            float lastPulse = 0f;
-            actor.data.get("inner_gates_pulse_t", out lastPulse);
-            if (Time.time - lastPulse < 1f) return false;
-            actor.data.set("inner_gates_pulse_t", Time.time);
-
-            if (gate >= 4 && UnityEngine.Random.value < 0.30f)
-            {
-                int idx = gate - 1;
-                float healthLoss = actor.getMaxHealth() * InnerGateHealthDrainPct[idx];
-                if (healthLoss > 0f)
-                {
-                    actor.getHit(healthLoss, true, AttackType.Other, actor, false);
-                }
-
-                float chakraLoss = ChakraSystem.GetMax(actor) * InnerGateChakraDrainPct[idx];
-                if (chakraLoss > 0f)
-                {
-                    ChakraSystem.RemoveChakra(actor, chakraLoss);
-                }
-            }
-
-            if (gate >= 5 && actor.current_tile != null && UnityEngine.Random.value < 0.01f)
-            {
-                World.world.applyForceOnTile(actor.current_tile, 6, 1.6f, true, 0);
-            }
-
-            if (ChakraSystem.GetCurrent(actor) <= 0f)
-            {
-                StopEightInnerGates(actor, true);
-            }
-
-            return true;
+            return EightGatesProgression.InnerGatesPulseAction(pSelf, pTile);
         }
 
-        private static void StopEightInnerGates(Actor actor, bool chakraBroke)
-        {
-            if (actor == null || !actor.isAlive()) return;
-
-            int activeGate = 0;
-            actor.data.get("inner_gates_active_gate", out activeGate);
-            if (activeGate > 0)
-            {
-                ApplyInnerGateEndEffects(actor, activeGate);
-            }
-
-            ClearInnerGateStatuses(actor);
-            actor.data.set("inner_gates_active_gate", 0);
-
-            if (chakraBroke)
-            {
-                actor.addStatusEffect("chakra_exhaustion", 25f);
-                actor.addStatusEffect("status_ability_cooldown", 80f);
-            }
-        }
-
-        private static void ApplyInnerGateEndEffects(Actor actor, int gate)
-        {
-            if (actor == null || !actor.isAlive()) return;
-
-            if (gate == 3)
-            {
-                actor.addStatusEffect("chakra_exhaustion", 20f);
-            }
-
-            if (gate >= 5)
-            {
-                actor.addStatusEffect("eight_gate_strain", 30f);
-            }
-        }
-
-        private static int GetActiveInnerGate(Actor actor)
-        {
-            if (actor == null) return 0;
-
-            for (int i = InnerGateStatusIds.Length - 1; i >= 0; i--)
-            {
-                if (actor.hasStatus(InnerGateStatusIds[i]))
-                {
-                    return i + 1;
-                }
-            }
-
-            return 0;
-        }
-
-        private static void ClearInnerGateStatuses(Actor actor)
-        {
-            if (actor == null) return;
-
-            for (int i = 0; i < InnerGateStatusIds.Length; i++)
-            {
-                actor.finishStatusEffect(InnerGateStatusIds[i]);
-            }
-        }
-
-        private static bool CheckAndConsumeChakra(Actor actor, float cost)
+        public static bool CheckAndConsumeChakra(Actor actor, float cost)
         {
             if (actor == null) return false;
             if (!ChakraSystem.IsChakraUser(actor)) return false;

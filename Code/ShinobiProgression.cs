@@ -54,7 +54,8 @@ namespace ShinobiBox
             ApplyPassives(actor);
 
             CleanOppositeTraits(actor);
-            CheckRankProgression(actor);
+            RankProgression.CheckRankProgression(actor);
+            ClanProgression.KaguyaProgression(actor);
             RemoveFormsIfNoTrait(actor);
 
             // Rinnegan Awakening
@@ -160,7 +161,11 @@ namespace ShinobiBox
             }
 
             HandleNatureProgressionExp(actor, level, kills);
-            HandleSageProgression(actor, level);
+            SageProgression.HandleSageProgression(actor, level);
+            ClanProgression.KaguyaProgression(actor);
+            ClanProgression.SenjuProgression(actor, level);
+            ClanProgression.HyugaProgression(actor);
+            ClanProgression.LeeProgression(actor, level, age);
 
             bool hasKCM2Plus = actor.hasStatus("status_jinchuriki_kcm2") || actor.hasStatus("status_jinchuriki_avatar");
 
@@ -171,46 +176,6 @@ namespace ShinobiBox
                 actor.finishStatusEffect("status_snake_sage");
                 actor.addStatusEffect("kurama_sage_mode", 60f);
             }
-
-
-
-            // Hashirama Cells for Senju
-            if (actor.hasTrait("senju_clan") && level >= 5 && !actor.hasTrait("hashi_cells"))
-            {
-                if (UnityEngine.Random.value < 0.01f)
-                {
-                    actor.addTrait("hashi_cells");
-
-                    if (ShinobiConfig.EnableWorldTips)
-                    {
-                        ShinobiWorldLogs.AddWorldLog("log_hashi_cells", "worldlog_hashi_cells", "ui/icons/hashirama_cells", actor);
-                    }
-                }
-            }
-
-            // Byakugan Obtain
-            if (actor.hasTrait("hyuga_clan") && !actor.hasTrait("byakugan"))
-            {
-                actor.addTrait("byakugan");
-            }
-
-
-            bool hasLeeClan = (actor.hasTrait("lee_clan"));
-            // Lee clan members can become taijutsu masters at level 4
-            if (hasLeeClan && level >= 4 && !actor.hasTrait("taijutsu_master"))
-            {
-                actor.addTrait("taijutsu_master");
-            }
-
-            // Lee clan can obtain eight inner gates at age 24
-            if (hasLeeClan && age >= 24 && !actor.hasTrait("eight_inner_gates"))
-            {
-                if (UnityEngine.Random.value < 0.01f)
-                {
-                    actor.addTrait("eight_inner_gates");
-                }
-            }
-
             // Sharingan Progression
             if (actor.hasTrait("uchiha_clan"))
             {
@@ -311,106 +276,6 @@ namespace ShinobiBox
         }
         #endregion
 
-        #region Sage Progression
-        private static void HandleSageProgression(Actor actor, int level)
-        {
-            if (actor == null || !actor.isAlive()) return;
-
-            bool hasAnySenjutsu = actor.hasTrait("frog_sage_mode") || actor.hasTrait("slug_sage_mode") || actor.hasTrait("snake_sage_mode") || actor.hasTrait("wood_sage_mode") || actor.hasTrait("six_paths_sage_mode");
-
-            int sageProgressionOptOut = 0;
-            actor.data.get("sage_progression_opt_out", out sageProgressionOptOut);
-            int hadSageTraitBefore = 0;
-            actor.data.get("sage_progression_had_trait", out hadSageTraitBefore);
-
-            if (hasAnySenjutsu)
-            {
-                actor.data.set("sage_progression_had_trait", 1);
-            }
-            else
-            {
-                if (hadSageTraitBefore > 0 && sageProgressionOptOut == 0)
-                {
-                    actor.data.set("sage_progression_opt_out", 1);
-                    sageProgressionOptOut = 1;
-                }
-
-                if (sageProgressionOptOut > 0)
-                {
-                    return;
-                }
-            }
-
-            if (!actor.hasTrait("wood_sage_mode") && actor.hasTrait("wood_release") && actor.hasTrait("hashi_cells"))
-            {
-                if (JutsuLibrary.GetNatureExp(actor, "wood") >= 600f)
-                {
-                    actor.addTrait("wood_sage_mode");
-                    hasAnySenjutsu = true;
-                }
-            }
-
-            if (level >= 5 && !hasAnySenjutsu && actor.current_tile != null)
-            {
-                string biomeId = actor.current_tile.Type?.biome_id;
-
-                if (biomeId == "biome_jungle" || biomeId == "biome_swamp")
-                {
-                    actor.addTrait("frog_sage_mode");
-                }
-                else if (biomeId == "biome_lemon" || biomeId == "biome_enchanted")
-                {
-                    actor.addTrait("slug_sage_mode");
-                }
-                else if (biomeId == "biome_rocklands" || biomeId == "biome_desert")
-                {
-                    actor.addTrait("snake_sage_mode");
-                }
-            }
-
-            if (actor.hasTrait("frog_sage_mode") && !actor.hasStatus("status_imperfect_frog_sage") && !actor.hasStatus("status_perfect_frog_sage"))
-            {
-                actor.addStatusEffect("status_imperfect_frog_sage", -1f);
-            }
-            if (actor.hasTrait("slug_sage_mode") && !actor.hasStatus("status_imperfect_slug_sage") && !actor.hasStatus("status_perfect_slug_sage"))
-            {
-                actor.addStatusEffect("status_imperfect_slug_sage", -1f);
-            }
-            if (actor.hasTrait("snake_sage_mode") && !actor.hasStatus("status_imperfect_snake_sage") && !actor.hasStatus("status_perfect_snake_sage"))
-            {
-                actor.addStatusEffect("status_imperfect_snake_sage", -1f);
-            }
-
-            float maxChakra = ChakraSystem.CalculateBaseMaxChakra(actor);
-            if (level >= 6 && maxChakra >= 400f)
-            {
-                if (actor.hasTrait("frog_sage_mode"))
-                {
-                    actor.finishStatusEffect("status_imperfect_frog_sage");
-                    actor.addStatusEffect("status_perfect_frog_sage", -1f);
-                }
-
-                if (actor.hasTrait("slug_sage_mode"))
-                {
-                    actor.finishStatusEffect("status_imperfect_slug_sage");
-                    actor.addStatusEffect("status_perfect_slug_sage", -1f);
-                }
-
-                if (actor.hasTrait("snake_sage_mode"))
-                {
-                    actor.finishStatusEffect("status_imperfect_snake_sage");
-                    actor.addStatusEffect("status_perfect_snake_sage", -1f);
-                }
-            }
-
-            if (!actor.hasTrait("six_paths_sage_mode") &&
-                actor.hasStatus("status_six_paths_senjutsu") && actor.hasStatus("status_perfect_frog_sage"))
-            {
-                actor.addTrait("six_paths_sage_mode");
-            }
-        }
-        #endregion
-
         #region Nature Progression EXP
         private static void HandleNatureProgressionExp(Actor actor, int currentLevel, int currentKills)
         {
@@ -480,98 +345,6 @@ namespace ShinobiBox
 
             actor.data.set("nature_last_level", currentLevel);
             actor.data.set("nature_last_kills", currentKills);
-        }
-        #endregion
-
-        #region CheckRankProgression
-        private static void CheckRankProgression(Actor a)
-        {
-            if (!ShinobiConfig.EnableAutoRanking) return;
-
-            int level = a.data.level;
-            int kills = a.data.kills;
-
-            // Kage Check
-            if (a.isKing() && !a.hasTrait("rank_kage"))
-            {
-                RemoveAllRanks(a);
-                a.addTrait("rank_kage");
-                a.restoreHealth(a.getMaxHealth());
-                return;
-            }
-
-            // Auto scouts unranked units into academy
-            bool gifted = a.hasTrait("high_chakra_reserve") || a.hasTrait("will_of_fire") || a.hasTrait("uchiha_clan") || a.hasTrait("nine_tails_jinchuriki") ||
-            a.hasTrait("hyuga_clan") || a.hasTrait("uzumaki_clan") ||
-            a.hasTrait("akimichi_clan") ||
-            a.hasTrait("senju_clan") || a.hasTrait("great_chakra_reserve") ||
-            a.hasTrait("vast_chakra_reserve") || a.hasTrait("genius") || level >= 3 || kills >= 4;
-
-            bool isUnranked = !a.hasTrait("rank_academy_student") &&
-            !a.hasTrait("rank_genin") && !a.hasTrait("rank_chunin") &&
-            !a.hasTrait("rank_jonin") && !a.hasTrait("rank_anbu") &&
-            !a.hasTrait("rank_kage") && !a.hasTrait("rank_sannin") &&
-            !a.hasTrait("rank_ghost_of_uchiha") &&
-            !a.hasTrait("rank_god_of_shinobi");
-
-            if (isUnranked && a.data.getAge() < 50)
-            {
-                if (gifted)
-                {
-                    if (UnityEngine.Random.value < 0.01f) 
-                    a.addTrait("rank_academy_student");
-                }
-            }
-
-            if(a.hasTrait("rank_anbu") && level >= 9)
-            {
-                a.removeTrait("rank_anbu");
-                a.addTrait("rank_kage");
-                return;
-            }
-
-            // Jonin -> Anbu
-            if (a.hasTrait("rank_jonin") && level >= 7)
-            {
-                a.removeTrait("rank_jonin");
-                a.addTrait("rank_anbu");
-                return;
-            }
-
-            // Chunin -> Jonin
-            if (a.hasTrait("rank_chunin") && level >= 5)
-            {
-                a.removeTrait("rank_chunin");
-                a.addTrait("rank_jonin");
-                return;
-            }
-
-            // Genin -> Chunin
-            if (a.hasTrait("rank_genin") && level >= 3)
-            {
-                a.removeTrait("rank_genin");
-                a.addTrait("rank_chunin");
-                return;
-            }
-
-            // Academy Student -> Genin
-            if (a.hasTrait("rank_academy_student") && level >= 2)
-            {
-                a.removeTrait("rank_academy_student");
-                a.addTrait("rank_genin");
-                return;
-            }
-        }
-        #endregion
-
-        #region RemoveAllRanks
-        private static void RemoveAllRanks(Actor a)
-        {
-            a.removeTrait("rank_academy_student");
-            a.removeTrait("rank_genin");
-            a.removeTrait("rank_chunin");
-            a.removeTrait("rank_jonin");
-            a.removeTrait("rank_anbu");
         }
         #endregion
 
@@ -742,6 +515,7 @@ namespace ShinobiBox
             {
                 actor.removeTrait("indra_chakra");
                 actor.removeTrait("asura_chakra");
+
             }
         }
         #endregion

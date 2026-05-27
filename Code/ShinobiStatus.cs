@@ -495,6 +495,74 @@ namespace ShinobiBox
             AssetManager.status.add(baryonDecay);
             #endregion
 
+            #region Cursed Mark
+            StatusAsset cursedMark1 = new StatusAsset();
+            cursedMark1.id = "cursed_mark1";
+            cursedMark1.path_icon = "ui/icons/curse";
+            cursedMark1.duration = 95f;
+            cursedMark1.base_stats = new BaseStats();
+            cursedMark1.base_stats.set("damage", 12f);
+            cursedMark1.base_stats.set("health", 123f);
+            cursedMark1.base_stats.set("multiplier_damage", 0.08f);
+            cursedMark1.base_stats.set("speed", 4f);
+            cursedMark1.base_stats.set("multiplier_speed", 0.06f);
+            cursedMark1.base_stats.set("attack_speed", 0.05f);
+            cursedMark1.base_stats.set("multiplier_lifespan", -0.05f);
+            cursedMark1.need_visual_render = false;
+            cursedMark1.is_animated_in_pause = false;
+            cursedMark1.can_be_flipped = true;
+            cursedMark1.removed_on_damage = false;
+            cursedMark1.action = new WorldAction(CursedMarkProgression.CurseMarkStrain);
+            cursedMark1.action_interval = 1.5f;
+            cursedMark1.locale_id = "status_title_cursed_mark1";
+            cursedMark1.locale_description = "status_description_cursed_mark1";
+            AssetManager.status.add(cursedMark1);
+
+            StatusAsset cursedMark2 = new StatusAsset();
+            cursedMark2.id = "cursed_mark2";
+            cursedMark2.path_icon = "ui/icons/curse2";
+            cursedMark2.duration = 145f;
+            cursedMark2.base_stats = new BaseStats();
+            cursedMark2.base_stats.set("damage", 24f);
+            cursedMark2.base_stats.set("health", 243f);
+            cursedMark2.base_stats.set("multiplier_damage", 0.15f);
+            cursedMark2.base_stats.set("speed", 8f);
+            cursedMark2.base_stats.set("multiplier_speed", 0.10f);
+            cursedMark2.base_stats.set("attack_speed", 0.10f);
+            cursedMark2.base_stats.set("multiplier_lifespan", -0.10f);
+            cursedMark2.need_visual_render = false;
+            cursedMark2.is_animated_in_pause = false;
+            cursedMark2.can_be_flipped = true;
+            cursedMark2.removed_on_damage = false;
+            cursedMark2.action = new WorldAction(CursedMarkProgression.CurseMarkStrain);
+            cursedMark2.action_interval = 1.5f;
+            cursedMark2.locale_id = "status_title_cursed_mark2";
+            cursedMark2.locale_description = "status_description_cursed_mark2";
+            AssetManager.status.add(cursedMark2);
+
+            StatusAsset cursedMark3 = new StatusAsset();
+            cursedMark3.id = "cursed_mark3";
+            cursedMark3.path_icon = "ui/icons/curse3";
+            cursedMark3.duration = 185f;
+            cursedMark3.base_stats = new BaseStats();
+            cursedMark3.base_stats.set("damage", 32f);
+            cursedMark3.base_stats.set("health", 310f);
+            cursedMark3.base_stats.set("multiplier_damage", 0.25f);
+            cursedMark3.base_stats.set("speed", 12f);
+            cursedMark3.base_stats.set("multiplier_speed", 0.15f);
+            cursedMark3.base_stats.set("attack_speed", 0.15f);
+            cursedMark3.base_stats.set("multiplier_lifespan", -0.15f);
+            cursedMark3.need_visual_render = false;
+            cursedMark3.is_animated_in_pause = false;
+            cursedMark3.can_be_flipped = true;
+            cursedMark3.removed_on_damage = false;
+            cursedMark3.action = new WorldAction(CursedMarkProgression.CurseMarkStrain);
+            cursedMark3.action_interval = 1.5f;
+            cursedMark3.locale_id = "status_title_cursed_mark3";
+            cursedMark3.locale_description = "status_description_cursed_mark3";
+            AssetManager.status.add(cursedMark3);
+            #endregion
+
             #region Kaiten (Eight Trigrams: Palm Rotation)
             // Kaiten
             StatusAsset kaiten = new StatusAsset();
@@ -1022,7 +1090,7 @@ namespace ShinobiBox
             imperfectFrog.base_stats.set("multiplier_health", 0.05f);
             imperfectFrog.base_stats.set("range", 0.5f);
             imperfectFrog.base_stats.set("experience", 5);
-            imperfectFrog.duration = 999f;
+            imperfectFrog.duration = 45f;
             imperfectFrog.path_icon = "ui/icons/sage_mode";
             imperfectFrog.locale_id = "status_title_imperfect_frog_sage";
             imperfectFrog.locale_description = "status_description_imperfect_frog_sage";
@@ -1036,7 +1104,7 @@ namespace ShinobiBox
             imperfectSlug.base_stats.set("armor", 8f);
             imperfectSlug.base_stats.set("multiplier_health", 0.10f);
             imperfectSlug.base_stats.set("experience", 5);
-            imperfectSlug.duration = 999f;
+            imperfectSlug.duration = 45f;
             imperfectSlug.path_icon = "ui/icons/slug_sage";
             imperfectSlug.locale_id = "status_title_imperfect_slug_sage";
             imperfectSlug.locale_description = "status_description_imperfect_slug_sage";
@@ -1050,7 +1118,7 @@ namespace ShinobiBox
             imperfectSnake.base_stats.set("multiplier_speed", 0.06f);
             imperfectSnake.base_stats.set("multiplier_damage", 0.08f);
             imperfectSnake.base_stats.set("experience", 5);
-            imperfectSnake.duration = 999f;
+            imperfectSnake.duration = 45f;
             imperfectSnake.path_icon = "ui/icons/snake_sage";
             imperfectSnake.locale_id = "status_title_imperfect_snake_sage";
             imperfectSnake.locale_description = "status_description_imperfect_snake_sage";
@@ -1071,7 +1139,7 @@ namespace ShinobiBox
             perfectFrog.base_stats.set("range", 1f);
             perfectFrog.base_stats.set("accuracy", 1f);
             perfectFrog.base_stats.set("experience", 15);
-            perfectFrog.duration = 999f;
+            perfectFrog.duration = 45f;
             perfectFrog.path_icon = "ui/icons/sage_mode";
             perfectFrog.locale_id = "status_title_perfect_frog_sage";
             perfectFrog.locale_description = "status_description_perfect_frog_sage";
@@ -1085,7 +1153,7 @@ namespace ShinobiBox
             perfectSlug.base_stats.set("armor", 20f);
             perfectSlug.base_stats.set("multiplier_health", 0.20f);
             perfectSlug.base_stats.set("experience", 15);
-            perfectSlug.duration = 999f;
+            perfectSlug.duration = 45f;
             perfectSlug.path_icon = "ui/icons/slug_sage";
             perfectSlug.locale_id = "status_title_perfect_slug_sage";
             perfectSlug.locale_description = "status_description_perfect_slug_sage";
@@ -1100,7 +1168,7 @@ namespace ShinobiBox
             perfectSnake.base_stats.set("multiplier_damage", 0.18f);
             perfectSnake.base_stats.set("critical_chance", 0.10f);
             perfectSnake.base_stats.set("experience", 15);
-            perfectSnake.duration = 999f;
+            perfectSnake.duration = 45f;
             perfectSnake.path_icon = "ui/icons/snake_sage";
             perfectSnake.locale_id = "status_title_perfect_snake_sage";
             perfectSnake.locale_description = "status_description_perfect_snake_sage";
@@ -1252,13 +1320,13 @@ namespace ShinobiBox
             sixPathsSenjutsu.duration = 999f;
 
             sixPathsSenjutsu.base_stats = new BaseStats();
-            sixPathsSenjutsu.base_stats.set("multiplier_damage", 0.20f);
-            sixPathsSenjutsu.base_stats.set("multiplier_health", 0.20f);
+            sixPathsSenjutsu.base_stats.set("multiplier_damage", 0.18f);
+            sixPathsSenjutsu.base_stats.set("multiplier_health", 0.18f);
             sixPathsSenjutsu.base_stats.set("multiplier_speed", 0.20f);
-            sixPathsSenjutsu.base_stats.set("intelligence", 20f);
-            sixPathsSenjutsu.base_stats.set("critical_chance", 0.20f);
+            sixPathsSenjutsu.base_stats.set("intelligence", 18f);
+            sixPathsSenjutsu.base_stats.set("critical_chance", 0.18f);
             sixPathsSenjutsu.base_stats.set("critical_damage_multiplier", 0.20f);
-            sixPathsSenjutsu.base_stats.set("multiplier_chakra", 0.20f);
+            sixPathsSenjutsu.base_stats.set("multiplier_chakra", 0.15f);
 
             sixPathsSenjutsu.animated = true;
             sixPathsSenjutsu.texture = "fx_TSOrbs";
@@ -1273,7 +1341,7 @@ namespace ShinobiBox
             sixPathsSenjutsu.action_get_hit = (GetHitAction)Delegate.Combine(sixPathsSenjutsu.action_get_hit, new GetHitAction(TruthSeekingOrbShield));
             sixPathsSenjutsu.action = (WorldAction)Delegate.Combine(sixPathsSenjutsu.action, new WorldAction(JutsuLibrary.AutoTruthSeekingOrbAtTarget));
             sixPathsSenjutsu.action = (WorldAction)Delegate.Combine(sixPathsSenjutsu.action, new WorldAction(SixPathsFlightAction));
-            sixPathsSenjutsu.action_interval = 5f;
+            sixPathsSenjutsu.action_interval = 5.5f;
 
             sixPathsSenjutsu.locale_id = "status_title_six_paths_senjutsu";
             sixPathsSenjutsu.locale_description = "status_description_six_paths_senjutsu";
@@ -1723,18 +1791,18 @@ namespace ShinobiBox
             kcm2Form.path_icon = "ui/icons/kcm2";
             kcm2Form.duration = -1f;
             kcm2Form.base_stats = new BaseStats();
-            kcm2Form.base_stats.set("damage", 108f);
+            kcm2Form.base_stats.set("damage", 104f);
             kcm2Form.base_stats.set("multiplier_damage", 0.30f);
-            kcm2Form.base_stats.set("health", 603f);
-            kcm2Form.base_stats.set("multiplier_health", 0.35f);
-            kcm2Form.base_stats.set("armor", 18f);
+            kcm2Form.base_stats.set("health", 570f);
+            kcm2Form.base_stats.set("multiplier_health", 0.33f);
+            kcm2Form.base_stats.set("armor", 17f);
             kcm2Form.base_stats.set("speed", 20f);
             kcm2Form.base_stats.set("multiplier_speed", 0.25f);
-            kcm2Form.base_stats.set("critical_chance", 0.30f);
-            kcm2Form.base_stats.set("critical_damage_multiplier", 0.30f);
+            kcm2Form.base_stats.set("critical_chance", 0.27f);
+            kcm2Form.base_stats.set("critical_damage_multiplier", 0.27f);
             kcm2Form.base_stats.set("intelligence", 40f);
             kcm2Form.base_stats.set("experience", 14f);
-            kcm2Form.base_stats.set("chakra", 306f);
+            kcm2Form.base_stats.set("chakra", 290f);
 
             kcm2Form.animated = true;
             kcm2Form.texture = "fx_kcmAura";
@@ -1750,7 +1818,7 @@ namespace ShinobiBox
             kcm2Form.locale_id = "status_title_jinchuriki_kcm2";
             kcm2Form.locale_description = "status_description_jinchuriki_kcm2";
             kcm2Form.action = (WorldAction)Delegate.Combine(kcm2Form.action, new WorldAction(JutsuLibrary.NineTailsStatusMoves));
-            kcm2Form.action_interval = 1.15f;
+            kcm2Form.action_interval = 1.2f;
             AssetManager.status.add(kcm2Form);
 
             StatusAsset avatarForm = new StatusAsset();
@@ -1758,47 +1826,47 @@ namespace ShinobiBox
             avatarForm.path_icon = "ui/icons/avatar";
             avatarForm.duration = -1f;
             avatarForm.base_stats = new BaseStats();
-            avatarForm.base_stats.set("damage", 127f);
+            avatarForm.base_stats.set("damage", 122f);
             avatarForm.base_stats.set("multiplier_damage", 0.35f);
-            avatarForm.base_stats.set("health", 804f);
-            avatarForm.base_stats.set("multiplier_health", 0.40f);
-            avatarForm.base_stats.set("armor", 23f);
+            avatarForm.base_stats.set("health", 740f);
+            avatarForm.base_stats.set("multiplier_health", 0.36f);
+            avatarForm.base_stats.set("armor", 21f);
             avatarForm.base_stats.set("speed", 24f);
             avatarForm.base_stats.set("multiplier_speed", 0.30f);
-            avatarForm.base_stats.set("critical_chance", 0.35f);
-            avatarForm.base_stats.set("critical_damage_multiplier", 0.40f);
+            avatarForm.base_stats.set("critical_chance", 0.32f);
+            avatarForm.base_stats.set("critical_damage_multiplier", 0.35f);
             avatarForm.base_stats.set("intelligence", 0.50f);
             avatarForm.base_stats.set("experience", 16f);
-            avatarForm.base_stats.set("chakra", 408f);
+            avatarForm.base_stats.set("chakra", 385f);
             avatarForm.locale_id = "status_title_jinchuriki_avatar";
             avatarForm.locale_description = "status_description_jinchuriki_avatar";
             avatarForm.action = (WorldAction)Delegate.Combine(avatarForm.action, new WorldAction(JutsuLibrary.NineTailsStatusMoves));
-            avatarForm.action_interval = 1.15f;
+            avatarForm.action_interval = 1.2f;
             AssetManager.status.add(avatarForm);
 
             StatusAsset baryonModeForm = new StatusAsset();
             baryonModeForm.id = "status_jinchuriki_baryon_mode";
             baryonModeForm.path_icon = "ui/icons/baryon";
-            baryonModeForm.duration = 60f;
+            baryonModeForm.duration = 36f;
             baryonModeForm.base_stats = new BaseStats();
-            baryonModeForm.base_stats.set("damage", 320f);
-            baryonModeForm.base_stats.set("multiplier_damage", 0.50f);
-            baryonModeForm.base_stats.set("health", 1203f);
-            baryonModeForm.base_stats.set("multiplier_health", 0.50f);
-            baryonModeForm.base_stats.set("armor", 30f);
-            baryonModeForm.base_stats.set("speed", 32f);
-            baryonModeForm.base_stats.set("multiplier_speed", 0.40f);
-            baryonModeForm.base_stats.set("critical_chance", 0.60f);
-            baryonModeForm.base_stats.set("critical_damage_multiplier", 0.70f);
-            baryonModeForm.base_stats.set("attack_speed", 0.30f);
-            baryonModeForm.base_stats.set("intelligence", 70f);
-            baryonModeForm.base_stats.set("multiplier_lifespan", -0.25f);
-            baryonModeForm.base_stats.set("experience", 40f);
-            baryonModeForm.base_stats.set("chakra", 5000f);
+            baryonModeForm.base_stats.set("damage", 285f);
+            baryonModeForm.base_stats.set("multiplier_damage", 0.45f);
+            baryonModeForm.base_stats.set("health", 980f);
+            baryonModeForm.base_stats.set("multiplier_health", 0.38f);
+            baryonModeForm.base_stats.set("armor", 26f);
+            baryonModeForm.base_stats.set("speed", 31f);
+            baryonModeForm.base_stats.set("multiplier_speed", 0.37f);
+            baryonModeForm.base_stats.set("critical_chance", 0.50f);
+            baryonModeForm.base_stats.set("critical_damage_multiplier", 0.60f);
+            baryonModeForm.base_stats.set("attack_speed", 0.36f);
+            baryonModeForm.base_stats.set("intelligence", 60f);
+            baryonModeForm.base_stats.set("multiplier_lifespan", -0.40f);
+            baryonModeForm.base_stats.set("experience", 32f);
+            baryonModeForm.base_stats.set("chakra", 3200f);
             baryonModeForm.locale_id = "status_title_jinchuriki_baryon_mode";
             baryonModeForm.locale_description = "status_description_jinchuriki_baryon_mode";
             baryonModeForm.action = (WorldAction)Delegate.Combine(baryonModeForm.action, new WorldAction(JutsuLibrary.NineTailsStatusMoves));
-            baryonModeForm.action_interval = 0.95f;
+            baryonModeForm.action_interval = 1f;
             baryonModeForm.action_finish = (WorldAction)Delegate.Combine(baryonModeForm.action_finish, new WorldAction(BaryonModeEnded));
             AssetManager.status.add(baryonModeForm);
 
@@ -1824,6 +1892,94 @@ namespace ShinobiBox
             jutsuuse.locale_description = "status_description_jutsuuse";
 
             AssetManager.status.add(jutsuuse);
+            #endregion
+
+            #region Byakugan
+            StatusAsset byakugan = new StatusAsset();
+            byakugan.id = "byakugan";
+            byakugan.path_icon = "ui/icons/byakugan";
+            byakugan.duration = 60f;
+            byakugan.material = material;
+            byakugan.opposite_status = new[] { "byakuganP", "byakuganG" };
+
+            byakugan.base_stats.set("damage", 40f);
+            byakugan.base_stats.set("accuracy", 0.30f);
+            byakugan.base_stats.set("critical_chance", 0.12f);
+            byakugan.base_stats.set("critical_damage_multiplier", 0.12f);
+            byakugan.base_stats.set("skill_combat", 0.12f);
+            byakugan.base_stats.set("chakra", 32f);
+
+            byakugan.locale_id = "status_title_byakugan";
+            byakugan.locale_description = "status_description_byakugan";
+            
+            AssetManager.status.add(byakugan);
+            #endregion
+
+            #region Pure Byakugan
+            StatusAsset byakuganP = new StatusAsset();
+            byakuganP.id = "byakuganP";
+            byakuganP.path_icon = "ui/icons/byakugan_p";
+            byakuganP.duration = 60f;
+
+            byakuganP.animated = true;
+            byakuganP.texture = "fx_gentlefist";
+            byakuganP.sprite_list = SpriteTextureLoader.getSpriteList($"effects/{byakuganP.texture}", false);
+            byakuganP.material = material;
+
+            byakuganP.need_visual_render = true;
+            byakuganP.use_parent_rotation = false;
+            byakuganP.is_animated_in_pause = false;
+            byakuganP.can_be_flipped = true;
+            //byakuganP.scale = 0.3f;
+            byakuganP.render_priority = 5;
+            byakuganP.get_override_sprite_position = delegate (BaseSimObject pActor, int pIndex)
+            {
+                if (pActor == null || pActor.a == null) return Vector2.zero;
+
+                float bob = 0f;
+                if (pActor.a.is_moving)
+                {
+                    float scale = Mathf.Max(0.15f, pActor.a.stats["scale"]);
+                    bob = Mathf.Sin(Time.time * 12f) * 0.06f * scale;
+                }
+
+                return new Vector2(0f, bob);
+            };
+            byakuganP.opposite_status = new[] {"byakugan", "byakuganG"};
+
+            byakuganP.base_stats.set("damage", 67f);
+            byakuganP.base_stats.set("accuracy", 0.60f);
+            byakuganP.base_stats.set("critical_chance", 0.22f);
+            byakuganP.base_stats.set("critical_damage_multiplier", 0.22f);
+            byakuganP.base_stats.set("skill_combat", 0.30f);
+            byakuganP.base_stats.set("chakra", 120f);
+
+            byakuganP.locale_id = "status_title_byakuganP";
+            byakuganP.locale_description = "status_description_byakuganP";
+
+            AssetManager.status.add(byakuganP);
+            #endregion
+
+            #region Golden Byakugan
+            StatusAsset byakuganG = new StatusAsset();
+            byakuganG.id = "byakuganG";
+            byakuganG.path_icon = "ui/icons/byakuganGold";
+            byakuganG.duration = 60f;
+            byakuganG.opposite_status = new[] { "byakugan", "byakuganP" };
+
+            byakuganG.base_stats.set("damage", 67f);
+            byakuganG.base_stats.set("multiplier_damage", 0.15f);
+            byakuganG.base_stats.set("accuracy", 1f);
+            byakuganG.base_stats.set("critical_chance", 0.42f);
+            byakuganG.base_stats.set("critical_damage_multiplier", 0.38f);
+            byakuganG.base_stats.set("skill_combat", 0.53f);
+            byakuganG.base_stats.set("chakra", 320f);
+            byakuganG.base_stats.set("multiplier_speed", 0.05f);
+
+            byakuganG.locale_id = "status_title_byakuganG";
+            byakuganG.locale_description = "status_description_byakuganG";
+
+            AssetManager.status.add(byakuganG);
             #endregion
         }
 

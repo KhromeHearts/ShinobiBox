@@ -105,9 +105,9 @@ namespace ShinobiBox
         {
             if (!IsChakraUser(actor)) return 0f;
 
-            float rate = 1.5f;
-            rate += actor.data.level * 0.35f;
-            rate += Mathf.Sqrt(Mathf.Max(0f, CalculateBaseMaxChakra(actor))) * 0.08f;
+            float rate = 1.05f;
+            rate += actor.data.level * 0.24f;
+            rate += Mathf.Sqrt(Mathf.Max(0f, CalculateBaseMaxChakra(actor))) * 0.055f;
 
             if (actor.hasStatus("status_perfect_frog_sage") || actor.hasStatus("status_perfect_slug_sage") || actor.hasStatus("status_perfect_snake_sage"))
             {
@@ -129,7 +129,7 @@ namespace ShinobiBox
 
             if (actor.hasTrait("rank_god_of_shinobi")) return 0.70f;
             if (actor.hasTrait("rank_ghost_of_uchiha")) return 0.75f;
-            if (actor.hasTrait("rank_sanin")) return 0.85f;
+            if (actor.hasTrait("rank_sannin")) return 0.85f;
             if (actor.hasTrait("rank_kage")) return 0.90f;
             if (actor.hasTrait("rank_anbu")) return 0.95f;
             if (actor.hasTrait("rank_jonin")) return 1.00f;
@@ -222,10 +222,10 @@ namespace ShinobiBox
             float traitChakraMultiplier = GetActorStatValue(actor, "multiplier_chakra");
             if (traitChakra <= 0f && traitChakraMultiplier <= 0f) return 0f;
 
-            float total = 25f;
+            float total = 24f;
             total += traitChakra;
-            total += actor.data.level * 30f;
-            total += actor.data.kills * 10f;
+            total += actor.data.level * 26f;
+            total += actor.data.kills * 8f;
 
             float multiplier = 1.0f + traitChakraMultiplier;
 
@@ -288,14 +288,14 @@ namespace ShinobiBox
             bool drainsChakra = false;
             float drainPerSecond = 0f;
 
-            if (actor.hasStatus("status_jinchuriki_initial_release")) { drainPerSecond = 2f; drainsChakra = true; }
-            else if (actor.hasStatus("status_jinchuriki_v1_cloak")) { drainPerSecond = 5f; drainsChakra = true; }
+            if (actor.hasStatus("status_jinchuriki_initial_release")) { drainPerSecond = 3f; drainsChakra = true; }
+            else if (actor.hasStatus("status_jinchuriki_v1_cloak")) { drainPerSecond = 6f; drainsChakra = true; }
             else if (actor.hasStatus("status_jinchuriki_v2_cloak")) { drainPerSecond = 10f; drainsChakra = true; }
             else if (actor.hasStatus("status_jinchuriki_incomplete_beast")) { drainPerSecond = 20f; drainsChakra = true; }
-            else if (actor.hasStatus("status_jinchuriki_kcm1")) { drainPerSecond = 25f; drainsChakra = true; }
-            else if (actor.hasStatus("status_jinchuriki_kcm2")) { drainPerSecond = 32f; drainsChakra = true; }
-            else if (actor.hasStatus("status_jinchuriki_avatar")) { drainPerSecond = 40f; drainsChakra = true; }
-            else if (actor.hasStatus("status_jinchuriki_baryon_mode")) { drainPerSecond = 60f; drainsChakra = true; }
+            else if (actor.hasStatus("status_jinchuriki_kcm1")) { drainPerSecond = 28f; drainsChakra = true; }
+            else if (actor.hasStatus("status_jinchuriki_kcm2")) { drainPerSecond = 36f; drainsChakra = true; }
+            else if (actor.hasStatus("status_jinchuriki_avatar")) { drainPerSecond = 46f; drainsChakra = true; }
+            else if (actor.hasStatus("status_jinchuriki_baryon_mode")) { drainPerSecond = 68f; drainsChakra = true; }
 
             if (actor.hasStatus("status_sharingan_3t")) { drainPerSecond += 1f; drainsChakra = true; }
             if (actor.hasTrait("mangekyo_sharingan")) { drainPerSecond += 3f; drainsChakra = true; }

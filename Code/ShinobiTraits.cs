@@ -34,6 +34,7 @@ namespace ShinobiBox
         private static string GroupId_Ranks = "Shinobi_Box_Ranks";
         private static string GroupId_ChakraN = "Shinobi_Box_ChakraN";
         private static string GroupId_SpecialChakra = "Shinobi_Box_Special_Chakra";
+        private static string GroupId_TransformationTraits = "Shinobi_Box_Transformation_Traits";
         private static string GroupId_Jutsus = "Shinobi_Box_Jutsus";
         private static string GroupId_Senjutsu = "Shinobi_Box_Senjutsu";
         private static string GroupId_FightingStyles = "Shinobi_Box_Fighting_Styles";
@@ -104,9 +105,15 @@ namespace ShinobiBox
             specialChakraGroup.color = "#66CCFF";
             AssetManager.trait_groups.add(specialChakraGroup);
 
+            ActorTraitGroupAsset transformationTraitsGroup = new ActorTraitGroupAsset();
+            transformationTraitsGroup.id = GroupId_TransformationTraits;
+            transformationTraitsGroup.name = "Transformation Traits";
+            transformationTraitsGroup.color = "#C37BFF";
+            AssetManager.trait_groups.add(transformationTraitsGroup);
+
             ActorTraitGroupAsset jutsuGroup = new ActorTraitGroupAsset();
             jutsuGroup.id = GroupId_Jutsus;
-            jutsuGroup.name = "Shinobi Jutsus";
+            jutsuGroup.name = "Shinobi Techniques";
             jutsuGroup.color = "#009dd1";
             AssetManager.trait_groups.add(jutsuGroup);
 
@@ -137,7 +144,7 @@ namespace ShinobiBox
             hyuga.base_stats.set("damage", 10f);
             hyuga.base_stats.set("intelligence", 10f);
             hyuga.base_stats.set("chakra", 25f);
-            hyuga.base_stats.set("experience", 15f);
+            hyuga.base_stats.set("experience", 10f);
             addTraitToGame(hyuga);
             #endregion
 
@@ -158,13 +165,59 @@ namespace ShinobiBox
             uzumaki.base_stats.set("multiplier_lifespan", 0.35f);
             uzumaki.base_stats.set("intelligence", 10f);
             uzumaki.base_stats.set("stamina", 50f);
-            uzumaki.base_stats.set("experience", 15f);
+            uzumaki.base_stats.set("experience", 10f);
             uzumaki.base_stats.set("chakra", 100f);
             uzumaki.base_stats.set("multiplier_chakra", 0.75f);
 
             uzumaki.action_attack_target = new AttackAction(JutsuLibrary.AdamantiteChainsAction);
 
             addTraitToGame(uzumaki);
+            #endregion
+
+            #region Kaguya Clan
+            ActorTrait kaguya_clan = new ActorTrait
+            {
+                id = "kaguya_clan",
+                group_id = GroupId_Bloodlines,
+                path_icon = "ui/icons/kaguya_clan",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_inherit = alwaysChance,
+            };
+            kaguya_clan.base_stats = new BaseStats();
+            kaguya_clan.base_stats.set("health", 75f);
+            kaguya_clan.base_stats.set("damage", 15f);
+            kaguya_clan.base_stats.set("armor", 7f);
+            kaguya_clan.base_stats.set("stamina", 25f);
+            kaguya_clan.base_stats.set("experience", 10f);
+            kaguya_clan.base_stats.set("chakra", 30f);
+
+            addTraitToGame(kaguya_clan);
+            #endregion
+
+            #region Otsutsuki Clan
+            ActorTrait otsutsuki_clan = new ActorTrait
+            {
+                id = "otsutsuki_clan",
+                group_id = GroupId_Bloodlines,
+                path_icon = "ui/icons/otsutsuki_clan",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_inherit = alwaysChance,
+                rarity = Rarity.R3_Legendary
+            };
+            otsutsuki_clan.base_stats = new BaseStats();
+            otsutsuki_clan.base_stats.set("health", 190f);
+            otsutsuki_clan.base_stats.set("damage", 64f);
+            otsutsuki_clan.base_stats.set("intelligence", 1000f);
+            otsutsuki_clan.base_stats.set("stamina", 1000f);
+            otsutsuki_clan.base_stats.set("chakra", 1000f);
+            otsutsuki_clan.base_stats.set("experience", 20f);
+            otsutsuki_clan.base_stats.set("multiplier_speed", 0.15f);
+            otsutsuki_clan.base_stats.set("multiplier_health", 0.15f);
+            otsutsuki_clan.base_stats.set("multiplier_lifespan", 0.25f);
+            otsutsuki_clan.base_stats.set("multiplier_damage", 0.15f);
+            addTraitToGame(otsutsuki_clan);
             #endregion
 
             #region Senju Clan
@@ -186,7 +239,7 @@ namespace ShinobiBox
             senju.base_stats.set("stewardship", 5f);
             senju.base_stats.set("intelligence", 10f);
             senju.base_stats.set("chakra", 25f);
-            senju.base_stats.set("experience", 20f);
+            senju.base_stats.set("experience", 15f);
             addTraitToGame(senju);
             #endregion
 
@@ -281,13 +334,10 @@ namespace ShinobiBox
                 rarity = Rarity.R2_Epic
             };
             byakugan.base_stats = new BaseStats();
-            byakugan.base_stats.set("damage", 40f);
-            byakugan.base_stats.set("accuracy", 2f);
-            byakugan.base_stats.set("critical_chance", 0.12f);
-            byakugan.base_stats.set("critical_damage_multiplier", 0.12f);
-            byakugan.base_stats.set("skill_combat", 0.12f);
+            byakugan.base_stats.set("accuracy", 0.50f);
             byakugan.base_stats.set("chakra", 32f);
 
+            byakugan.action_special_effect = new WorldAction(Byakugan.ByakuganAction);
             byakugan.action_attack_target = new AttackAction(JutsuLibrary.PalmRotationAttackAction);
             byakugan.action_attack_target = (AttackAction)Delegate.Combine(byakugan.action_attack_target, new AttackAction(JutsuLibrary.EightTrigrams64PalmsAction));
 
@@ -514,8 +564,7 @@ namespace ShinobiBox
             sasukeRinnegan.action_attack_target = (AttackAction)Delegate.Combine(sasukeRinnegan.action_attack_target, new AttackAction(JutsuLibrary.AmaterasuAction));
             sasukeRinnegan.action_attack_target = (AttackAction)Delegate.Combine(sasukeRinnegan.action_attack_target, new AttackAction(JutsuLibrary.PerfectSusanooAction));
             sasukeRinnegan.action_attack_target = (AttackAction)Delegate.Combine(sasukeRinnegan.action_attack_target, new AttackAction(JutsuLibrary.MadaraEMSGenjutsu));
-            sasukeRinnegan.action_attack_target = (AttackAction)Delegate.Combine(sasukeRinnegan.action_attack_target, new AttackAction(JutsuLibrary.Amenotejikara));
-
+            sasukeRinnegan.action_special_effect = (WorldAction)Delegate.Combine(sasukeRinnegan.action_special_effect, new WorldAction(JutsuLibrary.Amenotejikara));
             sasukeRinnegan.action_special_effect = (WorldAction)Delegate.Combine(sasukeRinnegan.action_special_effect, new WorldAction(JutsuLibrary.SusanooRibcage));
             sasukeRinnegan.action_get_hit = (GetHitAction)Delegate.Combine(sasukeRinnegan.action_get_hit, new GetHitAction(JutsuLibrary.DevaShinraTensei));
             sasukeRinnegan.action_get_hit = (GetHitAction)Delegate.Combine(sasukeRinnegan.action_get_hit, new GetHitAction(JutsuLibrary.KamuiAction));
@@ -1344,7 +1393,7 @@ namespace ShinobiBox
             ActorTrait eight_inner_gates = new ActorTrait
             {
                 id = "eight_inner_gates",
-                group_id = GroupId_Abilities,
+                group_id = GroupId_TransformationTraits,
                 path_icon = "ui/icons/eight_gates",
                 can_be_given = true,
                 needs_to_be_explored = false,
@@ -1360,6 +1409,88 @@ namespace ShinobiBox
             eight_inner_gates.action_get_hit = new GetHitAction(JutsuLibrary.EightInnerGates);
 
             addTraitToGame(eight_inner_gates);
+            #endregion
+
+            #region Shikotsumyaku Trait
+            ActorTrait shikotsumyaku = new ActorTrait
+            {
+                id = "shikotsumyaku",
+                group_id = GroupId_Jutsus,
+                path_icon = "ui/icons/WIP",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_birth = veryRare,
+                rate_inherit = lowChance
+            };
+
+            shikotsumyaku.base_stats = new BaseStats();
+            shikotsumyaku.base_stats.set("health", 45f);
+            shikotsumyaku.base_stats.set("damage", 22f);
+            shikotsumyaku.base_stats.set("armor", 15f);
+            shikotsumyaku.base_stats.set("speed", 6f);
+            shikotsumyaku.base_stats.set("attack_speed", 0.15f);
+            shikotsumyaku.base_stats.set("critical_chance", 0.10f);
+            shikotsumyaku.base_stats.set("critical_damage_multiplier", 0.10f);
+            shikotsumyaku.base_stats.set("stamina", 20f);
+            shikotsumyaku.base_stats.set("experience", 8f);
+
+
+            shikotsumyaku.action_get_hit = new GetHitAction(Shikotsumyaku.ShikoDefense);
+            shikotsumyaku.action_attack_target = (AttackAction)Delegate.Combine(shikotsumyaku.action_attack_target, new AttackAction(Shikotsumyaku.BoneShot));
+            addTraitToGame(shikotsumyaku);
+            #endregion
+
+            #region Drunken Fist Trait
+            ActorTrait drunken_fist = new ActorTrait
+            {
+                id = "drunken_fist",
+                group_id = GroupId_Jutsus,
+                path_icon = "ui/icons/WIP",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_birth = veryRare,
+                rate_inherit = lowChance
+            };
+            addTraitToGame(drunken_fist);
+            #endregion
+
+            #region Jugo Transformation Trait
+            ActorTrait jugo_transformation = new ActorTrait
+            {
+                id = "jugo_transformation",
+                group_id = GroupId_TransformationTraits,
+                path_icon = "ui/icons/WIP",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_birth = veryRare,
+                rate_inherit = lowChance
+            };
+            addTraitToGame(jugo_transformation);
+            #endregion
+
+            #region Cursed Mark Trait
+            ActorTrait cursed_mark = new ActorTrait
+            {
+                id = "cursed_mark",
+                group_id = GroupId_TransformationTraits,
+                path_icon = "ui/icons/curse",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_birth = veryRare,
+                rate_inherit = 0
+            };
+            cursed_mark.base_stats = new BaseStats();
+            cursed_mark.base_stats.set("damage", 12f);
+            cursed_mark.base_stats.set("attack_speed", 0.15f);
+            cursed_mark.base_stats.set("multiplier_speed", 0.10f);
+            cursed_mark.base_stats.set("multiplier_damage", 0.20f);
+            cursed_mark.base_stats.set("lifespan", -10f);
+            cursed_mark.base_stats.set("chakra", 15f);
+            cursed_mark.base_stats.set("experience", 5f);
+            cursed_mark.action_get_hit = new GetHitAction(CursedMarkProgression.CursedMark);
+            cursed_mark.action_attack_target = (AttackAction)Delegate.Combine(cursed_mark.action_attack_target, new AttackAction(CursedMarkProgression.OrochimaruCM));
+            
+            addTraitToGame(cursed_mark);
             #endregion
 
             #region Akatsuki Member Trait
@@ -1625,7 +1756,7 @@ namespace ShinobiBox
             setGroupOpposites(allDojutsu);
 
             // Clans
-            string[] clanIds = { "uchiha_clan", "hyuga_clan", "uzumaki_clan", "senju_clan", "akimichi_clan", "lee_clan" };
+            string[] clanIds = { "uchiha_clan", "hyuga_clan", "uzumaki_clan", "senju_clan", "akimichi_clan", "lee_clan", "kaguya_clan", "otsutsuki_clan" };
             setGroupOpposites(clanIds);
 
             string[] jinchurikiIds = { "nine_tails_jinchuriki", "ten_tails_jinchuriki" };

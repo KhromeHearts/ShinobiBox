@@ -1,6 +1,6 @@
 namespace ShinobiBox
 {
-    public class bsStuff
+    public static class ShinobiShi
     {
         public static bool sealWeak = false;
         public static bool demShroud = false;

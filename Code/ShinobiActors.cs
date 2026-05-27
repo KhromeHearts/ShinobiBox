@@ -14,10 +14,14 @@ namespace ShinobiBox
         public const string MadaraActorId = "madara_uchiha";
         public const string KuramaActorId = "kurama";
         public const string JuubiActorId = "juubi";
+        public const string KakashiActorId = "kakashi_hatake";
         public const string SasukeActorId = "sasuke_uchiha";
+        public const string OrochimaruActorId = "orochimaru";
         public const string NarutoActorId = "naruto_uzumaki";
         public const string SakuraActorId = "sakura_haruno";
         public const string ItachiActorId = "itachi_uchiha";
+        public const string ObitoActorId = "obito_uchiha";
+        public const string HagoromoActorId = "hagoromo_otsutsuki";
         public const string JinchurikiObitoActorId = "jinchuriki_obito";
         public const string JinchurikiMadaraActorId = "jinchuriki_madara";
 
@@ -95,7 +99,7 @@ namespace ShinobiBox
 
                 hashirama.base_stats["lifespan"] = 125f;
                 hashirama.base_stats["health"] = 1200f;
-                hashirama.base_stats["damage"] = 25f;
+                hashirama.base_stats["damage"] = 10f;
                 hashirama.base_stats["speed"] = 25f;
                 hashirama.base_stats["attack_speed"] = 2f;
                 hashirama.base_stats["intelligence"] = 200f;
@@ -112,7 +116,6 @@ namespace ShinobiBox
 
                 hashirama.addTrait("immortal");
                 hashirama.addTrait("fire_proof");
-                hashirama.addTrait("regeneration");
                 hashirama.addTrait("senju_clan");
                 hashirama.addTrait("wood_release");
                 hashirama.addTrait("hashi_cells");
@@ -197,7 +200,7 @@ namespace ShinobiBox
 
                 madara.base_stats["lifespan"] = 125f;
                 madara.base_stats["health"] = 1000f;
-                madara.base_stats["damage"] = 25f;
+                madara.base_stats["damage"] = 10f;
                 madara.base_stats["speed"] = 25f;
                 madara.base_stats["attack_speed"] = 2f;
                 madara.base_stats["intelligence"] = 200f;
@@ -214,10 +217,10 @@ namespace ShinobiBox
 
                 madara.addTrait("immortal");
                 madara.addTrait("fire_proof");
-                madara.addTrait("regeneration");
                 madara.addTrait("uchiha_clan");
                 madara.addTrait("madara_eternal_mangekyo");
                 madara.addTrait("vast_chakra_reserve");
+                madara.addTrait("curse_of_hatred");
                 madara.addTrait("fireN");
                 madara.addTrait("earthN");
                 madara.addTrait("waterN");
@@ -296,7 +299,7 @@ namespace ShinobiBox
 
                 sasuke.base_stats["lifespan"] = 125f;
                 sasuke.base_stats["health"] = 1500f;
-                sasuke.base_stats["damage"] = 28f;
+                sasuke.base_stats["damage"] = 7f;
                 sasuke.base_stats["speed"] = 26f;
                 sasuke.base_stats["attack_speed"] = 1.5f;
                 sasuke.base_stats["intelligence"] = 180f;
@@ -311,18 +314,207 @@ namespace ShinobiBox
                 sasuke.base_stats["chakra"] = 500f;
                 sasuke.base_stats["mass_2"] = 40f;
 
-                sasuke.addTrait("regeneration");
                 sasuke.addTrait("uchiha_clan");
                 sasuke.addTrait("sasuke_rinnegan");
                 sasuke.addTrait("vast_chakra_reserve");
                 sasuke.addTrait("fireN");
-                sasuke.addTrait("earthN");
-                sasuke.addTrait("waterN");
                 sasuke.addTrait("lightningN");
-                sasuke.addTrait("windN");
+                sasuke.addTrait("cursed_mark");
+                sasuke.addTrait("curse_of_hatred");
+                sasuke.addTrait("indra_chakra");
+                sasuke.addTrait("chidoriJ");
 
                 sasuke.action_death = new WorldAction(SasukeOnDeath);
                 AssetManager.actor_library.loadTexturesAndSprites(sasuke);
+            }
+
+            #endregion
+
+            #region Orochimaru
+
+            if (AssetManager.actor_library.get(OrochimaruActorId) == null)
+            {
+                ActorAsset orochimaru = AssetManager.actor_library.clone(OrochimaruActorId, "$mob$");
+                orochimaru.id = OrochimaruActorId;
+                orochimaru.name_locale = "orochimaru";
+                orochimaru.power_id = "spawn_orochimaru";
+
+                orochimaru.is_humanoid = true;
+                orochimaru.use_phenotypes = false;
+                orochimaru.unit_other = true;
+                orochimaru.has_advanced_textures = false;
+                orochimaru.check_flip = delegate { return true; };
+                orochimaru.name_template_sets = new string[] { "human_default_set" };
+
+                orochimaru.job = new string[] { "random_move" };
+                orochimaru.kingdom_id_wild = ShinobiKingdoms.RougeKingdomId;
+                orochimaru.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
+                orochimaru.animation_swim = ActorAnimationSequences.walk_0;
+                orochimaru.texture_asset = new ActorTextureSubAsset("actors/orochimaru/", orochimaru.has_advanced_textures);
+                orochimaru._cached_sprite = Resources.Load<Sprite>("GameResources/actors/orochimaru/Main/walk_0");
+                orochimaru.default_weapons = new string[] { "weapon_kusanagi" };
+                orochimaru.texture_id = "orochimaru";
+                orochimaru.icon = "units/orochimaru";
+
+                orochimaru.can_be_killed_by_stuff = true;
+                orochimaru.can_be_killed_by_life_eraser = true;
+                orochimaru.can_attack_buildings = true;
+                orochimaru.can_be_moved_by_powers = true;
+                orochimaru.can_be_hurt_by_powers = true;
+                orochimaru.can_be_inspected = true;
+                orochimaru.visible_on_minimap = true;
+                orochimaru.use_items = true;
+                orochimaru.take_items = false;
+                orochimaru.can_talk_with = false;
+                orochimaru.control_can_talk = false;
+                orochimaru.can_evolve_into_new_species = false;
+                orochimaru.can_have_subspecies = false;
+                orochimaru.disable_jump_animation = true;
+                orochimaru.has_soul = true;
+                orochimaru.has_baby_form = false;
+                orochimaru.render_heads_for_babies = false;
+                orochimaru.body_separate_part_hands = true;
+                orochimaru.shadow = false;
+                orochimaru.can_level_up = false;
+
+                orochimaru.force_land_creature = true;
+                orochimaru.force_ocean_creature = false;
+                orochimaru.flying = false;
+                orochimaru.very_high_flyer = false;
+                orochimaru.run_to_water_when_on_fire = true;
+
+                orochimaru.can_turn_into_zombie = false;
+                orochimaru.can_turn_into_demon_in_age_of_chaos = false;
+                orochimaru.can_turn_into_ice_one = false;
+                orochimaru.can_turn_into_tumor = false;
+                orochimaru.can_turn_into_mush = false;
+                orochimaru.can_be_killed_by_divine_light = true;
+                orochimaru.ignored_by_infinity_coin = false;
+                orochimaru.actor_size = ActorSize.S13_Human;
+                orochimaru.can_edit_equipment = true;
+
+                orochimaru.base_stats["lifespan"] = 125f;
+                orochimaru.base_stats["health"] = 1500f;
+                orochimaru.base_stats["damage"] = 5f;
+                orochimaru.base_stats["speed"] = 26f;
+                orochimaru.base_stats["attack_speed"] = 1.5f;
+                orochimaru.base_stats["intelligence"] = 180f;
+                orochimaru.base_stats["stamina"] = 620f;
+                orochimaru.base_stats["mana"] = 3600f;
+                orochimaru.base_stats["armor"] = 13f;
+                orochimaru.base_stats["critical_chance"] = 0.40f;
+                orochimaru.base_stats["knockback"] = 0.2f;
+                orochimaru.base_stats["accuracy"] = 5f;
+                orochimaru.base_stats["targets"] = 1f;
+                orochimaru.base_stats["scale"] = 0.15f;
+                orochimaru.base_stats["chakra"] = 500f;
+                orochimaru.base_stats["mass_2"] = 40f;
+
+                orochimaru.addTrait("regeneration");
+                orochimaru.addTrait("cursed_mark");
+                orochimaru.addTrait("snake_sage");
+                orochimaru.addTrait("vast_chakra_reserve");
+                orochimaru.addTrait("wood_release");
+                orochimaru.addTrait("shikotsumyaku");
+
+                AssetManager.actor_library.loadTexturesAndSprites(orochimaru);
+            }
+
+            #endregion
+
+            #region Kakashi
+
+            if (AssetManager.actor_library.get(KakashiActorId) == null)
+            {
+                ActorAsset kakashi = AssetManager.actor_library.clone(KakashiActorId, "$mob$");
+                kakashi.id = KakashiActorId;
+                kakashi.name_locale = "kakashi hatake";
+                kakashi.power_id = "spawn_kakashi_hatake";
+
+                kakashi.is_humanoid = true;
+                kakashi.use_phenotypes = false;
+                kakashi.unit_other = true;
+                kakashi.has_advanced_textures = false;
+                kakashi.check_flip = delegate { return true; };
+                kakashi.name_template_sets = new string[] { "human_default_set" };
+
+                kakashi.job = new string[] { "random_move" };
+                kakashi.kingdom_id_wild = ShinobiKingdoms.KonohaKingdomId;
+                kakashi.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
+                kakashi.animation_swim = ActorAnimationSequences.walk_0;
+                kakashi.texture_asset = new ActorTextureSubAsset("actors/kakashi/", kakashi.has_advanced_textures);
+                kakashi._cached_sprite = Resources.Load<Sprite>("GameResources/actors/kakashi/Main/walk_0");
+                kakashi.default_weapons = new string[] { "basic_kunai" };
+                kakashi.texture_id = "kakashi";
+                kakashi.icon = "units/kakashi";
+
+                kakashi.can_be_killed_by_stuff = true;
+                kakashi.can_be_killed_by_life_eraser = true;
+                kakashi.can_attack_buildings = true;
+                kakashi.can_be_moved_by_powers = true;
+                kakashi.can_be_hurt_by_powers = true;
+                kakashi.can_be_inspected = true;
+                kakashi.visible_on_minimap = true;
+                kakashi.use_items = true;
+                kakashi.take_items = false;
+                kakashi.can_talk_with = false;
+                kakashi.control_can_talk = false;
+                kakashi.can_evolve_into_new_species = false;
+                kakashi.can_have_subspecies = false;
+                kakashi.disable_jump_animation = true;
+                kakashi.has_soul = true;
+                kakashi.has_baby_form = false;
+                kakashi.render_heads_for_babies = false;
+                kakashi.body_separate_part_hands = true;
+                kakashi.shadow = false;
+                kakashi.can_level_up = false;
+
+                kakashi.force_land_creature = true;
+                kakashi.force_ocean_creature = false;
+                kakashi.flying = false;
+                kakashi.very_high_flyer = false;
+                kakashi.run_to_water_when_on_fire = true;
+
+                kakashi.can_turn_into_zombie = false;
+                kakashi.can_turn_into_demon_in_age_of_chaos = false;
+                kakashi.can_turn_into_ice_one = false;
+                kakashi.can_turn_into_tumor = false;
+                kakashi.can_turn_into_mush = false;
+                kakashi.can_be_killed_by_divine_light = true;
+                kakashi.ignored_by_infinity_coin = false;
+                kakashi.actor_size = ActorSize.S13_Human;
+                kakashi.can_edit_equipment = true;
+
+                kakashi.base_stats["lifespan"] = 125f;
+                kakashi.base_stats["health"] = 1200f;
+                kakashi.base_stats["damage"] = 7f;
+                kakashi.base_stats["speed"] = 25f;
+                kakashi.base_stats["attack_speed"] = 2.5f;
+                kakashi.base_stats["intelligence"] = 170f;
+                kakashi.base_stats["stamina"] = 700f;
+                kakashi.base_stats["mana"] = 3700f;
+                kakashi.base_stats["armor"] = 27f;
+                kakashi.base_stats["critical_chance"] = 0.40f;
+                kakashi.base_stats["knockback"] = 0.2f;
+                kakashi.base_stats["accuracy"] = 4f;
+                kakashi.base_stats["targets"] = 1f;
+                kakashi.base_stats["scale"] = 0.15f;
+                kakashi.base_stats["chakra"] = 520f;
+                kakashi.base_stats["mass_2"] = 40f;
+
+                kakashi.addTrait("vast_chakra_reserve");
+                kakashi.addTrait("windN");
+                kakashi.addTrait("lightningN");
+                kakashi.addTrait("earthN");
+                kakashi.addTrait("fireN");
+                kakashi.addTrait("waterN");
+                kakashi.addTrait("rasenganJ");
+                kakashi.addTrait("shadow_clone_jutsu");
+                kakashi.addTrait("rasenshuriken");
+                kakashi.addTrait("chidoriJ");
+                kakashi.addTrait("mangekyo_sharingan");
+
+                AssetManager.actor_library.loadTexturesAndSprites(kakashi);
             }
 
             #endregion
@@ -349,6 +541,7 @@ namespace ShinobiBox
                 itachi.animation_swim = ActorAnimationSequences.walk_0;
                 itachi.texture_asset = new ActorTextureSubAsset("actors/itachi/", itachi.has_advanced_textures);
                 itachi._cached_sprite = Resources.Load<Sprite>("GameResources/actors/itachi/Main/walk_0");
+                itachi.default_weapons = new string[] { "basic_kunai" };
                 itachi.texture_id = "itachi";
                 itachi.icon = "units/itachi";
 
@@ -390,32 +583,29 @@ namespace ShinobiBox
                 itachi.can_edit_equipment = true;
 
                 itachi.base_stats["lifespan"] = 125f;
-                itachi.base_stats["health"] = 980f;
-                itachi.base_stats["damage"] = 24f;
-                itachi.base_stats["speed"] = 25f;
-                itachi.base_stats["attack_speed"] = 2.3f;
-                itachi.base_stats["intelligence"] = 190f;
-                itachi.base_stats["stamina"] = 580f;
-                itachi.base_stats["mana"] = 3400f;
-                itachi.base_stats["armor"] = 24f;
+                itachi.base_stats["health"] = 1500f;
+                itachi.base_stats["damage"] = 8f;
+                itachi.base_stats["speed"] = 26f;
+                itachi.base_stats["attack_speed"] = 1.5f;
+                itachi.base_stats["intelligence"] = 180f;
+                itachi.base_stats["stamina"] = 620f;
+                itachi.base_stats["mana"] = 3600f;
+                itachi.base_stats["armor"] = 13f;
                 itachi.base_stats["critical_chance"] = 0.40f;
                 itachi.base_stats["knockback"] = 0.2f;
                 itachi.base_stats["accuracy"] = 5f;
                 itachi.base_stats["targets"] = 1f;
                 itachi.base_stats["scale"] = 0.15f;
-                itachi.base_stats["chakra"] = 420f;
-                itachi.base_stats["mass_2"] = 38f;
+                itachi.base_stats["chakra"] = 500f;
+                itachi.base_stats["mass_2"] = 40f;
 
-                itachi.addTrait("fire_proof");
                 itachi.addTrait("regeneration");
                 itachi.addTrait("uchiha_clan");
                 itachi.addTrait("mangekyo_sharingan");
                 itachi.addTrait("vast_chakra_reserve");
-                itachi.addTrait("trait_akatsuki");
-                itachi.addTrait("fireN");
-                itachi.addTrait("waterN");
+                itachi.addTrait("curse_of_hatred");
+                itachi.addTrait("rank_anbu");
 
-                itachi.action_death = new WorldAction(ItachiOnDeath);
                 AssetManager.actor_library.loadTexturesAndSprites(itachi);
             }
 
@@ -485,7 +675,7 @@ namespace ShinobiBox
 
                 naruto.base_stats["lifespan"] = 125f;
                 naruto.base_stats["health"] = 1200f;
-                naruto.base_stats["damage"] = 28f;
+                naruto.base_stats["damage"] = 15f;
                 naruto.base_stats["speed"] = 25f;
                 naruto.base_stats["attack_speed"] = 2.5f;
                 naruto.base_stats["intelligence"] = 170f;
@@ -516,6 +706,196 @@ namespace ShinobiBox
 
             #endregion
 
+            #region Obito
+
+            if (AssetManager.actor_library.get(ObitoActorId) == null)
+            {
+                ActorAsset obito = AssetManager.actor_library.clone(ObitoActorId, "$mob$");
+                obito.id = ObitoActorId;
+                obito.name_locale = "obito uchiha";
+                obito.power_id = "spawn_obito_uchiha";
+
+                obito.is_humanoid = true;
+                obito.use_phenotypes = false;
+                obito.unit_other = true;
+                obito.has_advanced_textures = false;
+                obito.check_flip = delegate { return true; };
+                obito.name_template_sets = new string[] { "human_default_set" };
+
+                obito.job = new string[] { "random_move" };
+                obito.kingdom_id_wild = ShinobiKingdoms.RougeKingdomId;
+                obito.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
+                obito.animation_swim = ActorAnimationSequences.walk_0;
+                obito.texture_asset = new ActorTextureSubAsset("actors/obito/", obito.has_advanced_textures);
+                obito._cached_sprite = Resources.Load<Sprite>("GameResources/actors/obito/Main/walk_0");
+                obito.texture_id = "obito";
+                obito.icon = "units/obito";
+
+                obito.can_be_killed_by_stuff = true;
+                obito.can_be_killed_by_life_eraser = true;
+                obito.can_attack_buildings = true;
+                obito.can_be_moved_by_powers = true;
+                obito.can_be_hurt_by_powers = true;
+                obito.can_be_inspected = true;
+                obito.visible_on_minimap = true;
+                obito.use_items = true;
+                obito.take_items = false;
+                obito.can_talk_with = false;
+                obito.control_can_talk = false;
+                obito.can_evolve_into_new_species = false;
+                obito.can_have_subspecies = false;
+                obito.disable_jump_animation = true;
+                obito.has_soul = true;
+                obito.has_baby_form = false;
+                obito.render_heads_for_babies = false;
+                obito.body_separate_part_hands = true;
+                obito.shadow = false;
+                obito.can_level_up = false;
+
+                obito.force_land_creature = true;
+                obito.force_ocean_creature = false;
+                obito.flying = false;
+                obito.very_high_flyer = false;
+                obito.run_to_water_when_on_fire = true;
+
+                obito.can_turn_into_zombie = false;
+                obito.can_turn_into_demon_in_age_of_chaos = false;
+                obito.can_turn_into_ice_one = false;
+                obito.can_turn_into_tumor = false;
+                obito.can_turn_into_mush = false;
+                obito.can_be_killed_by_divine_light = true;
+                obito.ignored_by_infinity_coin = false;
+                obito.actor_size = ActorSize.S13_Human;
+                obito.can_edit_equipment = true;
+
+                obito.base_stats["lifespan"] = 125f;
+                obito.base_stats["health"] = 1500f;
+                obito.base_stats["damage"] = 28f;
+                obito.base_stats["speed"] = 26f;
+                obito.base_stats["attack_speed"] = 1.5f;
+                obito.base_stats["intelligence"] = 180f;
+                obito.base_stats["stamina"] = 620f;
+                obito.base_stats["mana"] = 3600f;
+                obito.base_stats["armor"] = 13f;
+                obito.base_stats["critical_chance"] = 0.40f;
+                obito.base_stats["knockback"] = 0.2f;
+                obito.base_stats["accuracy"] = 5f;
+                obito.base_stats["targets"] = 1f;
+                obito.base_stats["scale"] = 0.15f;
+                obito.base_stats["chakra"] = 500f;
+                obito.base_stats["mass_2"] = 40f;
+
+                obito.addTrait("ten_tails_jinchuriki");
+                obito.addTrait("uchiha_clan");
+                obito.addTrait("rinnegan");
+                obito.addTrait("vast_chakra_reserve");
+                obito.addTrait("fireN");
+                obito.addTrait("yinyang_release");
+                obito.addTrait("wood_release");
+                obito.addTrait("mangekyo_sharingan");
+
+                AssetManager.actor_library.loadTexturesAndSprites(obito);
+            }
+
+            #endregion
+
+            #region Hagoromo
+
+            if (AssetManager.actor_library.get(HagoromoActorId) == null)
+            {
+                ActorAsset hagoromo = AssetManager.actor_library.clone(HagoromoActorId, "$mob$");
+                hagoromo.id = HagoromoActorId;
+                hagoromo.name_locale = "hagoromo otsutsuki";
+                hagoromo.power_id = "spawn_hagoromo_otsutsuki";
+
+                hagoromo.is_humanoid = true;
+                hagoromo.use_phenotypes = false;
+                hagoromo.unit_other = true;
+                hagoromo.has_advanced_textures = false;
+                hagoromo.check_flip = delegate { return true; };
+                hagoromo.name_template_sets = new string[] { "human_default_set" };
+
+                hagoromo.job = new string[] { "random_move" };
+                hagoromo.kingdom_id_wild = ShinobiKingdoms.KonohaKingdomId;
+                hagoromo.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
+                hagoromo.animation_swim = ActorAnimationSequences.walk_0;
+                hagoromo.texture_asset = new ActorTextureSubAsset("actors/hagoromo/", hagoromo.has_advanced_textures);
+                hagoromo._cached_sprite = Resources.Load<Sprite>("GameResources/actors/hagoromo/Main/walk_0");
+                hagoromo.texture_id = "hagoromo";
+                hagoromo.icon = "units/hagoromo";
+
+                hagoromo.can_be_killed_by_stuff = true;
+                hagoromo.can_be_killed_by_life_eraser = true;
+                hagoromo.can_attack_buildings = true;
+                hagoromo.can_be_moved_by_powers = true;
+                hagoromo.can_be_hurt_by_powers = true;
+                hagoromo.can_be_inspected = true;
+                hagoromo.visible_on_minimap = true;
+                hagoromo.use_items = true;
+                hagoromo.take_items = false;
+                hagoromo.can_talk_with = false;
+                hagoromo.control_can_talk = false;
+                hagoromo.can_evolve_into_new_species = false;
+                hagoromo.can_have_subspecies = false;
+                hagoromo.disable_jump_animation = true;
+                hagoromo.has_soul = true;
+                hagoromo.has_baby_form = false;
+                hagoromo.render_heads_for_babies = false;
+                hagoromo.body_separate_part_hands = true;
+                hagoromo.shadow = false;
+                hagoromo.can_level_up = false;
+
+                hagoromo.force_land_creature = true;
+                hagoromo.force_ocean_creature = false;
+                hagoromo.flying = false;
+                hagoromo.very_high_flyer = false;
+                hagoromo.run_to_water_when_on_fire = true;
+
+                hagoromo.can_turn_into_zombie = false;
+                hagoromo.can_turn_into_demon_in_age_of_chaos = false;
+                hagoromo.can_turn_into_ice_one = false;
+                hagoromo.can_turn_into_tumor = false;
+                hagoromo.can_turn_into_mush = false;
+                hagoromo.can_be_killed_by_divine_light = true;
+                hagoromo.ignored_by_infinity_coin = false;
+                hagoromo.actor_size = ActorSize.S13_Human;
+                hagoromo.can_edit_equipment = true;
+
+                hagoromo.base_stats["lifespan"] = 999f;
+                hagoromo.base_stats["health"] = 10000f;
+                hagoromo.base_stats["damage"] = 28f;
+                hagoromo.base_stats["speed"] = 50f;
+                hagoromo.base_stats["attack_speed"] = 2.5f;
+                hagoromo.base_stats["intelligence"] = 1000f;
+                hagoromo.base_stats["stamina"] = 10000f;
+                hagoromo.base_stats["mana"] = 10000f;
+                hagoromo.base_stats["armor"] = 27f;
+                hagoromo.base_stats["critical_chance"] = 0.90f;
+                hagoromo.base_stats["knockback"] = 0.2f;
+                hagoromo.base_stats["accuracy"] = 4f;
+                hagoromo.base_stats["targets"] = 1f;
+                hagoromo.base_stats["scale"] = 0.20f;
+                hagoromo.base_stats["chakra"] = 10000f;
+                hagoromo.base_stats["mass_2"] = 40f;
+
+                hagoromo.addTrait("regeneration");
+                hagoromo.addTrait("otsutsuki_clan");
+                hagoromo.addTrait("rinnegan");
+                hagoromo.addTrait("vast_chakra_reserve");
+                hagoromo.addTrait("hagoromo_chakra");
+                hagoromo.addTrait("windN");
+                hagoromo.addTrait("earthN");
+                hagoromo.addTrait("fireN");
+                hagoromo.addTrait("waterN");
+                hagoromo.addTrait("lightningN");
+                hagoromo.addTrait("ten_tails_jinchuriki");
+
+                hagoromo.action_death = new WorldAction(HagoromoOnDeath);
+                AssetManager.actor_library.loadTexturesAndSprites(hagoromo);
+            }
+
+            #endregion
+
             #region Sakura
 
             if (AssetManager.actor_library.get(SakuraActorId) == null)
@@ -540,14 +920,6 @@ namespace ShinobiBox
                 sakura._cached_sprite = Resources.Load<Sprite>("GameResources/actors/sakura/Main/walk_0");
                 sakura.texture_id = "sakura";
                 sakura.icon = "units/sakura";
-
-                sakura.name_taxonomic_kingdom = "animalia";
-                sakura.name_taxonomic_phylum = "chordata";
-                sakura.name_taxonomic_class = "mammalia";
-                sakura.name_taxonomic_order = "primates";
-                sakura.name_taxonomic_family = "hominidae";
-                sakura.name_taxonomic_genus = "homo";
-                sakura.name_taxonomic_species = "sapiens";
 
                 sakura.can_be_killed_by_stuff = true;
                 sakura.can_be_killed_by_life_eraser = true;
@@ -588,7 +960,7 @@ namespace ShinobiBox
 
                 sakura.base_stats["lifespan"] = 125f;
                 sakura.base_stats["health"] = 950f;
-                sakura.base_stats["damage"] = 22f;
+                sakura.base_stats["damage"] = 7f;
                 sakura.base_stats["speed"] = 24f;
                 sakura.base_stats["attack_speed"] = 2.2f;
                 sakura.base_stats["intelligence"] = 150f;
@@ -603,12 +975,10 @@ namespace ShinobiBox
                 sakura.base_stats["chakra"] = 350f;
                 sakura.base_stats["mass_2"] = 36f;
 
-                sakura.addTrait("immortal");
-                sakura.addTrait("fire_proof");
+                sakura.addTrait("slug_sage_mode");
                 sakura.addTrait("regeneration");
                 sakura.addTrait("will_of_fire");
                 sakura.addTrait("vast_chakra_reserve");
-                sakura.addTrait("waterN");
                 sakura.addTrait("earthN");
 
                 sakura.action_death = new WorldAction(SakuraOnDeath);
@@ -842,6 +1212,21 @@ namespace ShinobiBox
             return true;
         }
 
+        public static bool HagoromoOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            if (pTarget == null || pTarget.a == null || !pTarget.a.isAlive()) return false;
+
+            for (int i = 0; i < 4; i++)
+            {
+                ActionLibrary.castTornado(null, pTarget, null);
+            }
+            MapBox.spawnLightningMedium(pTarget.current_tile, 0.15f);
+            Earthquake.startQuake(pTarget.a.current_tile, EarthquakeType.SmallDisaster);
+            MapBox.spawnLightningBig(pTarget.current_tile, 0.45f);
+
+            return true;
+        }
+
         public static bool HashiramaOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
         {
             if (pTarget == null || pTarget.a == null || pTarget.a.data == null) return false;
@@ -888,7 +1273,7 @@ namespace ShinobiBox
 
             return true;
         }
-        
+
         public static bool KuramaOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
         {
             if (pTarget == null || pTarget.a == null || pTarget.a.data == null) return false;
@@ -933,6 +1318,6 @@ namespace ShinobiBox
             return true;
         }
         #endregion
-    
+
     }
 }

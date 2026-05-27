@@ -36,6 +36,8 @@ namespace ShinobiBox
             ShinobiItems.Init();
             ShinobiTab.Init();
             ShinobiStatus.Init();
+            Shikotsumyaku.Init();
+            ShinobiDisasters.Init();
             ShinobiEffects.Init();
             ShinobiKingdoms.Init();
 
@@ -61,6 +63,7 @@ namespace ShinobiBox
             if (World.world.isPaused()) return;
 
             JutsuLibrary.TickWorldAgeRevert(Time.deltaTime);
+
 
             timer += Time.deltaTime;
             if (timer >= 0.1f)

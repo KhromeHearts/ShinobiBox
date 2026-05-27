@@ -6,8 +6,9 @@
   "Shinobi Ranks": "Shinobi Ranks",
   "Chakra Natures": "Chakra Natures",
   "Special Chakra": "Special Chakra",
-  "Shinobi Jutsus": "Shinobi Jutsus",
+  "Shinobi Techniques": "Shinobi Techniques",
   "Senjutsu": "Senjutsu",
+  "Transformation Traits": "Transformation Traits",
 
   "config_enable_shinobi_clan_name": "Enable Clan Names",
   "config_enable_shinobi_auto_ranking": "Enable Auto-Ranking",
@@ -186,8 +187,7 @@
   "trait_sasuke_rinnegan": "Sasuke's Rinnegan",
   "trait_sasuke_rinnegan_info": "A legendary dojutsu, gifted by the Sage Of Six Paths.",
   "trait_sasuke_rinnegan_info_2": "Uses all the moves from the rinnegan and the Eternal Mangekyo. Amenotejikara is also available as a short-range teleportation jutsu.",
-  "jutsu_amenotejikara": "Amenotejikara",
-  "jutsu_amenotejikara_description": "Space-time switch technique. Placeholder; implementation in progress.",
+
 
   "trait_sharingan": "Sharingan",
   "trait_sharingan_info": "The base Sharingan has awakened.",
@@ -221,6 +221,10 @@
   "trait_hagoromo_chakra_info": "Six Paths chakra from the Sage of Six Paths.",
   "trait_hagoromo_chakra_info_2": "Children of these units may inherit either Indra's Chakra or Asura's Chakra.",
 
+  "trait_otsutsuki_clan": "Otsutsuki Clan",
+  "trait_otsutsuki_clan_info": "A celestial bloodline from the highest level of chakra lineage.",
+  "trait_otsutsuki_clan_info_2": "Units in this clan have access to a special kind of chakra...",
+
   "trait_ten_tails_jinchuriki": "Ten-Tails Jinchuriki",
   "trait_ten_tails_jinchuriki_info": "The Ultimate Vessel! Contains the power of all tailed beasts combined!",
   "trait_ten_tails_jinchuriki_info_2": "God-like power that can combine with senjutsu for Six Paths Senjutsu. (no natural way to obtain right now)",
@@ -231,6 +235,35 @@
   "trait_eight_inner_gates": "Eight Inner Gates",
   "trait_eight_inner_gates_info": "A forbidden taijutsu art that forcefully opens the body's limiters.",
   "trait_eight_inner_gates_info_2": "Can open up to 8 gates while under pressure. Massive power with escalating backlash and a chakra-break cooldown.",
+  "trait_cursed_mark": "Cursed Seal Of Heaven",
+  "trait_cursed_mark_info": "A cursed seal that floods the body with unstable power.",
+  "trait_cursed_mark_info_2": "20% chance to be obtained in a fight against Orochimaru Or .",
+
+  "status_title_cursed_mark1": "Cursed Mark 1",
+  "status_description_cursed_mark1": "The first cursed seal stage. Power rises, but the body starts to strain.",
+  "status_title_cursed_mark2": "Cursed Mark 2",
+  "status_description_cursed_mark2": "A stronger cursed seal stage with more power and heavier strain.",
+  "status_title_cursed_mark3": "Cursed Mark 3",
+  "status_description_cursed_mark3": "The most unstable cursed seal stage. Great power, severe cost.",
+
+  "trait_kaguya_clan": "Kaguya Clan",
+  "trait_kaguya_clan_info": "A bone-wielding bloodline known for brutal physical combat.",
+  "trait_kaguya_clan_info_2": "At age 15 and above, each progression check has a 0.05% chance to awaken Shikotsumyaku.",
+
+  "trait_shikotsumyaku": "Shikotsumyaku",
+  "trait_shikotsumyaku_info": "The Kaguya bone technique that weaponizes the body's skeleton.",
+  "trait_shikotsumyaku_info_2": "A Kaguya bloodline power with lethal close-range pressure.",
+
+  "status_title_shikodef": "Shiko Defense",
+  "status_description_shikodef": "35% chance to raise a 6 second bone guard that can reflect damage back at attackers.",
+
+  "trait_drunken_fist": "Drunken Fist",
+  "trait_drunken_fist_info": "A wild taijutsu style that turns unpredictability into offense.",
+  "trait_drunken_fist_info_2": "A Shinobi Techniques trait reserved for chaotic close-range fighters.",
+
+  "trait_jugo_transformation": "Jugo Transformation",
+  "trait_jugo_transformation_info": "A cursed transformation fueled by unstable natural energy.",
+  "trait_jugo_transformation_info_2": "A transformation trait for berserk, mutating chakra users.",
 
   
 
@@ -261,6 +294,12 @@
   "trait_byakugan": "Byakugan",
   "trait_byakugan_info": "The White Eye.",
   "trait_byakugan_info_2": "Most commonly gained through Hyuga lineage progression.",
+  "status_title_byakugan": "Byakugan",
+  "status_description_byakugan": "One of the three great dojutsu. Level 3+ or more than 3 kills will purify the eye.",
+  "status_title_byakuganP": "Pure Byakugan",
+  "status_description_byakuganP": "A stronger White Eye state that appears at level 3+ or after 3 kills.",
+  "status_title_byakuganG": "Golden Byakugan",
+  "status_description_byakuganG": "High Level Otsutsuki can manifest this eye. Lvl 5+.",
 
   "trait_eternal_mangekyo": "Eternal Mangekyo Sharingan",
   "trait_eternal_mangekyo_info": "The final stage of the Sharingan that never loses its light.",
@@ -473,16 +512,20 @@
 
   "summon_hashirama": "Summon Hashirama",
   "summon_hashirama_description": "Spawn legendary Hashirama",
-  "itachi uchiha": "Itachi Uchiha",
+  "itachi uchiha": "Edo Tensei Itachi",
   "kurama": "Kurama",
   "naruto uzumaki": "Naruto Uzumaki",
   "sakura haruno": "Sakura Haruno",
   "sasuke uchiha": "Sasuke Uchiha",
-  "hashirama senju": "Hashirama Senju",
-  "hashirama_senju": "Hashirama Senju",
+  "kakashi hatake": "Kakashi Hatake",
+  "obito uchiha": "Obito Uchiha",
+  "orochimaru": "Orochimaru",
+  "hagoromo otsutsuki": "Hagoromo Otsutsuki",
+  "hashirama senju": "Edo Tensei Hashirama",
+  "hashirama_senju": "Edo Tensei Hashirama",
   "summon_madara": "Summon Madara",
   "summon_madara_description": "Spawn legendary Madara",
-  "madara uchiha": "Madara Uchiha",
-  "madara_uchiha": "Madara Uchiha",
+  "madara uchiha": "Edo Tensei Madara",
+  "madara_uchiha": "Edo Tensei Madara",
   "juubi": "Ten-Tails"
 }

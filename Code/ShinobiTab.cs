@@ -42,8 +42,7 @@ namespace ShinobiBox
             if (tab == null) return;
             try
             {
-                #region Kurama Power
-                // Kurama Button
+                #region Kurama
                 GodPower kuramaPower = new GodPower();
                 kuramaPower.id = "summon_kurama";
                 kuramaPower.name = "summon_kurama";
@@ -71,8 +70,7 @@ namespace ShinobiBox
                 }
                 #endregion
 
-                #region Ten Tails Power
-                // Ten-Tails Button
+                #region Ten Tails
                 GodPower tenTailsPower = new GodPower();
                 tenTailsPower.id = "summon_ten_tails";
                 tenTailsPower.name = "summon_ten_tails";
@@ -100,7 +98,7 @@ namespace ShinobiBox
                 }
                 #endregion
 
-                #region Hashirama Power
+                #region Hashirama
                 GodPower hashiramaPower = new GodPower();
                 hashiramaPower.id = "summon_hashirama";
                 hashiramaPower.name = "summon_hashirama";
@@ -128,7 +126,7 @@ namespace ShinobiBox
                 }
                 #endregion
 
-                #region Madara Power
+                #region Madara
                 GodPower madaraPower = new GodPower();
                 madaraPower.id = "summon_madara";
                 madaraPower.name = "summon_madara";
@@ -155,7 +153,7 @@ namespace ShinobiBox
                 }
                 #endregion
 
-                #region Sasuke Power
+                #region Sasuke
                 GodPower sasukePower = new GodPower();
                 sasukePower.id = "summon_sasuke";
                 sasukePower.name = "summon_sasuke";
@@ -182,7 +180,7 @@ namespace ShinobiBox
                 }
                 #endregion
 
-                #region Itachi Power
+                #region Itachi
                 GodPower itachiPower = new GodPower();
                 itachiPower.id = "summon_itachi";
                 itachiPower.name = "summon_itachi";
@@ -209,7 +207,7 @@ namespace ShinobiBox
                 }
                 #endregion
 
-                #region Naruto Power
+                #region Naruto
                 GodPower narutoPower = new GodPower();
                 narutoPower.id = "summon_naruto";
                 narutoPower.name = "summon_naruto";
@@ -229,6 +227,114 @@ namespace ShinobiBox
                         "Summon Naruto",
                         "Spawn Naruto Uzumaki",
                         new Vector2(326f, 54f),
+                        ButtonType.GodPower,
+                        tab.transform,
+                        null
+                    );
+                }
+                #endregion
+
+                #region Kakashi
+                GodPower kakashiPower = new GodPower();
+                kakashiPower.id = "summon_kakashi";
+                kakashiPower.name = "summon_kakashi";
+                kakashiPower.actor_asset_id = ShinobiActors.KakashiActorId;
+                kakashiPower.show_spawn_effect = true;
+                kakashiPower.actor_spawn_height = 3f;
+                kakashiPower.sound_event = "spawn";
+                kakashiPower.click_action = new PowerActionWithID(CallSpawnUnit);
+                AssetManager.powers.add(kakashiPower);
+
+                Sprite kakashiIcon = SpriteTextureLoader.getSprite("ui/icons/units/IconKakashi");
+                if (kakashiIcon != null)
+                {
+                    PowerButtons.CreateButton(
+                        "summon_kakashi",
+                        kakashiIcon,
+                        "Summon Kakashi",
+                        "Spawn Kakashi Hatake",
+                        new Vector2(254f, 90f),
+                        ButtonType.GodPower,
+                        tab.transform,
+                        null
+                    );
+                }
+                #endregion
+
+                #region Obito
+                GodPower obitoPower = new GodPower();
+                obitoPower.id = "summon_obito";
+                obitoPower.name = "summon_obito";
+                obitoPower.actor_asset_id = ShinobiActors.ObitoActorId;
+                obitoPower.show_spawn_effect = true;
+                obitoPower.actor_spawn_height = 3f;
+                obitoPower.sound_event = "spawn";
+                obitoPower.click_action = new PowerActionWithID(CallSpawnUnit);
+                AssetManager.powers.add(obitoPower);
+
+                Sprite obitoIcon = SpriteTextureLoader.getSprite("ui/icons/units/IconObito");
+                if (obitoIcon != null)
+                {
+                    PowerButtons.CreateButton(
+                        "summon_obito",
+                        obitoIcon,
+                        "Summon Obito",
+                        "Spawn Obito Uchiha",
+                        new Vector2(290f, 90f),
+                        ButtonType.GodPower,
+                        tab.transform,
+                        null
+                    );
+                }
+                #endregion
+
+                #region Hagoromo
+                GodPower hagoromoPower = new GodPower();
+                hagoromoPower.id = "summon_hagoromo";
+                hagoromoPower.name = "summon_hagoromo";
+                hagoromoPower.actor_asset_id = ShinobiActors.HagoromoActorId;
+                hagoromoPower.show_spawn_effect = true;
+                hagoromoPower.actor_spawn_height = 3f;
+                hagoromoPower.sound_event = "spawn";
+                hagoromoPower.click_action = new PowerActionWithID(CallSpawnUnit);
+                AssetManager.powers.add(hagoromoPower);
+
+                Sprite hagoromoIcon = SpriteTextureLoader.getSprite("ui/icons/units/IconHagoromo");
+                if (hagoromoIcon != null)
+                {
+                    PowerButtons.CreateButton(
+                        "summon_hagoromo",
+                        hagoromoIcon,
+                        "Summon Hagoromo",
+                        "Spawn Hagoromo Otsutsuki",
+                        new Vector2(326f, 90f),
+                        ButtonType.GodPower,
+                        tab.transform,
+                        null
+                    );
+                }
+                #endregion
+
+                #region Orochimaru
+                GodPower orochimaruPower = new GodPower();
+                orochimaruPower.id = "summon_orochimaru";
+                orochimaruPower.name = "summon_orochimaru";
+                orochimaruPower.actor_asset_id = ShinobiActors.OrochimaruActorId;
+                orochimaruPower.show_spawn_effect = true;
+                orochimaruPower.actor_spawn_height = 3f;
+                orochimaruPower.sound_event = "spawn";
+                orochimaruPower.click_action = new PowerActionWithID(CallSpawnUnit);
+                AssetManager.powers.add(orochimaruPower);
+
+                Sprite orochimaruIcon = SpriteTextureLoader.getSprite("ui/icons/units/IconOrochimaru");
+                if (orochimaruIcon != null)
+                {
+                    PowerButtons.CreateButton(
+                        "summon_orochimaru",
+                        orochimaruIcon,
+                        "Summon Orochimaru",
+                        "Spawn Orochimaru",
+                        new Vector2(362f, 90f),
                         ButtonType.GodPower,
                         tab.transform,
                         null
@@ -360,6 +466,26 @@ namespace ShinobiBox
                 {
                     spawned.setName("Sakura", true);
                     spawned.data.name = "Sakura";
+                }
+                else if (pPowerID == "summon_orochimaru")
+                {
+                    spawned.setName("Orochimaru", true);
+                    spawned.data.name = "Orochimaru";
+                }
+                else if (pPowerID == "summon_kakashi")
+                {
+                    spawned.setName("Kakashi", true);
+                    spawned.data.name = "Kakashi";
+                }
+                else if (pPowerID == "summon_obito")
+                {
+                    spawned.setName("Obito", true);
+                    spawned.data.name = "Obito";
+                }
+                else if (pPowerID == "summon_hagoromo")
+                {
+                    spawned.setName("Hagoromo", true);
+                    spawned.data.name = "Hagoromo";
                 }
                 else if (pPowerID == "summon_ten_tails")
                 {
