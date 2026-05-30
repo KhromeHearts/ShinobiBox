@@ -1932,14 +1932,7 @@ namespace ShinobiBox
             byakuganP.can_be_flipped = true;
             //byakuganP.scale = 0.3f;
             byakuganP.render_priority = 5;
-            byakuganP.get_override_sprite = delegate(BaseSimObject pActor, int pIndex)
-            {
-                if (pActor == null || pActor.a == null) return null;
-                if (pActor.a.animation_container == null) return null;
 
-                Sprite pMainSprite = pActor.a.animation_container.walking.frames[0];
-                return pActor.a.calculateColoredSprite(pMainSprite, pUpdateFrameData: false);
-            };
 
             byakuganP.get_override_sprite_position = delegate (BaseSimObject pActor, int pIndex)
             {

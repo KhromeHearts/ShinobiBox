@@ -1,63 +1,112 @@
+using System;
 using UnityEngine;
 
 namespace ShinobiBox
 {
     public static class ClanProgression
     {
-        public static void KaguyaProgression(Actor actor)
+        public static bool Kaguya(BaseSimObject pTarget = null, WorldTile pTile = null)
         {
-            if (actor == null || !actor.isAlive()) return;
-            if (!actor.hasTrait("kaguya_clan")) return;
-            if (actor.data.getAge() < 15) return;
-            if (actor.hasTrait("shikotsumyaku")) return;
+            if (pTarget == null || !pTarget.isAlive()) return false;
+            Actor a = pTarget.a;
 
-            if (UnityEngine.Random.value < 0.005f)
-            {
-                actor.addTrait("shikotsumyaku");
-            }
+            a.addTrait("shikotsumyaku");
+            return true;
         }
 
-        public static void SenjuProgression(Actor actor, int level)
+        public static bool Senju(BaseSimObject pTarget = null, WorldTile pTile = null)
         {
-            if (actor == null || !actor.isAlive()) return;
-            if (!actor.hasTrait("senju_clan")) return;
-            if (level < 5) return;
-            if (actor.hasTrait("hashi_cells")) return;
+            if (pTarget == null || !pTarget.isAlive()) return false;
+            Actor a = pTarget.a;
+            int level = a.data.level;
+            bool done = false;
 
-            if (UnityEngine.Random.value < 0.01f)
+            a.data.get("awakened", out done, false);
+
+            if (done) return false;
+
+            if (Randy.randomChance(0.04f) && !a.hasTrait("hashi_cells"))
             {
-                actor.addTrait("hashi_cells");
+                a.addTrait("hashi_cells");
 
                 if (ShinobiConfig.EnableWorldTips)
                 {
-                    ShinobiWorldLogs.AddWorldLog("log_hashi_cells", "worldlog_hashi_cells", "ui/icons/hashirama_cells", actor);
+                    ShinobiWorldLogs.AddWorldLog("log_hashi_cells", "worldlog_hashi_cells", "ui/icons/hashirama_cells", a);
                 }
+                a.data.set("awakened", true);
+                return true;
             }
-        }
-        
-        public static void HyugaProgression(Actor actor)
-        {
-            if (actor == null || !actor.isAlive()) return;
-            if (!actor.hasTrait("hyuga_clan")) return;
-            if (actor.hasTrait("byakugan")) return;
-
-            actor.addTrait("byakugan");
-        }
-
-        public static void LeeProgression(Actor actor, int level, int age)
-        {
-            if (actor == null || !actor.isAlive()) return;
-            if (!actor.hasTrait("lee_clan")) return;
-
-            if (level >= 4 && !actor.hasTrait("taijutsu_master"))
+            else
             {
-                actor.addTrait("taijutsu_master");
+                a.addTrait("wood_release");
+
+                if (ShinobiConfig.EnableWorldTips)
+                {
+                    ShinobiWorldLogs.AddWorldLog("log_wood_release", "worldlog_wood_release", "ui/icons/wood_release", a);
+                }
+                a.data.set("awakened", true);
+                return true;
+            }
+            return false;
+        }
+
+        public static bool Hyuga(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            if (pTarget == null || !pTarget.isAlive()) return false;
+            Actor a = pTarget.a;
+            Debug.Log($"ClanProgression.Hyuga invoked for actor: {a?.data?.name} (id:{a?.id})");
+
+            a.addTrait("byakugan");
+
+            return true;
+        }
+
+        public static bool Lee(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            if (pTarget == null || !pTarget.isAlive()) return false;
+            Actor a = pTarget.a;
+            int level = a.data.level;
+            int age = a.data.getAge();
+            if (!a.hasTrait("lee_clan")) return false;
+            bool done = false;
+
+            if (age >= 24 && !a.hasTrait("eight_inner_gates") && Randy.randomChance(0.10f))
+            {
+                a.addTrait("eight_inner_gates");
+                return true;
             }
 
-            if (age >= 24 && !actor.hasTrait("eight_inner_gates") && UnityEngine.Random.value < 0.01f)
+            a.data.get("awakened", out done, false);
+            if (done) return false;
+
+            if (level >= 4 && !a.hasTrait("taijutsu_master"))
             {
-                actor.addTrait("eight_inner_gates");
+                a.addTrait("taijutsu_master");
+                a.data.set("awakened", true);
+                return true;
             }
+
+            return false;
         }
+
+        public static bool OtsutsukiBirth(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            if (pTarget == null || !pTarget.isAlive()) return false;
+            Actor a = pTarget.a;
+            Debug.Log($"ClanProgression.OtsutsukiBirth invoked for actor: {a?.data?.name} (id:{a?.id})");
+
+            string currentName = a.data.name;
+            string clanName = "Otsutsuki";
+
+            a.addTrait("byakugan");
+            a.data.name = $"{currentName} {clanName}";
+
+            if (Randy.randomChance(0.10f))
+            {
+                a.addTrait("rinnegan");
+            }
+            return true;
+        }
+
     }
 }

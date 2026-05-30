@@ -55,7 +55,7 @@ namespace ShinobiBox
 
             CleanOppositeTraits(actor);
             RankProgression.CheckRankProgression(actor);
-            ClanProgression.KaguyaProgression(actor);
+
             RemoveFormsIfNoTrait(actor);
 
             // Rinnegan Awakening
@@ -162,10 +162,6 @@ namespace ShinobiBox
 
             HandleNatureProgressionExp(actor, level, kills);
             SageProgression.HandleSageProgression(actor, level);
-            ClanProgression.KaguyaProgression(actor);
-            ClanProgression.SenjuProgression(actor, level);
-            ClanProgression.HyugaProgression(actor);
-            ClanProgression.LeeProgression(actor, level, age);
 
             bool hasKCM2Plus = actor.hasStatus("status_jinchuriki_kcm2") || actor.hasStatus("status_jinchuriki_avatar");
 

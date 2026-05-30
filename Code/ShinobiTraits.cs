@@ -47,6 +47,7 @@ namespace ShinobiBox
         private static int lowChance = 10;
         private static int highChance = 40;
         private static int alwaysChance = 100;
+        public static float effectInt = 7f;
 
         public static void Init()
         {
@@ -147,9 +148,11 @@ namespace ShinobiBox
             hyuga.base_stats.set("chakra", 25f);
             hyuga.base_stats.set("experience", 10f);
 
-            hyuga.action_special_effect = new WorldAction(ClanProgression.Hyuga);
+            hyuga.special_effect_interval = effectInt;
+            hyuga.action_birth = new WorldAction(ClanProgression.Hyuga);
 
             addTraitToGame(hyuga);
+            Debug.Log($"ShinobiTraits: registered trait 'hyuga_clan', action_birth set={hyuga.action_birth != null}");
             #endregion
 
             #region Uzumaki Clan
@@ -179,7 +182,7 @@ namespace ShinobiBox
             #endregion
 
             #region Kaguya Clan
-            ActorTrait kaguya_clan = new ActorTrait
+            ActorTrait kaguya = new ActorTrait
             {
                 id = "kaguya_clan",
                 group_id = GroupId_Bloodlines,
@@ -188,19 +191,22 @@ namespace ShinobiBox
                 needs_to_be_explored = false,
                 rate_inherit = alwaysChance,
             };
-            kaguya_clan.base_stats = new BaseStats();
-            kaguya_clan.base_stats.set("health", 75f);
-            kaguya_clan.base_stats.set("damage", 15f);
-            kaguya_clan.base_stats.set("armor", 7f);
-            kaguya_clan.base_stats.set("stamina", 25f);
-            kaguya_clan.base_stats.set("experience", 10f);
-            kaguya_clan.base_stats.set("chakra", 30f);
+            kaguya.base_stats = new BaseStats();
+            kaguya.base_stats.set("health", 75f);
+            kaguya.base_stats.set("damage", 15f);
+            kaguya.base_stats.set("armor", 7f);
+            kaguya.base_stats.set("stamina", 25f);
+            kaguya.base_stats.set("experience", 10f);
+            kaguya.base_stats.set("chakra", 30f);
 
-            addTraitToGame(kaguya_clan);
+            kaguya.special_effect_interval = effectInt;
+            kaguya.action_special_effect = new WorldAction(ClanProgression.Kaguya);
+
+            addTraitToGame(kaguya);
             #endregion
 
             #region Otsutsuki Clan
-            ActorTrait otsutsuki_clan = new ActorTrait
+            ActorTrait otsutsuki = new ActorTrait
             {
                 id = "otsutsuki_clan",
                 group_id = GroupId_Bloodlines,
@@ -210,18 +216,23 @@ namespace ShinobiBox
                 rate_inherit = alwaysChance,
                 rarity = Rarity.R3_Legendary
             };
-            otsutsuki_clan.base_stats = new BaseStats();
-            otsutsuki_clan.base_stats.set("health", 190f);
-            otsutsuki_clan.base_stats.set("damage", 64f);
-            otsutsuki_clan.base_stats.set("intelligence", 1000f);
-            otsutsuki_clan.base_stats.set("stamina", 1000f);
-            otsutsuki_clan.base_stats.set("chakra", 1000f);
-            otsutsuki_clan.base_stats.set("experience", 20f);
-            otsutsuki_clan.base_stats.set("multiplier_speed", 0.15f);
-            otsutsuki_clan.base_stats.set("multiplier_health", 0.15f);
-            otsutsuki_clan.base_stats.set("multiplier_lifespan", 0.25f);
-            otsutsuki_clan.base_stats.set("multiplier_damage", 0.15f);
-            addTraitToGame(otsutsuki_clan);
+            otsutsuki.base_stats = new BaseStats();
+            otsutsuki.base_stats.set("health", 190f);
+            otsutsuki.base_stats.set("damage", 64f);
+            otsutsuki.base_stats.set("intelligence", 1000f);
+            otsutsuki.base_stats.set("stamina", 1000f);
+            otsutsuki.base_stats.set("chakra", 1000f);
+            otsutsuki.base_stats.set("experience", 20f);
+            otsutsuki.base_stats.set("multiplier_speed", 0.15f);
+            otsutsuki.base_stats.set("multiplier_health", 0.15f);
+            otsutsuki.base_stats.set("multiplier_lifespan", 0.50f);
+            otsutsuki.base_stats.set("multiplier_damage", 0.15f);
+
+            otsutsuki.special_effect_interval = effectInt;
+            otsutsuki.action_birth = new WorldAction(ClanProgression.OtsutsukiBirth);
+
+            addTraitToGame(otsutsuki);
+            Debug.Log($"ShinobiTraits: registered trait 'otsutsuki_clan', action_birth set={otsutsuki.action_birth != null}");
             #endregion
 
             #region Senju Clan
