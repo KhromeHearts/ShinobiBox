@@ -57,9 +57,11 @@ namespace ShinobiBox
             loadClans();
             loadDojutsu();
             loadShinobiRanks();
+            loadChakraTraits();
             loadSenjutsu();
             loadJutsus();
             populateListOppositeTraits();
+
         }
 
         #region Trait Groups
@@ -149,10 +151,9 @@ namespace ShinobiBox
             hyuga.base_stats.set("experience", 10f);
 
             hyuga.special_effect_interval = effectInt;
-            hyuga.action_birth = new WorldAction(ClanProgression.Hyuga);
+            hyuga.action_special_effect = new WorldAction(ClanProgression.Hyuga);
 
             addTraitToGame(hyuga);
-            Debug.Log($"ShinobiTraits: registered trait 'hyuga_clan', action_birth set={hyuga.action_birth != null}");
             #endregion
 
             #region Uzumaki Clan
@@ -229,10 +230,9 @@ namespace ShinobiBox
             otsutsuki.base_stats.set("multiplier_damage", 0.15f);
 
             otsutsuki.special_effect_interval = effectInt;
-            otsutsuki.action_birth = new WorldAction(ClanProgression.OtsutsukiBirth);
+            otsutsuki.action_special_effect = new WorldAction(ClanProgression.OtsutsukiBirth);
 
             addTraitToGame(otsutsuki);
-            Debug.Log($"ShinobiTraits: registered trait 'otsutsuki_clan', action_birth set={otsutsuki.action_birth != null}");
             #endregion
 
             #region Senju Clan
@@ -349,14 +349,42 @@ namespace ShinobiBox
                 rarity = Rarity.R2_Epic
             };
             byakugan.base_stats = new BaseStats();
-            byakugan.base_stats.set("accuracy", 0.50f);
+            byakugan.base_stats.set("accuracy", 0.35f);
+            byakugan.base_stats.set("critical_chance", 0.15f);
             byakugan.base_stats.set("chakra", 32f);
+            byakugan.base_stats.set("health", 125f);
+            byakugan.base_stats.set("attack_speed", 0.10f);
 
             byakugan.action_special_effect = new WorldAction(Byakugan.ByakuganAction);
             byakugan.action_attack_target = new AttackAction(JutsuLibrary.PalmRotationAttackAction);
             byakugan.action_attack_target = (AttackAction)Delegate.Combine(byakugan.action_attack_target, new AttackAction(JutsuLibrary.EightTrigrams64PalmsAction));
 
             addTraitToGame(byakugan);
+            #endregion
+
+            #region Golden Byakugan
+            // Byakugan
+            ActorTrait byakuganG = new ActorTrait
+            {
+                id = "golden_byakugan",
+                group_id = GroupId_Dojutsu,
+                path_icon = "ui/icons/gold_byakugan",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rarity = Rarity.R3_Legendary
+            };
+            byakuganG.base_stats = new BaseStats();
+            byakuganG.base_stats.set("accuracy", 0.35f);
+            byakuganG.base_stats.set("critical_chance", 0.15f);
+            byakuganG.base_stats.set("chakra", 32f);
+            byakuganG.base_stats.set("health", 435f);
+            byakuganG.base_stats.set("attack_speed", 0.20f);
+
+            byakuganG.action_special_effect = new WorldAction(Byakugan.ByakuganAction);
+            byakuganG.action_attack_target = new AttackAction(JutsuLibrary.PalmRotationAttackAction);
+            byakuganG.action_attack_target = (AttackAction)Delegate.Combine(byakuganG.action_attack_target, new AttackAction(JutsuLibrary.EightTrigrams64PalmsAction));
+
+            addTraitToGame(byakuganG);
             #endregion
 
             #region Rinnegan
@@ -370,8 +398,7 @@ namespace ShinobiBox
                 rarity = Rarity.R3_Legendary
             };
             rinnegan.base_stats = new BaseStats();
-            rinnegan.base_stats.set("damage", 65f);
-            rinnegan.base_stats.set("multiplier_damage", 0.28f);
+            rinnegan.base_stats.set("multiplier_damage", 0.36f);
             rinnegan.base_stats.set("multiplier_health", 0.25f);
             rinnegan.base_stats.set("multiplier_speed", 0.15f);
             rinnegan.base_stats.set("intelligence", 30f);
@@ -478,7 +505,7 @@ namespace ShinobiBox
                 mangekyo.action_special_effect = (WorldAction)Delegate.Combine(mangekyo.action_special_effect, new WorldAction(JutsuLibrary.ItachiSusanooRibcage));
                 */
                 Debug.Log("itachi mangekyo was picked");
-                
+
             }
 
 
@@ -585,7 +612,7 @@ namespace ShinobiBox
             sasukeRinnegan.action_get_hit = (GetHitAction)Delegate.Combine(sasukeRinnegan.action_get_hit, new GetHitAction(JutsuLibrary.KamuiAction));
 
             addTraitToGame(sasukeRinnegan);
-    
+
             /*
             #region Itachi Mangekyo Sharingan
             ActorTrait itachiMangekyo = new ActorTrait
@@ -618,6 +645,24 @@ namespace ShinobiBox
             addTraitToGame(itachiMangekyo);
             #endregion
             */
+            #endregion
+
+            #region Tenseigan
+            // Tenseigan
+            ActorTrait tenseigan = new ActorTrait
+            {
+                id = "tenseigan",
+                group_id = GroupId_Dojutsu,
+                path_icon = "ui/icons/tenseigan",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rarity = Rarity.R2_Epic
+            };
+            tenseigan.base_stats = new BaseStats();
+            tenseigan.base_stats.set("accuracy", 0.50f);
+            tenseigan.base_stats.set("chakra", 32f);
+
+            addTraitToGame(tenseigan);
             #endregion
         }
 
@@ -845,6 +890,178 @@ namespace ShinobiBox
             #endregion
         }
 
+        private static void loadChakraTraits()
+        {
+            #region Low Chakra Reserves
+            ActorTrait low_chakra = new ActorTrait
+            {
+                id = "01_low_chakra_reserve",
+                group_id = GroupId_SpecialChakra,
+                path_icon = "ui/icons/LowChakraReserve",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_inherit = rare,
+                rate_birth = 2
+            };
+            low_chakra.base_stats = new BaseStats();
+            low_chakra.base_stats.set("multiplier_chakra", -0.10f);
+            addTraitToGame(low_chakra);
+            #endregion
+
+            #region High Chakra Reserves
+            ActorTrait high_chakra = new ActorTrait
+            {
+                id = "02_high_chakra_reserve",
+                group_id = GroupId_SpecialChakra,
+                path_icon = "ui/icons/HighChakraReserve",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_inherit = rare,
+                rate_birth = 2
+            };
+            high_chakra.base_stats = new BaseStats();
+            high_chakra.base_stats.set("chakra", 100f);
+            high_chakra.base_stats.set("multiplier_chakra", 0.10f);
+            addTraitToGame(high_chakra);
+            #endregion
+
+            #region Greater Chakra Reserves
+            ActorTrait greater_chakra = new ActorTrait
+            {
+                id = "03_greater_chakra_reserve",
+                group_id = GroupId_SpecialChakra,
+                path_icon = "ui/icons/GreaterChakraReserve",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_inherit = rare,
+                rate_birth = veryRare
+            };
+            greater_chakra.base_stats = new BaseStats();
+            greater_chakra.base_stats.set("chakra", 200f);
+            greater_chakra.base_stats.set("multiplier_chakra", 0.25f);
+            addTraitToGame(greater_chakra);
+            #endregion
+
+            #region Vast Chakra Reserves
+            ActorTrait vast_chakra = new ActorTrait
+            {
+                id = "04_vast_chakra_reserve",
+                group_id = GroupId_SpecialChakra,
+                path_icon = "ui/icons/VastChakraReserve",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_inherit = rare,
+                rate_birth = 1
+            };
+            vast_chakra.base_stats = new BaseStats();
+            vast_chakra.base_stats.set("chakra", 300f);
+            vast_chakra.base_stats.set("multiplier_chakra", 0.50f);
+            addTraitToGame(vast_chakra);
+            #endregion
+
+            #region Hagoromo Chakra
+            ActorTrait hagoromo = new ActorTrait
+            {
+                id = "05_hagoromo_chakra",
+                group_id = GroupId_SpecialChakra,
+                path_icon = "ui/icons/sixpathssenjutsu",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_inherit = 0,
+                rate_birth = 0
+            };
+            hagoromo.base_stats = new BaseStats();
+            hagoromo.base_stats.set("multiplier_damage", 0.15f);
+            hagoromo.base_stats.set("multiplier_health", 0.15f);
+            hagoromo.base_stats.set("multiplier_speed", 0.10f);
+            hagoromo.base_stats.set("intelligence", 50f);
+            hagoromo.base_stats.set("critical_chance", 0.10f);
+            hagoromo.base_stats.set("critical_damage_multiplier", 0.10f);
+            hagoromo.base_stats.set("experience", 15f);
+            hagoromo.base_stats.set("chakra", 322f);
+
+            addTraitToGame(hagoromo);
+            #endregion
+
+            #region Hamura's Chakra
+            ActorTrait hamura = new ActorTrait
+            {
+                id = "06_hamura_chakra",
+                group_id = GroupId_SpecialChakra,
+                path_icon = "ui/icons/sixpathssenjutsu",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_inherit = 0,
+                rate_birth = 0
+            };
+            hamura.base_stats = new BaseStats();
+            hamura.base_stats.set("multiplier_damage", 0.15f);
+            hamura.base_stats.set("multiplier_health", 0.15f);
+            hamura.base_stats.set("multiplier_speed", 0.10f);
+            hamura.base_stats.set("intelligence", 50f);
+            hamura.base_stats.set("critical_chance", 0.10f);
+            hamura.base_stats.set("critical_damage_multiplier", 0.10f);
+            hamura.base_stats.set("experience", 15f);
+            hamura.base_stats.set("chakra", 322f);
+
+            addTraitToGame(hamura);
+            #endregion
+
+            #region Indra's Chakra
+            // Indra's Chakra
+            ActorTrait indra = new ActorTrait
+            {
+                id = "07_indra_chakra",
+                group_id = GroupId_SpecialChakra,
+                path_icon = "ui/icons/indra_chakra",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_inherit = 0,
+                rate_birth = 0,
+                action_death = new WorldAction(TransmigrateAction)
+            };
+            indra.base_stats = new BaseStats();
+            indra.base_stats.set("intelligence", 10f);
+            indra.base_stats.set("critical_chance", 0.10f);
+            indra.base_stats.set("warfare", 5f);
+            indra.base_stats.set("experience", 10f);
+            indra.base_stats.set("skill_combat", 0.15f);
+            indra.base_stats.set("diplomacy", -5f);
+            indra.base_stats.set("stewardship", -5f);
+            indra.base_stats.set("opinion", -25f);
+            indra.base_stats.set("chakra", 322f);
+
+            addTraitToGame(indra);
+            #endregion
+
+            #region Asura's Chakra
+            // Asura's Chakra
+            ActorTrait asura = new ActorTrait
+            {
+                id = "08_asura_chakra",
+                group_id = GroupId_SpecialChakra,
+                path_icon = "ui/icons/asura_chakra",
+                can_be_given = true,
+                needs_to_be_explored = false,
+                rate_inherit = 0,
+                rate_birth = 0,
+                action_death = new WorldAction(TransmigrateAction)
+            };
+            asura.base_stats = new BaseStats();
+            asura.base_stats.set("multiplier_health", 0.05f);
+            asura.base_stats.set("stamina", 20f);
+            asura.base_stats.set("experience", 10f);
+            asura.base_stats.set("skill_combat", 0.10f);
+            asura.base_stats.set("diplomacy", 10f);
+            asura.base_stats.set("stewardship", 10f);
+            asura.base_stats.set("intelligence", 10f);
+            asura.base_stats.set("opinion", 75f);
+            asura.base_stats.set("chakra", 322f);
+
+            addTraitToGame(asura);
+            #endregion
+        }
+
         private static void loadShinobiTraits()
         {
             #region Core Abilities
@@ -896,150 +1113,6 @@ namespace ShinobiBox
             addTraitToGame(curse_of_hatred);
             #endregion
 
-            #region High Chakra Reserves
-            ActorTrait high_chakra = new ActorTrait
-            {
-                id = "high_chakra_reserve",
-                group_id = GroupId_SpecialChakra,
-                path_icon = "ui/icons/HighChakraReserve",
-                can_be_given = true,
-                needs_to_be_explored = false,
-                rate_inherit = rare,
-                rate_birth = 2
-            };
-            high_chakra.base_stats = new BaseStats();
-            high_chakra.base_stats.set("chakra", 100f);
-            high_chakra.base_stats.set("multiplier_chakra", 0.10f);
-            addTraitToGame(high_chakra);
-            #endregion
-
-            #region Greater Chakra Reserves
-            ActorTrait greater_chakra = new ActorTrait
-            {
-                id = "greater_chakra_reserve",
-                group_id = GroupId_SpecialChakra,
-                path_icon = "ui/icons/GreaterChakraReserve",
-                can_be_given = true,
-                needs_to_be_explored = false,
-                rate_inherit = rare,
-                rate_birth = veryRare
-            };
-            greater_chakra.base_stats = new BaseStats();
-            greater_chakra.base_stats.set("chakra", 200f);
-            greater_chakra.base_stats.set("multiplier_chakra", 0.25f);
-            addTraitToGame(greater_chakra);
-            #endregion
-
-            #region Vast Chakra Reserves
-            ActorTrait vast_chakra = new ActorTrait
-            {
-                id = "vast_chakra_reserve",
-                group_id = GroupId_SpecialChakra,
-                path_icon = "ui/icons/VastChakraReserve",
-                can_be_given = true,
-                needs_to_be_explored = false,
-                rate_inherit = rare,
-                rate_birth = 1
-            };
-            vast_chakra.base_stats = new BaseStats();
-            vast_chakra.base_stats.set("chakra", 300f);
-            vast_chakra.base_stats.set("multiplier_chakra", 0.50f);
-            addTraitToGame(vast_chakra);
-            #endregion
-
-            #region Low Chakra Reserves
-            ActorTrait low_chakra = new ActorTrait
-            {
-                id = "low_chakra_reserve",
-                group_id = GroupId_SpecialChakra,
-                path_icon = "ui/icons/LowChakraReserve",
-                can_be_given = true,
-                needs_to_be_explored = false,
-                rate_inherit = rare,
-                rate_birth = 2
-            };
-            low_chakra.base_stats = new BaseStats();
-            low_chakra.base_stats.set("multiplier_chakra", -0.10f);
-            addTraitToGame(low_chakra);
-            #endregion
-
-            #region Hagoromo Chakra
-            ActorTrait hagoromo = new ActorTrait
-            {
-                id = "hagoromo_chakra",
-                group_id = GroupId_SpecialChakra,
-                path_icon = "ui/icons/sixpathssenjutsu",
-                can_be_given = true,
-                needs_to_be_explored = false,
-                rate_inherit = 0,
-                rate_birth = 0
-            };
-            hagoromo.base_stats = new BaseStats();
-            hagoromo.base_stats.set("multiplier_damage", 0.15f);
-            hagoromo.base_stats.set("multiplier_health", 0.15f);
-            hagoromo.base_stats.set("multiplier_speed", 0.10f);
-            hagoromo.base_stats.set("intelligence", 50f);
-            hagoromo.base_stats.set("critical_chance", 0.10f);
-            hagoromo.base_stats.set("critical_damage_multiplier", 0.10f);
-            hagoromo.base_stats.set("experience", 15f);
-            hagoromo.base_stats.set("chakra", 322f);
-
-            addTraitToGame(hagoromo);
-            #endregion
-
-            #region Indra's Chakra
-            // Indra's Chakra
-            ActorTrait indra = new ActorTrait
-            {
-                id = "indra_chakra",
-                group_id = GroupId_SpecialChakra,
-                path_icon = "ui/icons/indra_chakra",
-                can_be_given = true,
-                needs_to_be_explored = false,
-                rate_inherit = 0,
-                rate_birth = 0,
-                action_death = new WorldAction(TransmigrateAction)
-            };
-            indra.base_stats = new BaseStats();
-            indra.base_stats.set("intelligence", 10f);
-            indra.base_stats.set("critical_chance", 0.10f);
-            indra.base_stats.set("warfare", 5f);
-            indra.base_stats.set("experience", 10f);
-            indra.base_stats.set("skill_combat", 0.15f);
-            indra.base_stats.set("diplomacy", -5f);
-            indra.base_stats.set("stewardship", -5f);
-            indra.base_stats.set("opinion", -25f);
-            indra.base_stats.set("chakra", 322f);
-
-            addTraitToGame(indra);
-            #endregion
-
-            #region Asura's Chakra
-            // Asura's Chakra
-            ActorTrait asura = new ActorTrait
-            {
-                id = "asura_chakra",
-                group_id = GroupId_SpecialChakra,
-                path_icon = "ui/icons/asura_chakra",
-                can_be_given = true,
-                needs_to_be_explored = false,
-                rate_inherit = 0,
-                rate_birth = 0,
-                action_death = new WorldAction(TransmigrateAction)
-            };
-            asura.base_stats = new BaseStats();
-            asura.base_stats.set("multiplier_health", 0.05f);
-            asura.base_stats.set("stamina", 20f);
-            asura.base_stats.set("experience", 10f);
-            asura.base_stats.set("skill_combat", 0.10f);
-            asura.base_stats.set("diplomacy", 10f);
-            asura.base_stats.set("stewardship", 10f);
-            asura.base_stats.set("intelligence", 10f);
-            asura.base_stats.set("opinion", 75f);
-            asura.base_stats.set("chakra", 322f);
-
-            addTraitToGame(asura);
-            #endregion
 
             #region Blindness
             // Blindness
@@ -1338,7 +1411,7 @@ namespace ShinobiBox
                 path_icon = "ui/icons/9Tails",
                 can_be_given = true,
                 needs_to_be_explored = false,
-   
+
             };
             ninetailsjinchuriki.base_stats = new BaseStats();
             ninetailsjinchuriki.base_stats.set("damage", 10f);
@@ -1504,7 +1577,7 @@ namespace ShinobiBox
             cursed_mark.base_stats.set("experience", 5f);
             cursed_mark.action_get_hit = new GetHitAction(CursedMarkProgression.CursedMark);
             cursed_mark.action_attack_target = (AttackAction)Delegate.Combine(cursed_mark.action_attack_target, new AttackAction(CursedMarkProgression.OrochimaruCM));
-            
+
             addTraitToGame(cursed_mark);
             #endregion
 

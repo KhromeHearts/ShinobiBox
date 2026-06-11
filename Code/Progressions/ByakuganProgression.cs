@@ -11,23 +11,12 @@ namespace ShinobiBox
             Actor a = pTarget.a;
             int level = a.data.level;
             int kills = a.data.kills;
-            bool isOtsutsuki = a.hasTrait("otsutsuki_clan");
 
             if (a.has_attack_target)
             {
-                if (level >= 5 && isOtsutsuki)
-                {
-                    a.addStatusEffect("byakuganG", 60f);
-                    return true;
-                }
-                else if (!a.hasStatus("byakuganP") && (level >= 3 || kills >= 3))
+                if (!a.hasStatus("byakuganP") && (level >= 3 || kills >= 3))
                 {
                     a.addStatusEffect("byakuganP", 60f);
-                    return true;
-                }
-                else if (level >= 1)
-                {
-                    a.addStatusEffect("byakugan", 60f);
                     return true;
                 }
                 return false;  

@@ -71,14 +71,15 @@ namespace ShinobiBox
             scythe.unlock(true);
 
             scythe.name_templates = new List<string>();
-            scythe.equipment_value = 20000;
+            scythe.equipment_value = 2500;
             scythe.special_effect_interval = 0.4f;
             scythe.equipment_type = EquipmentType.Weapon;
             scythe.attack_type = WeaponType.Range;
             scythe.name_class = "item_class_weapon";
-   
+            scythe.setCost(1, "adamantite", 12);
+
             scythe.base_stats = new BaseStats();
-            scythe.base_stats.set("damage", 60f);
+            scythe.base_stats.set("damage", 20f);
             scythe.base_stats.set("range", 2f);
             scythe.base_stats.set("critical_chance", 0.50f);
             
@@ -131,18 +132,18 @@ namespace ShinobiBox
 
             basicKunai.base_stats = new BaseStats();
             basicKunai.base_stats.set("projectiles", 1f);
-            basicKunai.base_stats.set("damage", 15f);
+            basicKunai.base_stats.set("damage", 10f);
             basicKunai.base_stats.set("range", 6f);
             basicKunai.base_stats.set("attack_speed", 2f);
             basicKunai.base_stats.set("accuracy", 0.10f);
             basicKunai.path_slash_animation = "effects/slashes/slash_bow";
 
-            basicKunai.equipment_value = 200;
+            basicKunai.equipment_value = 100;
             basicKunai.equipment_type = EquipmentType.Weapon;
             basicKunai.name_templates = new List<string>();
             basicKunai.name_class = "item_class_weapon";
             basicKunai.attack_type = WeaponType.Range;
-            basicKunai.setCost(250, "iron", 3);
+            basicKunai.setCost(5, "common_metals", 2);
             basicKunai.minimum_city_storage_resource_1 = 1;
 
             basicKunai.path_icon = "ui/items/basic_kunai";
@@ -164,16 +165,16 @@ namespace ShinobiBox
             gunbai.unlock(true);
 
             gunbai.base_stats = new BaseStats();
-            gunbai.base_stats.set("damage", 58f);
+            gunbai.base_stats.set("damage", 24f);
             gunbai.base_stats.set("knockback", 1.2f);
             gunbai.base_stats.set("armor", 6f);
 
-            gunbai.equipment_value = 5000;
+            gunbai.equipment_value = 3000;
             gunbai.equipment_type = EquipmentType.Weapon;
             gunbai.name_templates = new List<string>();
             gunbai.name_class = "item_class_weapon";
             gunbai.attack_type = WeaponType.Melee;
-            gunbai.setCost(1200, "adamantite", 25, "iron", 50);
+            gunbai.setCost(1, "adamantite", 5, "iron", 25);
             gunbai.minimum_city_storage_resource_1 = 1;
 
             gunbai.path_icon = "ui/items/gunbai";
@@ -197,17 +198,17 @@ namespace ShinobiBox
 
             paperBombKunai.base_stats = new BaseStats();
             paperBombKunai.base_stats.set("projectiles", 1f);
-            paperBombKunai.base_stats.set("damage", 26f);
-            paperBombKunai.base_stats.set("range", 10f);
-            paperBombKunai.base_stats.set("attack_speed", 3f);
+            paperBombKunai.base_stats.set("damage", 12f);
+            paperBombKunai.base_stats.set("range", 8f);
+            paperBombKunai.base_stats.set("attack_speed", 1.5f);
             paperBombKunai.path_slash_animation = "effects/slashes/slash_bow";
 
-            paperBombKunai.equipment_value = 1200;
+            paperBombKunai.equipment_value = 1000;
             paperBombKunai.equipment_type = EquipmentType.Weapon;
             paperBombKunai.name_templates = new List<string>();
             paperBombKunai.name_class = "item_class_weapon";
             paperBombKunai.attack_type = WeaponType.Range;
-            paperBombKunai.setCost(550, "steel", 40);
+            paperBombKunai.setCost(1, "common_metals", 1, "dragon_scales", 1);
             paperBombKunai.minimum_city_storage_resource_1 = 1;
 
             paperBombKunai.path_icon = "ui/items/bomb_kunai";
@@ -229,17 +230,17 @@ namespace ShinobiBox
             executioner.unlock(true);
 
             executioner.base_stats = new BaseStats();
-            executioner.base_stats.set("damage", 74f);
+            executioner.base_stats.set("damage", 24f);
             executioner.base_stats.set("range", 1.4f);
-            executioner.base_stats.set("attack_speed", -4f);
+            executioner.base_stats.set("attack_speed", -5f);
             executioner.base_stats.set("knockback", 1.3f);
 
-            executioner.equipment_value = 3500;
+            executioner.equipment_value = 2500;
             executioner.equipment_type = EquipmentType.Weapon;
             executioner.name_templates = new List<string>();
             executioner.name_class = "item_class_weapon";
             executioner.attack_type = WeaponType.Melee;
-            executioner.setCost(5000, "mythril", 12, "iron", 5);
+            executioner.setCost(5, "mythril", 10, "iron", 5);
             executioner.minimum_city_storage_resource_1 = 1;
 
             executioner.path_icon = "ui/items/executioner_blade";
@@ -261,16 +262,17 @@ namespace ShinobiBox
             hagoromoStaff.unlock(true);
 
             hagoromoStaff.base_stats = new BaseStats();
-            hagoromoStaff.base_stats.set("damage", 72f);
-            hagoromoStaff.base_stats.set("range", 1.8f);
-            hagoromoStaff.base_stats.set("critical_chance", 0.25f);
+            hagoromoStaff.base_stats.set("damage", 30f);
+            hagoromoStaff.base_stats.set("multiplier_damage", 0.30f);
+            hagoromoStaff.base_stats.set("range", 1.5f);
+            hagoromoStaff.base_stats.set("critical_chance", 0.28f);
+            hagoromoStaff.base_stats.set("knockback", 1.5f);
 
             hagoromoStaff.equipment_value = 1000000;
             hagoromoStaff.equipment_type = EquipmentType.Weapon;
             hagoromoStaff.name_templates = new List<string>();
             hagoromoStaff.name_class = "item_class_weapon";
             hagoromoStaff.attack_type = WeaponType.Melee;
-            hagoromoStaff.setCost(200000, "adamantite", 100, "mythril", 50);
             hagoromoStaff.minimum_city_storage_resource_1 = 1;
 
             hagoromoStaff.path_icon = "ui/items/hagoromo_staff";
@@ -292,8 +294,8 @@ namespace ShinobiBox
             yinStaff.unlock(true);
 
             yinStaff.base_stats = new BaseStats();
-            yinStaff.base_stats.set("damage", 66f);
-            yinStaff.base_stats.set("range", 1.7f);
+            yinStaff.base_stats.set("damage", 30f);
+            yinStaff.base_stats.set("range", 1.5f);
             yinStaff.base_stats.set("critical_chance", 0.15f);
 
             yinStaff.equipment_value = 500000;
@@ -301,7 +303,6 @@ namespace ShinobiBox
             yinStaff.name_templates = new List<string>();
             yinStaff.name_class = "item_class_weapon";
             yinStaff.attack_type = WeaponType.Melee;
-            yinStaff.setCost(100000, "adamantite", 50, "mythril", 25);
             yinStaff.minimum_city_storage_resource_1 = 1;
 
             yinStaff.path_icon = "ui/items/yin_staff";
@@ -323,8 +324,8 @@ namespace ShinobiBox
             yangStaff.unlock(true);
 
             yangStaff.base_stats = new BaseStats();
-            yangStaff.base_stats.set("damage", 66f);
-            yangStaff.base_stats.set("range", 1.7f);
+            yangStaff.base_stats.set("damage", 30f);
+            yangStaff.base_stats.set("range", 1.5f);
             yangStaff.base_stats.set("knockback", 1.5f);
 
             yangStaff.equipment_value = 500000;
@@ -332,7 +333,6 @@ namespace ShinobiBox
             yangStaff.name_templates = new List<string>();
             yangStaff.name_class = "item_class_weapon";
             yangStaff.attack_type = WeaponType.Melee;
-            yangStaff.setCost(100000, "adamantite", 50, "mythril", 25);
             yangStaff.minimum_city_storage_resource_1 = 1;
 
             yangStaff.path_icon = "ui/items/yang_staff";
@@ -357,19 +357,19 @@ namespace ShinobiBox
 
             ftgItem.base_stats = new BaseStats();
             ftgItem.base_stats.set("projectiles", 1f);
-            ftgItem.base_stats.set("damage", 40f);
+            ftgItem.base_stats.set("damage", 8f);
             ftgItem.base_stats.set("speed", 10f);
             ftgItem.base_stats.set("range", 9f);
             ftgItem.base_stats.set("attack_speed", 3f);
             ftgItem.path_slash_animation = "effects/slashes/slash_bow";
 
 
-            ftgItem.equipment_value = 20000;
+            ftgItem.equipment_value = 8000;
             ftgItem.equipment_type = EquipmentType.Weapon;
             ftgItem.name_templates = new List<string>();
             ftgItem.name_class = "item_class_weapon";
             ftgItem.attack_type = WeaponType.Range;
-            ftgItem.setCost(1000, "adamantite", 10, "iron", 50);
+            ftgItem.setCost(1, "adamantite", 1, "mythril", 25);
             ftgItem.minimum_city_storage_resource_1 = 1;
 
             ftgItem.path_icon = "ui/items/ftg";
@@ -389,15 +389,15 @@ namespace ShinobiBox
             flakJacket.equipment_type = EquipmentType.Armor;
             flakJacket.name_class = "item_class_armor";
             flakJacket.quality = Rarity.R1_Rare;
-            flakJacket.equipment_value = 1500;
+            flakJacket.equipment_value = 350;
             flakJacket.unlock(true);
 
             flakJacket.base_stats = new BaseStats();
-            flakJacket.base_stats.set("armor", 12f);
-            flakJacket.base_stats.set("health", 110f);
+            flakJacket.base_stats.set("armor", 10f);
+            flakJacket.base_stats.set("health", 100f);
             flakJacket.base_stats.set("accuracy", 0.05f);
 
-            flakJacket.setCost(500, "leather", 15, "iron", 4);
+            flakJacket.setCost(3, "leather", 1, "common_metals", 3);
             flakJacket.minimum_city_storage_resource_1 = 1;
 
             flakJacket.path_icon = "ui/items/WIP";
@@ -415,15 +415,15 @@ namespace ShinobiBox
             warringArmor.equipment_type = EquipmentType.Armor;
             warringArmor.name_class = "item_class_armor";
             warringArmor.quality = Rarity.R3_Legendary;
-            warringArmor.equipment_value = 4500;
+            warringArmor.equipment_value = 1500;
             warringArmor.unlock(true);
 
             warringArmor.base_stats = new BaseStats();
             warringArmor.base_stats.set("armor", 22f);
-            warringArmor.base_stats.set("health", 280f);
+            warringArmor.base_stats.set("health", 200f);
 
             warringArmor.minimum_city_storage_resource_1 = 1;
-            warringArmor.setCost(750, "bronze", 10, "iron", 10);
+            warringArmor.setCost(3, "gold", 3, "iron", 5);
 
             warringArmor.path_icon = "ui/items/WIP";
 
@@ -445,7 +445,7 @@ namespace ShinobiBox
 
             madaraSixPathsCloak.base_stats = new BaseStats();
             madaraSixPathsCloak.base_stats.set("armor", 26f);
-            madaraSixPathsCloak.base_stats.set("health", 420f);
+            madaraSixPathsCloak.base_stats.set("health", 320f);
             madaraSixPathsCloak.base_stats.set("speed", 8f);
             madaraSixPathsCloak.base_stats.set("damage", 10f);
 

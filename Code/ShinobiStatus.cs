@@ -1959,7 +1959,6 @@ namespace ShinobiBox
                 float num4 = (!pActor.a.isInLiquid()) ? 5f : 1f;
                 return new Vector2(0f, num4 * num3 * current_scale.y + bob);
             };
-            byakuganP.opposite_status = new[] {"byakugan", "byakuganG"};
 
             byakuganP.base_stats.set("damage", 67f);
             byakuganP.base_stats.set("accuracy", 0.60f);
@@ -1972,28 +1971,6 @@ namespace ShinobiBox
             byakuganP.locale_description = "status_description_byakuganP";
 
             AssetManager.status.add(byakuganP);
-            #endregion
-
-            #region Golden Byakugan
-            StatusAsset byakuganG = new StatusAsset();
-            byakuganG.id = "byakuganG";
-            byakuganG.path_icon = "ui/icons/byakuganGold";
-            byakuganG.duration = 60f;
-            byakuganG.opposite_status = new[] { "byakugan", "byakuganP" };
-
-            byakuganG.base_stats.set("damage", 67f);
-            byakuganG.base_stats.set("multiplier_damage", 0.15f);
-            byakuganG.base_stats.set("accuracy", 1f);
-            byakuganG.base_stats.set("critical_chance", 0.42f);
-            byakuganG.base_stats.set("critical_damage_multiplier", 0.38f);
-            byakuganG.base_stats.set("skill_combat", 0.53f);
-            byakuganG.base_stats.set("chakra", 320f);
-            byakuganG.base_stats.set("multiplier_speed", 0.05f);
-
-            byakuganG.locale_id = "status_title_byakuganG";
-            byakuganG.locale_description = "status_description_byakuganG";
-
-            AssetManager.status.add(byakuganG);
             #endregion
         }
 

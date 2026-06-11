@@ -160,21 +160,21 @@
   "trait_curse_of_hatred_info": "A dark conviction born from grief, rivalry, and loss.",
   "trait_curse_of_hatred_info_2": "When near death, this trait can spread a curse to nearby enemies.",
 
-  "trait_high_chakra_reserve": "High Chakra Reserve",
-  "trait_high_chakra_reserve_info": "Born with High Chakra Reserves.",
-  "trait_high_chakra_reserve_info_2": "Rare birth or inheritance trait. Grants extra chakra capacity from the start.",
+  "trait_02_high_chakra_reserve": "High Chakra Reserve",
+  "trait_02_high_chakra_reserve_info": "Born with High Chakra Reserves.",
+  "trait_02_high_chakra_reserve_info_2": "Rare birth or inheritance trait. Grants extra chakra capacity from the start.",
 
-  "trait_greater_chakra_reserve": "Greater Chakra Reserves",
-  "trait_greater_chakra_reserve_info": "A rare reserve that significantly boosts chakra capacity.",
-  "trait_greater_chakra_reserve_info_2": "Very rare birth/inheritance trait with a larger chakra reserve than High Chakra Reserve.",
+  "trait_03_greater_chakra_reserve": "Greater Chakra Reserves",
+  "trait_03_greater_chakra_reserve_info": "A rare reserve that significantly boosts chakra capacity.",
+  "trait_03_greater_chakra_reserve_info_2": "Very rare birth/inheritance trait with a larger chakra reserve than High Chakra Reserve.",
 
-  "trait_vast_chakra_reserve": "Vast Chakra Reserves",
-  "trait_vast_chakra_reserve_info": "An exceptional reserve found only in anomalies.",
-  "trait_vast_chakra_reserve_info_2": "Extremely rare birth/inheritance trait. Strongest natural reserve tier.",
+  "trait_04_vast_chakra_reserve": "Vast Chakra Reserves",
+  "trait_04_vast_chakra_reserve_info": "An exceptional reserve found only in anomalies.",
+  "trait_04_vast_chakra_reserve_info_2": "Extremely rare birth/inheritance trait. Strongest natural reserve tier.",
 
-  "trait_low_chakra_reserve": "Low Chakra Reserve",
-  "trait_low_chakra_reserve_info": "Civilian Reserves... barely enough to perform a jutsu.",
-  "trait_low_chakra_reserve_info_2": "Can appear on birth. Lower reserve tier that struggles in prolonged chakra battles.",
+  "trait_01_low_chakra_reserve": "Low Chakra Reserve",
+  "trait_01_low_chakra_reserve_info": "Civilian Reserves... barely enough to perform a jutsu.",
+  "trait_01_low_chakra_reserve_info_2": "Can appear on birth. Lower reserve tier that struggles in prolonged chakra battles.",
 
   "trait_rinnegan": "Rinnegan",
   "trait_rinnegan_info": "The Eyes of a god! The Samsara Eye has finally appeared!",
@@ -217,9 +217,9 @@
   "trait_nine_tails_jinchuriki_info": "The Vessel! A Tailed Beast is sealed inside this unit.",
   "trait_nine_tails_jinchuriki_info_2": "Obtained by slaying the Nine Tails. First mode is giving when unit is level 2 and below 80% hp.",
 
-  "trait_hagoromo_chakra": "Six Paths Chakra",
-  "trait_hagoromo_chakra_info": "Six Paths chakra from the Sage of Six Paths.",
-  "trait_hagoromo_chakra_info_2": "Children of these units may inherit either Indra's Chakra or Asura's Chakra.",
+  "trait_05_hagoromo_chakra": "Six Paths Chakra",
+  "trait_05_hagoromo_chakra_info": "Six Paths chakra from the Sage of Six Paths.",
+  "trait_05_hagoromo_chakra_info_2": "Children of these units may inherit either Indra's Chakra or Asura's Chakra.",
 
   "trait_otsutsuki_clan": "Otsutsuki Clan",
   "trait_otsutsuki_clan_info": "A celestial bloodline from the highest level of chakra lineage.",
@@ -294,12 +294,8 @@
   "trait_byakugan": "Byakugan",
   "trait_byakugan_info": "The White Eye.",
   "trait_byakugan_info_2": "Most commonly gained through Hyuga lineage progression.",
-  "status_title_byakugan": "Byakugan",
-  "status_description_byakugan": "One of the three great dojutsu. Level 3+ or more than 3 kills will purify the eye.",
   "status_title_byakuganP": "Pure Byakugan",
   "status_description_byakuganP": "A stronger White Eye state that appears at level 3+ or after 3 kills.",
-  "status_title_byakuganG": "Golden Byakugan",
-  "status_description_byakuganG": "High Level Otsutsuki can manifest this eye. Lvl 5+.",
 
   "trait_eternal_mangekyo": "Eternal Mangekyo Sharingan",
   "trait_eternal_mangekyo_info": "The final stage of the Sharingan that never loses its light.",
@@ -436,6 +432,7 @@
   "worldlog_became_sannin": "$name$ Has Become A Sannin!",
   "worldlog_god_of_shinobi": "$name$ has become the god Of Shinobi!",
   "worldlog_ghost_of_uchiha": "$name$ has become the Ghost of Uchiha!",
+  "worldlog_hagoromo_blessing": "$name$ has received Hagoromo's blessing!",
 
   "chakra": "Chakra",
   "blindness": "Blindness",
