@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
 using NCMS;
 using NCMS.Utils;
 using UnityEngine;
 using NeoModLoader.services;
 using NeoModLoader.api;
-using System.Security.Cryptography.X509Certificates;
 
 namespace ShinobiBox
 {
@@ -25,10 +25,42 @@ namespace ShinobiBox
         public const string JinchurikiObitoActorId = "jinchuriki_obito";
         public const string JinchurikiMadaraActorId = "jinchuriki_madara";
 
+        private static readonly Dictionary<string, string[]> RequiredTraitsByActor = new Dictionary<string, string[]>
+        {
+            [HashiramaActorId] = new[] { "immortal", "fire_proof", "senju_clan", "wood_release", "hashi_cells", "wood_sage_mode", "will_of_fire", "04_vast_chakra_reserve", "fireN", "earthN", "waterN", "lightningN", "windN", "shadow_clonej", "09rank_god_of_shinobi" },
+            [MadaraActorId] = new[] { "immortal", "fire_proof", "uchiha_clan", "madara_eternal_mangekyo", "04_vast_chakra_reserve", "curse_of_hatred", "fireN", "earthN", "waterN", "lightningN", "windN", "08rank_ghost_of_uchiha" },
+            [SasukeActorId] = new[] { "uchiha_clan", "fireN", "lightningN", "cursed_mark", "curse_of_hatred", "sasuke_rinnegan", "chidoriJ", "04_vast_chakra_reserve", "07_indra_chakra" },
+            [OrochimaruActorId] = new[] { "regeneration", "cursed_mark", "snake_sage_mode", "wood_release", "shikotsumyaku", "04_vast_chakra_reserve", "07rank_sannin" },
+            [KakashiActorId] = new[] { "05rank_anbu", "windN", "lightningN", "earthN", "fireN", "waterN", "rasenganJ", "shadow_clonej", "rasenshurikenJ", "chidoriJ", "mangekyo_sharingan", "04_vast_chakra_reserve" },
+            [ItachiActorId] = new[] { "regeneration", "uchiha_clan", "curse_of_hatred", "05rank_anbu", "mangekyo_sharingan", "04_vast_chakra_reserve" },
+            [NarutoActorId] = new[] { "regeneration", "uzumaki_clan", "will_of_fire", "windN", "rasenganJ", "rasenshurikenJ", "shadow_clonej", "frog_sage_mode", "nine_tails_jinchuriki", "04_vast_chakra_reserve", "06rank_kage" },
+            [ObitoActorId] = new[] { "ten_tails_jinchuriki", "uchiha_clan", "fireN", "wood_release", "yinyang_release", "04_vast_chakra_reserve", "rinnegan", "mangekyo_sharingan" },
+            [HagoromoActorId] = new[] { "regeneration", "otsutsuki_clan", "rinnegan", "04_vast_chakra_reserve", "05_hagoromo_chakra", "windN", "earthN", "fireN", "waterN", "lightningN", "yinyang_release", "ten_tails_jinchuriki" },
+            [SakuraActorId] = new[] { "slug_sage_mode", "regeneration", "will_of_fire", "04_vast_chakra_reserve", "earthN" },
+            [KuramaActorId] = new[] { "immortal", "strong", "regeneration", "04_vast_chakra_reserve", "nine_tails_jinchuriki" },
+            [JuubiActorId] = new[] { "immortal", "strong", "regeneration", "04_vast_chakra_reserve", "05_hagoromo_chakra", "ten_tails_jinchuriki" }
+        };
 
         public static void Init()
         {
             loadAssets();
+        }
+
+        public static void EnsureRequiredTraits(Actor actor)
+        {
+            if (actor?.asset == null || !RequiredTraitsByActor.TryGetValue(actor.asset.id, out string[] requiredTraits)) return;
+
+            List<string> missingTraits = new List<string>();
+            foreach (string traitId in requiredTraits)
+            {
+                if (!actor.hasTrait(traitId)) actor.addTrait(traitId);
+                if (!actor.hasTrait(traitId)) missingTraits.Add(traitId);
+            }
+
+            if (missingTraits.Count > 0)
+            {
+                Debug.LogWarning($"[ShinobiBox] Actor '{actor.asset.id}' is missing required traits after spawn: {string.Join(", ", missingTraits)}");
+            }
         }
 
         public static void loadAssets()
@@ -51,7 +83,7 @@ namespace ShinobiBox
                 hashirama.name_template_sets = new string[] { "human_default_set" };
 
                 hashirama.job = new string[] { "random_move" };
-                hashirama.kingdom_id_wild = "rouge";
+                hashirama.kingdom_id_wild = "rogue";
                 hashirama.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
                 hashirama.animation_swim = ActorAnimationSequences.walk_0;
                 hashirama.texture_asset = new ActorTextureSubAsset("actors/hashirama/", hashirama.has_advanced_textures);
@@ -95,7 +127,8 @@ namespace ShinobiBox
                 hashirama.actor_size = ActorSize.S13_Human;
                 hashirama.can_edit_equipment = true;
                 hashirama.inspect_home = true;
-                hashirama.can_level_up = false;
+                hashirama.can_level_up = true;
+                hashirama.can_receive_traits = false;
 
                 hashirama.base_stats["lifespan"] = 125f;
                 hashirama.base_stats["health"] = 1200f;
@@ -105,7 +138,7 @@ namespace ShinobiBox
                 hashirama.base_stats["intelligence"] = 200f;
                 hashirama.base_stats["stamina"] = 600f;
                 hashirama.base_stats["mana"] = 3500f;
-                hashirama.base_stats["armor"] = 30f;
+                hashirama.base_stats["armor"] = 25f;
                 hashirama.base_stats["critical_chance"] = 0.40f;
                 hashirama.base_stats["knockback"] = 0.2f;
                 hashirama.base_stats["accuracy"] = 2f;
@@ -121,13 +154,14 @@ namespace ShinobiBox
                 hashirama.addTrait("hashi_cells");
                 hashirama.addTrait("wood_sage_mode");
                 hashirama.addTrait("will_of_fire");
-                hashirama.addTrait("vast_chakra_reserve");
+                hashirama.addTrait("04_vast_chakra_reserve");
                 hashirama.addTrait("fireN");
                 hashirama.addTrait("earthN");
                 hashirama.addTrait("waterN");
                 hashirama.addTrait("lightningN");
                 hashirama.addTrait("windN");
-                hashirama.addTrait("god_of_shinobi");
+                hashirama.addTrait("shadow_clonej");
+                hashirama.addTrait("09rank_god_of_shinobi");
 
                 hashirama.action_death = new WorldAction(HashiramaOnDeath);
                 AssetManager.actor_library.loadTexturesAndSprites(hashirama);
@@ -152,7 +186,7 @@ namespace ShinobiBox
                 madara.name_template_sets = new string[] { "human_default_set" };
 
                 madara.job = new string[] { "random_move" };
-                madara.kingdom_id_wild = "rouge";
+                madara.kingdom_id_wild = "rogue";
                 madara.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
                 madara.animation_swim = ActorAnimationSequences.walk_0;
                 madara.texture_asset = new ActorTextureSubAsset("actors/madara/", madara.has_advanced_textures);
@@ -180,7 +214,7 @@ namespace ShinobiBox
                 madara.render_heads_for_babies = false;
                 madara.body_separate_part_hands = true;
                 madara.shadow = false;
-                madara.can_level_up = false;
+                madara.can_level_up = true;
 
                 madara.force_land_creature = true;
                 madara.force_ocean_creature = false;
@@ -197,6 +231,7 @@ namespace ShinobiBox
                 madara.ignored_by_infinity_coin = false;
                 madara.actor_size = ActorSize.S13_Human;
                 madara.can_edit_equipment = true;
+                madara.can_receive_traits = false;
 
                 madara.base_stats["lifespan"] = 125f;
                 madara.base_stats["health"] = 1000f;
@@ -206,7 +241,7 @@ namespace ShinobiBox
                 madara.base_stats["intelligence"] = 200f;
                 madara.base_stats["stamina"] = 600f;
                 madara.base_stats["mana"] = 3500f;
-                madara.base_stats["armor"] = 30f;
+                madara.base_stats["armor"] = 25f;
                 madara.base_stats["critical_chance"] = 0.40f;
                 madara.base_stats["knockback"] = 0.2f;
                 madara.base_stats["accuracy"] = 6f;
@@ -219,14 +254,14 @@ namespace ShinobiBox
                 madara.addTrait("fire_proof");
                 madara.addTrait("uchiha_clan");
                 madara.addTrait("madara_eternal_mangekyo");
-                madara.addTrait("vast_chakra_reserve");
+                madara.addTrait("04_vast_chakra_reserve");
                 madara.addTrait("curse_of_hatred");
                 madara.addTrait("fireN");
                 madara.addTrait("earthN");
                 madara.addTrait("waterN");
                 madara.addTrait("lightningN");
                 madara.addTrait("windN");
-                madara.addTrait("ghost_of_uchiha");
+                madara.addTrait("08rank_ghost_of_uchiha");
 
                 madara.action_death = new WorldAction(MadaraOnDeath);
                 AssetManager.actor_library.loadTexturesAndSprites(madara);
@@ -251,7 +286,7 @@ namespace ShinobiBox
                 sasuke.name_template_sets = new string[] { "human_default_set" };
 
                 sasuke.job = new string[] { "random_move" };
-                sasuke.kingdom_id_wild = ShinobiKingdoms.RougeKingdomId;
+                sasuke.kingdom_id_wild = ShinobiKingdoms.RogueKingdomId;
                 sasuke.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
                 sasuke.animation_swim = ActorAnimationSequences.walk_0;
                 sasuke.texture_asset = new ActorTextureSubAsset("actors/sasuke/", sasuke.has_advanced_textures);
@@ -279,7 +314,7 @@ namespace ShinobiBox
                 sasuke.render_heads_for_babies = false;
                 sasuke.body_separate_part_hands = true;
                 sasuke.shadow = false;
-                sasuke.can_level_up = false;
+                sasuke.can_level_up = true;
 
                 sasuke.force_land_creature = true;
                 sasuke.force_ocean_creature = false;
@@ -296,6 +331,7 @@ namespace ShinobiBox
                 sasuke.ignored_by_infinity_coin = false;
                 sasuke.actor_size = ActorSize.S13_Human;
                 sasuke.can_edit_equipment = true;
+                sasuke.can_receive_traits = false;
 
                 sasuke.base_stats["lifespan"] = 125f;
                 sasuke.base_stats["health"] = 1500f;
@@ -315,14 +351,14 @@ namespace ShinobiBox
                 sasuke.base_stats["mass_2"] = 40f;
 
                 sasuke.addTrait("uchiha_clan");
-                sasuke.addTrait("sasuke_rinnegan");
-                sasuke.addTrait("vast_chakra_reserve");
                 sasuke.addTrait("fireN");
                 sasuke.addTrait("lightningN");
                 sasuke.addTrait("cursed_mark");
                 sasuke.addTrait("curse_of_hatred");
-                sasuke.addTrait("indra_chakra");
+                sasuke.addTrait("sasuke_rinnegan");
                 sasuke.addTrait("chidoriJ");
+                sasuke.addTrait("04_vast_chakra_reserve");
+                sasuke.addTrait("07_indra_chakra");
 
                 sasuke.action_death = new WorldAction(SasukeOnDeath);
                 AssetManager.actor_library.loadTexturesAndSprites(sasuke);
@@ -347,7 +383,7 @@ namespace ShinobiBox
                 orochimaru.name_template_sets = new string[] { "human_default_set" };
 
                 orochimaru.job = new string[] { "random_move" };
-                orochimaru.kingdom_id_wild = ShinobiKingdoms.RougeKingdomId;
+                orochimaru.kingdom_id_wild = ShinobiKingdoms.RogueKingdomId;
                 orochimaru.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
                 orochimaru.animation_swim = ActorAnimationSequences.walk_0;
                 orochimaru.texture_asset = new ActorTextureSubAsset("actors/orochimaru/", orochimaru.has_advanced_textures);
@@ -375,7 +411,7 @@ namespace ShinobiBox
                 orochimaru.render_heads_for_babies = false;
                 orochimaru.body_separate_part_hands = true;
                 orochimaru.shadow = false;
-                orochimaru.can_level_up = false;
+                orochimaru.can_level_up = true;
 
                 orochimaru.force_land_creature = true;
                 orochimaru.force_ocean_creature = false;
@@ -392,6 +428,7 @@ namespace ShinobiBox
                 orochimaru.ignored_by_infinity_coin = false;
                 orochimaru.actor_size = ActorSize.S13_Human;
                 orochimaru.can_edit_equipment = true;
+                orochimaru.can_receive_traits = false;
 
                 orochimaru.base_stats["lifespan"] = 125f;
                 orochimaru.base_stats["health"] = 1500f;
@@ -412,10 +449,11 @@ namespace ShinobiBox
 
                 orochimaru.addTrait("regeneration");
                 orochimaru.addTrait("cursed_mark");
-                orochimaru.addTrait("snake_sage");
-                orochimaru.addTrait("vast_chakra_reserve");
+                orochimaru.addTrait("snake_sage_mode");
                 orochimaru.addTrait("wood_release");
                 orochimaru.addTrait("shikotsumyaku");
+                orochimaru.addTrait("04_vast_chakra_reserve");
+                orochimaru.addTrait("07rank_sannin");
 
                 AssetManager.actor_library.loadTexturesAndSprites(orochimaru);
             }
@@ -444,7 +482,7 @@ namespace ShinobiBox
                 kakashi.animation_swim = ActorAnimationSequences.walk_0;
                 kakashi.texture_asset = new ActorTextureSubAsset("actors/kakashi/", kakashi.has_advanced_textures);
                 kakashi._cached_sprite = Resources.Load<Sprite>("GameResources/actors/kakashi/Main/walk_0");
-                kakashi.default_weapons = new string[] { "basic_kunai" };
+                kakashi.default_weapons = new string[] { "weapon_basic_kunai" };
                 kakashi.texture_id = "kakashi";
                 kakashi.icon = "units/kakashi";
 
@@ -467,7 +505,7 @@ namespace ShinobiBox
                 kakashi.render_heads_for_babies = false;
                 kakashi.body_separate_part_hands = true;
                 kakashi.shadow = false;
-                kakashi.can_level_up = false;
+                kakashi.can_level_up = true;
 
                 kakashi.force_land_creature = true;
                 kakashi.force_ocean_creature = false;
@@ -483,6 +521,7 @@ namespace ShinobiBox
                 kakashi.can_be_killed_by_divine_light = true;
                 kakashi.ignored_by_infinity_coin = false;
                 kakashi.actor_size = ActorSize.S13_Human;
+                kakashi.can_receive_traits = false;
                 kakashi.can_edit_equipment = true;
 
                 kakashi.base_stats["lifespan"] = 125f;
@@ -502,17 +541,18 @@ namespace ShinobiBox
                 kakashi.base_stats["chakra"] = 520f;
                 kakashi.base_stats["mass_2"] = 40f;
 
-                kakashi.addTrait("vast_chakra_reserve");
+                kakashi.addTrait("05rank_anbu");
                 kakashi.addTrait("windN");
                 kakashi.addTrait("lightningN");
                 kakashi.addTrait("earthN");
                 kakashi.addTrait("fireN");
                 kakashi.addTrait("waterN");
                 kakashi.addTrait("rasenganJ");
-                kakashi.addTrait("shadow_clone_jutsu");
-                kakashi.addTrait("rasenshuriken");
+                kakashi.addTrait("shadow_clonej");
+                kakashi.addTrait("rasenshurikenJ");
                 kakashi.addTrait("chidoriJ");
                 kakashi.addTrait("mangekyo_sharingan");
+                kakashi.addTrait("04_vast_chakra_reserve");
 
                 AssetManager.actor_library.loadTexturesAndSprites(kakashi);
             }
@@ -536,12 +576,12 @@ namespace ShinobiBox
                 itachi.name_template_sets = new string[] { "human_default_set" };
 
                 itachi.job = new string[] { "random_move" };
-                itachi.kingdom_id_wild = ShinobiKingdoms.RougeKingdomId;
+                itachi.kingdom_id_wild = ShinobiKingdoms.RogueKingdomId;
                 itachi.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
                 itachi.animation_swim = ActorAnimationSequences.walk_0;
                 itachi.texture_asset = new ActorTextureSubAsset("actors/itachi/", itachi.has_advanced_textures);
                 itachi._cached_sprite = Resources.Load<Sprite>("GameResources/actors/itachi/Main/walk_0");
-                itachi.default_weapons = new string[] { "basic_kunai" };
+                itachi.default_weapons = new string[] { "weapon_basic_kunai" };
                 itachi.texture_id = "itachi";
                 itachi.icon = "units/itachi";
 
@@ -564,7 +604,7 @@ namespace ShinobiBox
                 itachi.render_heads_for_babies = false;
                 itachi.body_separate_part_hands = true;
                 itachi.shadow = false;
-                itachi.can_level_up = false;
+                itachi.can_level_up = true;
 
                 itachi.force_land_creature = true;
                 itachi.force_ocean_creature = false;
@@ -581,6 +621,7 @@ namespace ShinobiBox
                 itachi.ignored_by_infinity_coin = false;
                 itachi.actor_size = ActorSize.S13_Human;
                 itachi.can_edit_equipment = true;
+                itachi.can_receive_traits = false;
 
                 itachi.base_stats["lifespan"] = 125f;
                 itachi.base_stats["health"] = 1500f;
@@ -601,10 +642,10 @@ namespace ShinobiBox
 
                 itachi.addTrait("regeneration");
                 itachi.addTrait("uchiha_clan");
-                itachi.addTrait("mangekyo_sharingan");
-                itachi.addTrait("vast_chakra_reserve");
                 itachi.addTrait("curse_of_hatred");
-                itachi.addTrait("rank_anbu");
+                itachi.addTrait("05rank_anbu");
+                itachi.addTrait("mangekyo_sharingan");
+                itachi.addTrait("04_vast_chakra_reserve");
 
                 AssetManager.actor_library.loadTexturesAndSprites(itachi);
             }
@@ -655,7 +696,7 @@ namespace ShinobiBox
                 naruto.render_heads_for_babies = false;
                 naruto.body_separate_part_hands = true;
                 naruto.shadow = false;
-                naruto.can_level_up = false;
+                naruto.can_level_up = true;
 
                 naruto.force_land_creature = true;
                 naruto.force_ocean_creature = false;
@@ -672,6 +713,7 @@ namespace ShinobiBox
                 naruto.ignored_by_infinity_coin = false;
                 naruto.actor_size = ActorSize.S13_Human;
                 naruto.can_edit_equipment = true;
+                naruto.can_receive_traits = false;
 
                 naruto.base_stats["lifespan"] = 125f;
                 naruto.base_stats["health"] = 1200f;
@@ -693,12 +735,14 @@ namespace ShinobiBox
                 naruto.addTrait("regeneration");
                 naruto.addTrait("uzumaki_clan");
                 naruto.addTrait("will_of_fire");
-                naruto.addTrait("vast_chakra_reserve");
                 naruto.addTrait("windN");
                 naruto.addTrait("rasenganJ");
-                naruto.addTrait("shadow_clone_jutsu");
-                naruto.addTrait("rasenshuriken");
+                naruto.addTrait("rasenshurikenJ");
+                naruto.addTrait("shadow_clonej");
+                naruto.addTrait("frog_sage_mode");
                 naruto.addTrait("nine_tails_jinchuriki");
+                naruto.addTrait("04_vast_chakra_reserve");
+                naruto.addTrait("06rank_kage");
 
                 naruto.action_death = new WorldAction(NarutoOnDeath);
                 AssetManager.actor_library.loadTexturesAndSprites(naruto);
@@ -723,7 +767,8 @@ namespace ShinobiBox
                 obito.name_template_sets = new string[] { "human_default_set" };
 
                 obito.job = new string[] { "random_move" };
-                obito.kingdom_id_wild = ShinobiKingdoms.RougeKingdomId;
+                obito.default_weapons = new string[] { "weapon_yang_staff" };
+                obito.kingdom_id_wild = ShinobiKingdoms.RogueKingdomId;
                 obito.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
                 obito.animation_swim = ActorAnimationSequences.walk_0;
                 obito.texture_asset = new ActorTextureSubAsset("actors/obito/", obito.has_advanced_textures);
@@ -750,7 +795,7 @@ namespace ShinobiBox
                 obito.render_heads_for_babies = false;
                 obito.body_separate_part_hands = true;
                 obito.shadow = false;
-                obito.can_level_up = false;
+                obito.can_level_up = true;
 
                 obito.force_land_creature = true;
                 obito.force_ocean_creature = false;
@@ -767,6 +812,7 @@ namespace ShinobiBox
                 obito.ignored_by_infinity_coin = false;
                 obito.actor_size = ActorSize.S13_Human;
                 obito.can_edit_equipment = true;
+                obito.can_receive_traits = false;
 
                 obito.base_stats["lifespan"] = 125f;
                 obito.base_stats["health"] = 1500f;
@@ -787,11 +833,11 @@ namespace ShinobiBox
 
                 obito.addTrait("ten_tails_jinchuriki");
                 obito.addTrait("uchiha_clan");
-                obito.addTrait("rinnegan");
-                obito.addTrait("vast_chakra_reserve");
                 obito.addTrait("fireN");
-                obito.addTrait("yinyang_release");
                 obito.addTrait("wood_release");
+                obito.addTrait("yinyang_release");
+                obito.addTrait("04_vast_chakra_reserve");
+                obito.addTrait("rinnegan");
                 obito.addTrait("mangekyo_sharingan");
 
                 AssetManager.actor_library.loadTexturesAndSprites(obito);
@@ -814,7 +860,8 @@ namespace ShinobiBox
                 hagoromo.has_advanced_textures = false;
                 hagoromo.check_flip = delegate { return true; };
                 hagoromo.name_template_sets = new string[] { "human_default_set" };
-
+    
+                hagoromo.default_weapons = new string[] { "weapon_hagoromo_staff" };
                 hagoromo.job = new string[] { "random_move" };
                 hagoromo.kingdom_id_wild = ShinobiKingdoms.KonohaKingdomId;
                 hagoromo.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
@@ -843,7 +890,7 @@ namespace ShinobiBox
                 hagoromo.render_heads_for_babies = false;
                 hagoromo.body_separate_part_hands = true;
                 hagoromo.shadow = false;
-                hagoromo.can_level_up = false;
+                hagoromo.can_level_up = true;
 
                 hagoromo.force_land_creature = true;
                 hagoromo.force_ocean_creature = false;
@@ -860,6 +907,7 @@ namespace ShinobiBox
                 hagoromo.ignored_by_infinity_coin = false;
                 hagoromo.actor_size = ActorSize.S13_Human;
                 hagoromo.can_edit_equipment = true;
+                hagoromo.can_receive_traits = false;
 
                 hagoromo.base_stats["lifespan"] = 999f;
                 hagoromo.base_stats["health"] = 10000f;
@@ -881,13 +929,14 @@ namespace ShinobiBox
                 hagoromo.addTrait("regeneration");
                 hagoromo.addTrait("otsutsuki_clan");
                 hagoromo.addTrait("rinnegan");
-                hagoromo.addTrait("vast_chakra_reserve");
-                hagoromo.addTrait("hagoromo_chakra");
+                hagoromo.addTrait("04_vast_chakra_reserve");
+                hagoromo.addTrait("05_hagoromo_chakra");
                 hagoromo.addTrait("windN");
                 hagoromo.addTrait("earthN");
                 hagoromo.addTrait("fireN");
                 hagoromo.addTrait("waterN");
                 hagoromo.addTrait("lightningN");
+                hagoromo.addTrait("yinyang_release");
                 hagoromo.addTrait("ten_tails_jinchuriki");
 
                 hagoromo.action_death = new WorldAction(HagoromoOnDeath);
@@ -940,7 +989,7 @@ namespace ShinobiBox
                 sakura.render_heads_for_babies = false;
                 sakura.body_separate_part_hands = true;
                 sakura.shadow = false;
-                sakura.can_level_up = false;
+                sakura.can_level_up = true;
 
                 sakura.force_land_creature = true;
                 sakura.force_ocean_creature = false;
@@ -957,10 +1006,11 @@ namespace ShinobiBox
                 sakura.ignored_by_infinity_coin = false;
                 sakura.actor_size = ActorSize.S13_Human;
                 sakura.can_edit_equipment = true;
+                sakura.can_receive_traits = false;
 
                 sakura.base_stats["lifespan"] = 125f;
                 sakura.base_stats["health"] = 950f;
-                sakura.base_stats["damage"] = 7f;
+                sakura.base_stats["damage"] = 150f;
                 sakura.base_stats["speed"] = 24f;
                 sakura.base_stats["attack_speed"] = 2.2f;
                 sakura.base_stats["intelligence"] = 150f;
@@ -978,7 +1028,7 @@ namespace ShinobiBox
                 sakura.addTrait("slug_sage_mode");
                 sakura.addTrait("regeneration");
                 sakura.addTrait("will_of_fire");
-                sakura.addTrait("vast_chakra_reserve");
+                sakura.addTrait("04_vast_chakra_reserve");
                 sakura.addTrait("earthN");
 
                 sakura.action_death = new WorldAction(SakuraOnDeath);
@@ -998,7 +1048,7 @@ namespace ShinobiBox
                 kurama.name_locale = "kurama";
                 kurama.power_id = "spawn_kurama";
 
-                kurama.is_humanoid = true;
+                kurama.is_humanoid = false;
                 kurama.use_phenotypes = false;
                 kurama.unit_other = true;
                 kurama.has_advanced_textures = false;
@@ -1035,7 +1085,8 @@ namespace ShinobiBox
                 kurama.render_heads_for_babies = false;
                 kurama.body_separate_part_hands = true;
                 kurama.shadow = false;
-                kurama.can_level_up = false;
+                kurama.can_level_up = true;
+                kurama.can_receive_traits = false;
 
                 kurama.force_land_creature = true;
                 kurama.force_ocean_creature = false;
@@ -1074,7 +1125,7 @@ namespace ShinobiBox
                 kurama.addTrait("immortal");
                 kurama.addTrait("strong");
                 kurama.addTrait("regeneration");
-                kurama.addTrait("vast_chakra_reserve");
+                kurama.addTrait("04_vast_chakra_reserve");
                 kurama.addTrait("nine_tails_jinchuriki");
 
                 kurama.action_death = new WorldAction(KuramaOnDeath);
@@ -1088,7 +1139,7 @@ namespace ShinobiBox
                 juubi.name_locale = "juubi";
                 juubi.power_id = "summon_ten_tails";
 
-                juubi.is_humanoid = true;
+                juubi.is_humanoid = false;
                 juubi.use_phenotypes = false;
                 juubi.unit_other = true;
                 juubi.has_advanced_textures = false;
@@ -1098,7 +1149,7 @@ namespace ShinobiBox
                 juubi.job = new string[] { "random_move" };
                 juubi.kingdom_id_wild = ShinobiKingdoms.TailedBeastsKingdomId;
                 juubi.animation_walk = new string[] { "walk_0", "walk_1", "walk_2", "walk_3" };
-                juubi.animation_walk_speed = 5f;
+                juubi.animation_walk_speed = 2.5f;
                 juubi.animation_speed_based_on_walk_speed = false;
                 juubi.animation_swim = ActorAnimationSequences.walk_0;
                 juubi.texture_asset = new ActorTextureSubAsset("actors/juubi/", juubi.has_advanced_textures);
@@ -1125,8 +1176,8 @@ namespace ShinobiBox
                 juubi.render_heads_for_babies = false;
                 juubi.body_separate_part_hands = true;
                 juubi.shadow = false;
-                juubi.can_level_up = false;
-
+                juubi.can_level_up = true;
+                juubi.can_receive_traits = false;
                 juubi.force_land_creature = true;
                 juubi.force_ocean_creature = false;
                 juubi.flying = false;
@@ -1164,8 +1215,8 @@ namespace ShinobiBox
                 juubi.addTrait("immortal");
                 juubi.addTrait("strong");
                 juubi.addTrait("regeneration");
-                juubi.addTrait("vast_chakra_reserve");
-                juubi.addTrait("hagoromo_chakra");
+                juubi.addTrait("04_vast_chakra_reserve");
+                juubi.addTrait("05_hagoromo_chakra");
                 juubi.addTrait("ten_tails_jinchuriki");
 
                 juubi.action_death = new WorldAction(JuubiOnDeath);
@@ -1185,7 +1236,7 @@ namespace ShinobiBox
             Actor attacker = attackerObject.a;
             if (attacker == sasuke) return false;
 
-            if (!attacker.hasTrait("sasuke_rinnegan"))
+            if (!attacker.hasTrait("sasuke_rinnegan") && attacker.isSapient())
             {
                 attacker.addTrait("sasuke_rinnegan");
             }
@@ -1214,15 +1265,17 @@ namespace ShinobiBox
 
         public static bool HagoromoOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
         {
-            if (pTarget == null || pTarget.a == null || !pTarget.a.isAlive()) return false;
+            if (pTarget == null || pTarget.current_tile == null) return false;
+
+            WorldTile tile = pTarget.current_tile;
 
             for (int i = 0; i < 4; i++)
             {
                 ActionLibrary.castTornado(null, pTarget, null);
             }
-            MapBox.spawnLightningMedium(pTarget.current_tile, 0.15f);
-            Earthquake.startQuake(pTarget.a.current_tile, EarthquakeType.SmallDisaster);
-            MapBox.spawnLightningBig(pTarget.current_tile, 0.45f);
+            MapBox.spawnLightningMedium(tile, 0.15f);
+            Earthquake.startQuake(tile, EarthquakeType.SmallDisaster);
+            MapBox.spawnLightningBig(tile, 0.45f);
 
             return true;
         }
@@ -1238,7 +1291,7 @@ namespace ShinobiBox
             Actor attacker = attackerObject.a;
             if (attacker == hashirama) return false;
 
-            if (!attacker.hasTrait("hashi_cells") && Randy.randomChance(0.7f))
+            if (!attacker.hasTrait("hashi_cells") && attacker.isSapient() && Randy.randomChance(0.7f))
             {
                 attacker.addTrait("hashi_cells");
             }
@@ -1261,7 +1314,7 @@ namespace ShinobiBox
             Actor attacker = attackerObject.a;
             if (attacker == madara) return false;
 
-            if (!attacker.hasTrait("madara_eternal_mangekyo") || !attacker.hasTrait("eternal_mangekyo"))
+            if (!attacker.hasTrait("madara_eternal_mangekyo") && !attacker.hasTrait("eternal_mangekyo") && attacker.isSapient())
             {
                 attacker.addTrait("madara_eternal_mangekyo");
             }
@@ -1273,7 +1326,6 @@ namespace ShinobiBox
 
             return true;
         }
-
         public static bool KuramaOnDeath(BaseSimObject pTarget = null, WorldTile pTile = null)
         {
             if (pTarget == null || pTarget.a == null || pTarget.a.data == null) return false;
@@ -1285,7 +1337,7 @@ namespace ShinobiBox
             Actor attacker = attackerObject.a;
             if (attacker == kurama) return false;
 
-            if (!attacker.hasTrait("nine_tails_jinchuriki"))
+            if (!attacker.hasTrait("nine_tails_jinchuriki") && attacker.isSapient())
             {
                 attacker.addTrait("nine_tails_jinchuriki");
             }
@@ -1307,7 +1359,7 @@ namespace ShinobiBox
             Actor attacker = attackerObject.a;
             if (attacker == juubi) return false;
 
-            if (!attacker.hasTrait("ten_tails_jinchuriki"))
+            if (!attacker.hasTrait("ten_tails_jinchuriki") && attacker.isSapient())
             {
                 attacker.addTrait("ten_tails_jinchuriki");
             }

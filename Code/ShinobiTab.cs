@@ -407,8 +407,9 @@ namespace ShinobiBox
                 }
                 if (spawned == null) return false;
 
-                spawned.data.level = 15;
+                ShinobiActors.EnsureRequiredTraits(spawned);
 
+                spawned.data.level = 100;
 
                 if (spawned.kingdom == null)
                 {
@@ -427,75 +428,28 @@ namespace ShinobiBox
                     }
                 }
 
-                if (pPowerID == "summon_hashirama")
+                string nameToSet = pPowerID switch
                 {
-                    spawned.setName("Hashirama", true);
-                    spawned.data.name = "Hashirama";
-                }
-                else if (pPowerID == "summon_kurama")
+                    "summon_hashirama" => "Hashirama Senju",
+                    "summon_kurama" => "Kurama",
+                    "summon_madara" => "Madara Uchiha",
+                    "summon_sasuke" => "Sasuke Uchiha",
+                    "summon_itachi" => "Itachi Uchiha",
+                    "summon_naruto" => "Naruto Uzumaki",
+                    "summon_sakura" => "Sakura Haruno",
+                    "summon_orochimaru" => "Orochimaru",
+                    "summon_kakashi" => "Kakashi Hatake",
+                    "summon_obito" => "Obito Uchiha",
+                    "summon_hagoromo" => "Hagoromo Otsutsuki",
+                    "summon_ten_tails" => "Ten-Tails",
+                    _ => null
+                };
+
+                if (!string.IsNullOrEmpty(nameToSet))
                 {
-                    spawned.setName("Kurama", true);
-                    spawned.data.name = "Kurama";
-                    spawned.data.set("chakra_nature_exp", 1000f);
-                    spawned.data.set("chakra_nature_roll_steps", 10);
-                    spawned.data.set("nature_progress_initialized", 1);
-                    spawned.data.set("nature_last_level", spawned.data.level);
-                    spawned.data.set("nature_last_kills", spawned.data.kills);
-                }
-                else if (pPowerID == "summon_madara")
-                {
-                    spawned.setName("Madara", true);
-                    spawned.data.name = "Madara";
-                }
-                else if (pPowerID == "summon_sasuke")
-                {
-                    spawned.setName("Sasuke", true);
-                    spawned.data.name = "Sasuke";
-                }
-                else if (pPowerID == "summon_itachi")
-                {
-                    spawned.setName("Itachi", true);
-                    spawned.data.name = "Itachi";
-                }
-                else if (pPowerID == "summon_naruto")
-                {
-                    spawned.setName("Naruto", true);
-                    spawned.data.name = "Naruto";
-                }
-                else if (pPowerID == "summon_sakura")
-                {
-                    spawned.setName("Sakura", true);
-                    spawned.data.name = "Sakura";
-                }
-                else if (pPowerID == "summon_orochimaru")
-                {
-                    spawned.setName("Orochimaru", true);
-                    spawned.data.name = "Orochimaru";
-                }
-                else if (pPowerID == "summon_kakashi")
-                {
-                    spawned.setName("Kakashi", true);
-                    spawned.data.name = "Kakashi";
-                }
-                else if (pPowerID == "summon_obito")
-                {
-                    spawned.setName("Obito", true);
-                    spawned.data.name = "Obito";
-                }
-                else if (pPowerID == "summon_hagoromo")
-                {
-                    spawned.setName("Hagoromo", true);
-                    spawned.data.name = "Hagoromo";
-                }
-                else if (pPowerID == "summon_ten_tails")
-                {
-                    spawned.setName("Ten-Tails", true);
-                    spawned.data.name = "Ten-Tails";
-                    spawned.data.set("chakra_nature_exp", 1000f);
-                    spawned.data.set("chakra_nature_roll_steps", 10);
-                    spawned.data.set("nature_progress_initialized", 1);
-                    spawned.data.set("nature_last_level", spawned.data.level);
-                    spawned.data.set("nature_last_kills", spawned.data.kills);
+                    spawned.setName(nameToSet);
+                    spawned.data.name = nameToSet;
+                    spawned.data.custom_name = true;
                 }
 
                 return true;

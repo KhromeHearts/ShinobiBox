@@ -18,7 +18,6 @@ using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.GraphicsBuffer;
 using static UnityEngine.UI.CanvasScaler;
 using NeoModLoader.constants;
-using System.Net;
 
 namespace ShinobiBox
 {
@@ -244,6 +243,8 @@ namespace ShinobiBox
         public static bool InfiniteTsukuyomiAction(BaseSimObject pSelf, BaseSimObject pTarget, WorldTile pTile)
         {
             if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
+            // Needs Yin Release OR Yin-Yang Release. (It used to require both, but fusing Yin + Yang into
+            // Yin-Yang removes Yin, so no unit could ever have both and this could never trigger.)
             if (!pSelf.a.hasTrait("yin_release") && !pSelf.a.hasTrait("yinyang_release")) return false;
 
             int used = 0;
@@ -267,9 +268,8 @@ namespace ShinobiBox
             float bonusMultiplier = affectedCount * 0.001f;
             pSelf.a.data.set("it_bonus_multiplier", bonusMultiplier);
 
-            var state = ChakraSystem.Get(pSelf.a);
-            state.max = ChakraSystem.CalculateBaseMaxChakra(pSelf.a);
-            state.current = state.max;
+            float max = ChakraSystem.CalculateBaseMaxChakra(pSelf.a);
+            ChakraSystem.SetCurrent(pSelf.a, max);
 
             pSelf.a.restoreHealth(pSelf.a.getMaxHealth());
             pSelf.a.finishStatusEffect("sleeping");
@@ -363,14 +363,16 @@ namespace ShinobiBox
 
             if (UnityEngine.Random.value > 0.10f) return false;
 
+            // Asura is checked first. It used to be checked after "roll < 0.35", so "roll < 0.10" was
+            // never reachable and the Asura Path never fired. Now: Asura 10%, Human 25%, Animal 65%.
             float roll = UnityEngine.Random.value;
-            if (roll < 0.35f)
-            {
-                return HumanPathAttack(pSelf, pTarget);
-            }
             if (roll < 0.10f)
             {
                 return AsuraPathAttack(pSelf, pTarget);
+            }
+            if (roll < 0.35f)
+            {
+                return HumanPathAttack(pSelf, pTarget);
             }
             return AnimalPathSummon(pSelf, pTarget);
         }
@@ -462,7 +464,6 @@ namespace ShinobiBox
 
                 summon.addStatusEffect("status_rinnegan_controlled", 120f);
 
-                // Focus summons toward the current target.
                 summon.attack_target = pTarget.a;
                 summon.beh_actor_target = pTarget.a;
                 successCount++;
@@ -473,196 +474,6 @@ namespace ShinobiBox
 
         #endregion
 
-
-        #endregion
-
-        #region Nine Tails Jinchuriki
-
-        #region Progression
-        public static bool NineTailsJinchuriki(BaseSimObject pSelf, BaseSimObject pAttackedBy, WorldTile pTile = null)
-        {
-            if (pSelf?.a == null || !pSelf.a.isAlive()) return false;
-
-            Actor actor = pSelf.a;
-            if (!actor.hasTrait("nine_tails_jinchuriki")) return false;
-            if (actor.hasStatus("status_jinchuriki_baryon_mode")) return false;
-
-            int level = actor.data.level;
-            bool hasAttackTarget = actor.has_attack_target;
-
-            if (hasAttackTarget)
-            {
-                if (level >= 11 && !actor.hasStatus("status_jinchuriki_avatar"))
-                {
-                    ClearLowerForms(actor);
-                    actor.addStatusEffect("status_jinchuriki_avatar", 45f);
-                    if (!ShinobiShi.ava)
-                    {
-                        actor.restoreHealth(actor.getMaxHealth());
-                        ShinobiShi.ava = true;
-                    }
-                    return true;
-                }
-
-                if (actor.hasStatus("status_jinchuriki_avatar"))
-                {
-                    return false;
-                }
-
-                if (level >= 9 && (actor.intelligence >= 20f || actor.diplomacy >= 20f) && !actor.hasStatus("status_jinchuriki_kcm2"))
-                {
-                    ClearLowerForms(actor);
-                    actor.addStatusEffect("status_jinchuriki_kcm2", 45f);
-                    if (!ShinobiShi.kura2)
-                    {
-                        actor.restoreHealth(actor.getMaxHealth());
-                        if (ShinobiConfig.EnableWorldTips)
-                            ShinobiWorldLogs.AddWorldLog("log_mastered_kurama", "worldlog_mastered_kurama", "ui/icons/kcm2", actor);
-                        ShinobiShi.kura2 = true;
-                    }
-                    return true;
-                }
-
-                if (actor.hasStatus("status_jinchuriki_kcm2"))
-                {
-                    return false;
-                }
-
-                if (level >= 7 && (actor.intelligence >= 20f || actor.diplomacy >= 20f) && !actor.hasStatus("status_jinchuriki_kcm1"))
-                {
-                    ClearLowerForms(actor);
-                    actor.addStatusEffect("status_jinchuriki_kcm1", 120f);
-                    if (!ShinobiShi.kura1)
-                    {
-                        actor.restoreHealth(actor.getMaxHealth());
-                        if (ShinobiConfig.EnableWorldTips)
-                            ShinobiWorldLogs.AddWorldLog("log_controlled_kurama", "worldlog_controlled_kurama", "ui/icons/kcm1", actor);
-                        ShinobiShi.kura1 = true;
-                    }
-                    return true;
-                }
-
-                if (actor.hasStatus("status_jinchuriki_kcm1"))
-                {
-                    return false;
-                }
-
-                if (level >= 5 && !actor.hasStatus("status_jinchuriki_incomplete_beast"))
-                {
-                    ClearLowerForms(actor);
-                    actor.addStatusEffect("status_jinchuriki_incomplete_beast", 120f);
-                    if (!ShinobiShi.incomp)
-                    {
-                        actor.restoreHealth(actor.getMaxHealth());
-                        if (ShinobiConfig.EnableWorldTips)
-                            ShinobiWorldLogs.AddWorldLog("log_beast_awakens", "worldlog_beast_awakens", "ui/icons/incomplete", actor);
-                        ShinobiShi.incomp = true;
-                    }
-                    return true;
-                }
-
-                if (actor.hasStatus("status_jinchuriki_incomplete_beast"))
-                {
-                    return false;
-                }
-
-                if (level >= 4 && !actor.hasStatus("status_jinchuriki_v2_cloak"))
-                {
-                    ClearLowerForms(actor);
-                    actor.addStatusEffect("status_jinchuriki_v2_cloak", 120f);
-                    actor.restoreHealth(actor.getMaxHealth());
-                    if (ShinobiConfig.EnableWorldTips && !ShinobiShi.beastAwk)
-                    {
-                        ShinobiWorldLogs.AddWorldLog("log_beast_awakens", "worldlog_beast_awakens", "ui/icons/v2", actor);
-                        ShinobiShi.beastAwk = true;
-                    }
-                    return true;
-                }
-
-                if (actor.hasStatus("status_jinchuriki_v2_cloak"))
-                {
-                    return false;
-                }
-
-                if (level >= 3 && !actor.hasStatus("status_jinchuriki_v1_cloak"))
-                {
-                    ClearLowerForms(actor);
-                    actor.addStatusEffect("status_jinchuriki_v1_cloak", 120f);
-                    if (ShinobiConfig.EnableWorldTips && !ShinobiShi.demShroud)
-                    {
-                        ShinobiWorldLogs.AddWorldLog("log_demon_shroud", "worldlog_demon_shroud", "ui/icons/v1", actor);
-                        ShinobiShi.demShroud = true;
-                    }
-                    return true;
-                }
-
-                if (level >= 2 && !actor.hasStatus("status_jinchuriki_initial_release"))
-                {
-                    actor.addStatusEffect("status_jinchuriki_initial_release", 120f);
-                    if (ShinobiConfig.EnableWorldTips && !ShinobiShi.sealWeak)
-                    {
-                        ShinobiWorldLogs.AddWorldLog("log_seal_weakens", "worldlog_seal_weakens", "ui/icons/initial_release", actor);
-                        ShinobiShi.sealWeak = true;
-                    }
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private static void ClearLowerForms(Actor actor)
-        {
-            actor.finishStatusEffect("status_jinchuriki_initial_release");
-            actor.finishStatusEffect("status_jinchuriki_v1_cloak");
-            actor.finishStatusEffect("status_jinchuriki_v2_cloak");
-            actor.finishStatusEffect("status_jinchuriki_incomplete_beast");
-            actor.finishStatusEffect("status_jinchuriki_kcm1");
-            actor.finishStatusEffect("status_jinchuriki_kcm2");
-            actor.finishStatusEffect("status_jinchuriki_avatar");
-        }
-        #endregion
-
-        #region Baryon Mode
-        public static bool BaryonMode(BaseSimObject pSelf, WorldTile pTile = null)
-        {
-            if (pSelf?.a == null || !pSelf.a.isAlive()) return false;
-            Actor actor = pSelf.a;
-
-            if (actor.data.level < 7) return false;
-            if (actor.hasStatus("status_jinchuriki_baryon_mode")) return false;
-            if (UnityEngine.Random.value > 0.30f) return false;
-            //Actor baryonUnit = World.world.units.createNewUnit(actor.asset.id, actor.current_tile, true, 1f);
-            ClearLowerForms(actor);
-
-            /*
-            ActorTool.copyUnitToOtherUnit(actor, baryonUnit, true);
-            baryonUnit.setKingdom(actor.kingdom);
-
-                if (actor.hasStatus("status_jinchuriki_v1_cloak"))
-                {
-                    return false;
-                }
-            baryonUnit.joinCity(actor.city);
-            baryonUnit.data.name = actor.data.name;
-            baryonUnit.data.level = actor.data.level;
-            baryonUnit.data.kills = actor.data.kills;
-            baryonUnit.data.health = (int)(actor.getMaxHealth());
-
-            baryonUnit.addStatusEffect("status_jinchuriki_baryon_mode", 60f);
-            baryonUnit.restoreHealth(actor.getMaxHealth());
-            */
-
-            actor.addStatusEffect("status_jinchuriki_baryon_mode", 60f);
-            actor.restoreHealth((int)(actor.getMaxHealth() * 0.5f));
-            if (ShinobiConfig.EnableWorldTips)
-            {
-                ShinobiWorldLogs.AddWorldLog("log_baryon_mode", "worldlog_baryon_mode", "ui/icons/Baryon", actor);
-            }
-
-            return true;
-        }
-        #endregion
 
         #endregion
 
@@ -754,44 +565,6 @@ namespace ShinobiBox
             return TruthSeekingOrbAction(pSelf, target, target.current_tile);
         }
 
-        public static bool TenTailsJinchuriki(BaseSimObject pSelf, BaseSimObject pAttackedBy, WorldTile pTile = null)
-        {
-            if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
-
-            Actor actor = pSelf.a;
-            if (!actor.hasTrait("ten_tails_jinchuriki")) return false;
-
-            float maxHealth = actor.getMaxHealth();
-            if (maxHealth <= 0f) return false;
-
-            float healthPct = actor.data.health / maxHealth;
-            int level = actor.data.level;
-
-            bool hasJuubi1 = actor.hasStatus("juubi1");
-            bool hasJuubi2 = actor.hasStatus("juubi2");
-            bool hasSps = actor.hasStatus("status_six_paths_senjutsu");
-
-            if (!hasJuubi2 && level >= 5 && hasJuubi1)
-            {
-                actor.finishStatusEffect("juubi1");
-                actor.addStatusEffect("juubi2", 60f);
-                actor.restoreHealth(actor.getMaxHealth());
-                hasJuubi2 = true;
-            }
-            else if (!hasJuubi1 && !hasJuubi2)
-            {
-                actor.addStatusEffect("juubi1", 60f);
-                hasJuubi1 = true;
-            }
-
-            if ((hasJuubi1 || hasJuubi2) && !hasSps)
-            {
-                actor.addStatusEffect("status_six_paths_senjutsu", 60f);
-                actor.setFlying(true);
-            }
-
-            return hasJuubi1 || hasJuubi2;
-        }
 
 
         public static bool NineTailsStatusMoves(BaseSimObject pSelf, WorldTile pTile = null)
@@ -889,9 +662,7 @@ namespace ShinobiBox
                 pTarget.a.addStatusEffect("status_amaterasu", 60f);
 
                 // Blindness Logic
-                int currentUsage = 0;
-                pSelf.a.data.get("ms_usage", out currentUsage);
-                pSelf.a.data.set("ms_usage", currentUsage + 1);
+                ChakraSystem.AddMangekyoUsage(pSelf.a, 1);
 
                 return true;
             }
@@ -915,9 +686,7 @@ namespace ShinobiBox
                     pTarget.a.addStatusEffect("susanoo_ribcage");
 
                     // Blindness Logic
-                    int currentUsage = 0;
-                    pTarget.a.data.get("ms_usage", out currentUsage);
-                    pTarget.a.data.set("ms_usage", currentUsage + 1);
+                    ChakraSystem.AddMangekyoUsage(pTarget.a, 1);
 
                     return true;
                 }
@@ -940,9 +709,7 @@ namespace ShinobiBox
                 pSelf.a.addStatusEffect("status_base_susanoo");
 
                 // Blindness Logic
-                int currentUsage = 0;
-                pSelf.a.data.get("ms_usage", out currentUsage);
-                pSelf.a.data.set("ms_usage", currentUsage + 1);
+                ChakraSystem.AddMangekyoUsage(pSelf.a, 1);
             }
 
             EffectsLibrary.spawnExplosionWave(pSelf.current_tile.posV3, 1f, 1f);
@@ -1023,7 +790,7 @@ namespace ShinobiBox
 
             if (UnityEngine.Random.value > 0.30f) return false;
 
-            // 500 Chakra Cost
+            // 15 Chakra Cost
             if (!CheckAndConsumeChakra(pSelf.a, 15f)) return false;
 
             if (!pSelf.a.hasStatus("madara_ps"))
@@ -1269,7 +1036,7 @@ namespace ShinobiBox
             {
                 MapAction.damageWorld(pTarget.current_tile, 5, AssetManager.terraform.get("grenade"), null);
                 EffectsLibrary.spawnAtTileRandomScale("fx_explosion_small", pTarget.current_tile, 0.5f, 0.7f);
-                pTarget.a.getHit(100f, true, AttackType.Fire, pSelf.a, true);
+                pTarget.a.getHit(100f, true, AttackType.Explosion, pSelf.a, true);
             }
             return true;
         }
@@ -1277,19 +1044,23 @@ namespace ShinobiBox
 
         #region Kurama Avatar
         /* Idk if i wanna use this or not
-        // Kurama Avatar Action
-        public static bool KuramaAvatarAction(BaseSimObject pSelf, BaseSimObject pTarget, WorldTile pTile)
+        // Kurama Avatar
+        public static bool KuramaAvatar(BaseSimObject pSelf, BaseSimObject pTarget, WorldTile pTile)
         {
             if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
-
-            // 5% chance to activate if not active
-            if (UnityEngine.Random.value < 0.05f && !pSelf.a.hasStatus("status_kurama_avatar"))
+    
+            if (Randy.randomChance(0.25f) && pSelf.a.hasStatus("status_jinchuriki_kcm2"))
             {
-                pSelf.a.addStatusEffect("status_kurama_avatar");
+                if (!CheckAndConsumeChakra(pSelf.a, 2000f)) return false;
+            
+                if (Randy.randomChance(0.25f) && !pSelf.a.hasStatus("status_kurama_avatar"))
+                {
+                    pSelf.a.addStatusEffect("status_kurama_avatar");
 
-                // Spawn a Tailed Beast Bomb effect (Explosion)
-                EffectsLibrary.spawnExplosionWave(pSelf.current_tile.posV3, 3f, 1f);
-                return true;
+                    // Spawn a Tailed Beast Bomb effect (Explosion)
+                    EffectsLibrary.spawnExplosionWave(pSelf.current_tile.posV3, 3f, 1f);
+                    return true;
+                }
             }
             return false;
         }
@@ -1372,16 +1143,6 @@ namespace ShinobiBox
         }
         #endregion
 
-        #region Chakra Nature Helpers
-        private static readonly string[] BaseNatureTraits =
-        {
-            "fireN",
-            "earthN",
-            "waterN",
-            "windN",
-            "lightningN"
-        };
-
         public static bool HasAnyNatureTrait(Actor actor)
         {
             if (actor == null) return false;
@@ -1392,75 +1153,12 @@ namespace ShinobiBox
                    actor.hasTrait("yang_release") || actor.hasTrait("yinyang_release");
         }
 
-        public static void AddNatureProgressExp(Actor actor, float amount)
-        {
-            if (actor == null || amount <= 0f) return;
-
-            float exp = GetNatureProgressExp(actor);
-            exp = Mathf.Min(exp + amount, 1000f);
-            actor.data.set("chakra_nature_exp", exp);
-
-            int rollStepsDone = 0;
-            actor.data.get("chakra_nature_roll_steps", out rollStepsDone);
-            int availableRollSteps = Mathf.FloorToInt(exp / 100f);
-
-            while (rollStepsDone < availableRollSteps)
-            {
-                rollStepsDone++;
-                if (UnityEngine.Random.value <= 0.10f)
-                {
-                    GrantRandomBaseNature(actor);
-                }
-            }
-
-            actor.data.set("chakra_nature_roll_steps", rollStepsDone);
-        }
-
-        public static float GetNatureProgressExp(Actor actor)
-        {
-            if (actor == null) return 0f;
-            float exp = 0f;
-            actor.data.get("chakra_nature_exp", out exp);
-            return exp;
-        }
-
-        private static void GrantRandomBaseNature(Actor actor)
-        {
-            if (actor == null) return;
-
-            List<string> missingTraits = new List<string>();
-            foreach (string traitId in BaseNatureTraits)
-            {
-                if (!actor.hasTrait(traitId))
-                {
-                    missingTraits.Add(traitId);
-                }
-            }
-
-            if (missingTraits.Count == 0) return;
-
-            int randomIndex = UnityEngine.Random.Range(0, missingTraits.Count);
-            actor.addTrait(missingTraits[randomIndex]);
-        }
-
-        public static void AddNatureExp(Actor actor, string _nature, float amount)
-        {
-            AddNatureProgressExp(actor, amount);
-        }
-
-        public static float GetNatureExp(Actor actor, string _nature)
-        {
-            return GetNatureProgressExp(actor);
-        }
-        #endregion
-
         #region Fire Release Ability
         public static bool FireReleaseAction(BaseSimObject pSelf, BaseSimObject pTarget, WorldTile pTile)
         {
             if (pTarget == null || pTarget.a == null || !pTarget.a.isAlive()) return false;
             if (UnityEngine.Random.value > 0.10f) return false;
             if (!CheckAndConsumeChakra(pSelf.a, 50f)) return false;
-            if (GetNatureExp(pSelf.a, "fire") < 125f) return false;
             if (pTarget.current_tile != null && pSelf.current_tile != null)
             {
                 World.world.projectiles.spawn(pSelf, pTarget, "red_orb", pSelf.current_tile.posV3, pTarget.current_tile.posV3);
@@ -1487,7 +1185,6 @@ namespace ShinobiBox
             if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
             if (UnityEngine.Random.value > 0.10f) return false;
             if (!CheckAndConsumeChakra(pSelf.a, 60f)) return false;
-            if (GetNatureExp(pSelf.a, "earth") < 125f) return false;
 
             pSelf.addStatusEffect("weight_rock", 5f);
             return true;
@@ -1500,7 +1197,7 @@ namespace ShinobiBox
             if (pTarget == null || pTarget.a == null || !pTarget.a.isAlive()) return false;
             if (UnityEngine.Random.value > 0.10f) return false;
             if (!CheckAndConsumeChakra(pSelf.a, 50f)) return false;
-            if (GetNatureExp(pSelf.a, "water") < 125f) return false;
+
             if (pTarget.current_tile != null)
             {
                 pTarget.a.addStatusEffect("water_prison", 5f);
@@ -1517,7 +1214,7 @@ namespace ShinobiBox
             if (pTarget == null || pTarget.a == null || !pTarget.a.isAlive()) return false;
             if (UnityEngine.Random.value > 0.10f) return false;
             if (!CheckAndConsumeChakra(pSelf.a, 50f)) return false;
-            if (GetNatureExp(pSelf.a, "wind") < 130f) return false;
+
             if (pTarget.current_tile != null)
             {
                 if (pSelf.current_tile == null) return false;
@@ -1544,15 +1241,9 @@ namespace ShinobiBox
             if (pTarget == null || pTarget.a == null || !pTarget.a.isAlive()) return false;
             if (UnityEngine.Random.value > 0.10f) return false;
             if (!CheckAndConsumeChakra(pSelf.a, 60f)) return false;
-            if (GetNatureExp(pSelf.a, "lightning") < 60f) return false;
             if (pTarget.current_tile != null)
             {
                 ActionLibrary.castLightning(pSelf, pTarget, pTile);
-                if (GetNatureExp(pSelf.a, "lightning") >= 200f)
-                {
-                    ActionLibrary.castLightning(pSelf, pTarget, pTile);
-                    ActionLibrary.castLightning(pSelf, pTarget, pTile);
-                }
                 return true;
             }
             return false;
@@ -1565,7 +1256,6 @@ namespace ShinobiBox
             if (pTarget == null || pTarget.a == null || !pTarget.a.isAlive()) return false;
             if (UnityEngine.Random.value > 0.10f) return false;
             if (!CheckAndConsumeChakra(pSelf.a, 80f)) return false;
-            if (GetNatureExp(pSelf.a, "storm") < 250f) return false;
             ActionLibrary.castLightning(pSelf, pTarget, pTile);
             if (pTarget.current_tile != null)
             {
@@ -1580,23 +1270,19 @@ namespace ShinobiBox
         {
             if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
 
-            if (!CheckAndConsumeChakra(pSelf.a, 40f)) return false;
+            // Check first, pay after. (Chakra used to be spent before checking whether the unit was already
+            // grown/shrunk, so it was wasted on every attack while transformed.)
+            if (pSelf.a.hasStatus("status_akimichi_grown") || pSelf.a.hasStatus("status_akimichi_shrunk")) return false;
 
-            bool grow = UnityEngine.Random.value > 0.70f; //30% chance
+            if (!CheckAndConsumeChakra(pSelf.a, 100f)) return false;
 
-            if (grow)
+            if (Randy.randomChance(0.50f))
             {
-                if (!pSelf.a.hasStatus("status_akimichi_grown") && !pSelf.a.hasStatus("status_akimichi_shrunk"))
-                {
-                    pSelf.a.addStatusEffect("status_akimichi_grown", 6f);
-                }
+                pSelf.a.addStatusEffect("status_akimichi_grown", 20f);
             }
             else
             {
-                if (!pSelf.a.hasStatus("status_akimichi_shrunk") && !pSelf.a.hasStatus("status_akimichi_grown"))
-                {
-                    pSelf.a.addStatusEffect("status_akimichi_shrunk", 6f);
-                }
+                pSelf.a.addStatusEffect("status_akimichi_shrunk", 20f);
             }
 
             return true;
@@ -1625,23 +1311,88 @@ namespace ShinobiBox
         }
         #endregion
 
-        #region Strength Of A Hundred
-        public static bool StrengthOfHundredAction(BaseSimObject pSelf, BaseSimObject pTarget, WorldTile pTile)
+        #region Damage Tick
+        public static bool DamageTick(BaseSimObject pTarget = null, WorldTile pTile = null)
         {
-            if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
-            if (!pSelf.a.hasTrait("slug_sage_mode")) return false;
-            if (!pSelf.a.hasStatus("status_perfect_slug_sage")) return false;
-            if (pSelf.a.hasStatus("status_strength_hundred")) return false;
-            if (UnityEngine.Random.value > 0.05f) return false;
-            if (!CheckAndConsumeChakra(pSelf.a, 160f)) return false;
+            if (pTarget.a == null || !pTarget.a.isAlive()) return false;
+            Actor a = pTarget.a;
 
-            pSelf.a.addStatusEffect("status_strength_hundred", 15f);
-            return true;
+            if (Randy.randomChance(0.20f))
+            {
+                a.getHit((float)a.getMaxHealth() * 0.05f, true, AttackType.Other, null, true);
+                return true;
+            }
+            return false;
         }
         #endregion
 
-        
+        #region Aburame Insect Swarm
+        public static bool AburameInsectSwarm(BaseSimObject pSelf, BaseSimObject pAttackedBy, WorldTile pTile)
+        {
+            if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
+            Actor a = pSelf.a;
 
+            if (Randy.randomChance(0.30f))
+            {
+                if (!CheckAndConsumeChakra(a, 100f)) return false;
+
+                string[] insectIds = { "scorpion" };
+                int summonCount = UnityEngine.Random.Range(1, a.data.level);
+
+                for (int i = 0; i < summonCount; i++)
+                {
+                    string unitId = insectIds[UnityEngine.Random.Range(0, insectIds.Length)];
+                    WorldTile spawnTile = Toolbox.getRandomTileWithinDistance(pSelf.current_tile, 2) ?? pSelf.current_tile;
+                    Actor summon = World.world.units.createNewUnit(unitId, spawnTile, true, 1f);
+                    if (summon == null) continue;
+
+                    if (pSelf.a.kingdom != null)
+                    {
+                        summon.setKingdom(pSelf.a.kingdom);
+                    }
+                    if (pSelf.a.city != null)
+                    {
+                        summon.joinCity(pSelf.a.city);
+                    }
+
+                    summon.data.health = (int)(pSelf.a.getMaxHealth() * 0.10f);
+
+                    summon.addStatusEffect("angry", 15f);
+                    summon.addStatusEffect("status_aburame_mark", 10f);
+
+                    summon.attack_target = pAttackedBy.a;
+                    summon.beh_actor_target = pAttackedBy.a;
+                }
+                return true;
+            }
+            return false;
+        }
+        #endregion
+        
+        /*
+        #region Jugo Transformation
+        public static bool JugoTransformation(BaseSimObject pTarget, WorldTile pTile)
+        {
+            if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
+            Actor a = pSelf.a;
+
+            ChakraSystem.AddChakra(actor, 5f * deltaTime);
+
+            if (actor.data.health < (actor.getMaxHealth() * 0.5f))
+            {
+                if (!actor.hasStatus("jugo_rage"))
+                {
+                    actor.addStatusEffect("jugo_rage");
+                }
+                {
+                    actor.addStatusEffect("status_jugo_transformation");
+                }
+            }
+                return false;
+        }
+        #endregion
+        */
+        
         #region Helpers
         private static bool SetWorldAgeChaos()
         {
@@ -1727,51 +1478,29 @@ namespace ShinobiBox
             return EightGatesProgression.EightInnerGates(pSelf, pAttackedBy, pTile);
         }
 
-        public static void TickEightInnerGates(Actor actor)
-        {
-            EightGatesProgression.TickEightInnerGates(actor);
-        }
-
-        public static bool InnerGatesPulseAction(BaseSimObject pSelf, WorldTile pTile)
-        {
-            return EightGatesProgression.InnerGatesPulseAction(pSelf, pTile);
-        }
-
-        public static bool CheckAndConsumeChakra(Actor actor, float cost)
+        public static bool CheckAndConsumeChakra(Actor actor, float cost, string debugError = null)
         {
             if (actor == null) return false;
-            if (!ChakraSystem.IsChakraUser(actor)) return false;
             if (actor.hasStatus("status_ability_cooldown")) return false;
-            //Plays Jutsu Sound
-            PlayWavSound("jutsu_use.wav", actor.current_tile.posV3);
-            actor.addStatusEffect("jutsuuse", 1f);
+            if (actor.isAnimal()) return false;
 
             // Cost Checker
             float adjustedCost = Mathf.Max(0f, cost * ChakraSystem.GetAbilityCostMultiplier(actor));
 
-            if (ChakraSystem.GetCurrent(actor) + 0.001f < adjustedCost)
+            if (!ChakraSystem.TryConsume(actor, adjustedCost))
             {
-                if (!actor.hasTrait("taijutsu_master") && !actor.hasStatus("chakra_exhaustion"))
-                {
-                    actor.addStatusEffect("chakra_exhaustion", 30f);
-                }
                 return false;
             }
 
-            bool used = ChakraSystem.TryConsume(actor, adjustedCost);
+            PlayWavSound("jutsu_use.wav", actor.current_tile.posV3);
+            actor.addStatusEffect("jutsuuse", 1f);
 
-            if (!used)
-            {
-                if (!actor.hasTrait("taijutsu_master") && !actor.hasStatus("chakra_exhaustion"))
-                {
-                    actor.addStatusEffect("chakra_exhaustion", 30f);
-                }
-                return false;
-            }
+            // (Removed two Debug.Log lines that spammed the log on every ability use.
+            //  Re-enable one locally if you need to debug chakra costs.)
+            if (!string.IsNullOrEmpty(debugError)) Debug.Log(debugError);
 
             actor.addStatusEffect("status_ability_cooldown", 7f);
-            AddNatureProgressExp(actor, 2f);
-            ChakraSystem.SetLastMoveTime(actor, Time.time);
+
             return true;
         }
 
@@ -1837,7 +1566,7 @@ namespace ShinobiBox
             if (pSelf == null || pSelf.a == null || !pSelf.a.isAlive()) return false;
             Actor actor = pSelf.a;
 
-            if (actor.hasStatus("shadow_clone")) return false;
+            if (actor.isClone()) return false;
             if (actor.current_tile == null) return false;
             if (actor.hasStatus("status_ability_cooldown")) return false;
             if (UnityEngine.Random.value > 0.30f) return false;
@@ -1852,30 +1581,78 @@ namespace ShinobiBox
                 if (!ChakraSystem.TryConsume(actor, costPerClone)) break;
 
                 WorldTile spawnTile = Toolbox.getRandomTileWithinDistance(actor.current_tile, 1) ?? actor.current_tile;
-                Actor clone = World.world.units.createNewUnit(actor.asset.id, spawnTile, true, 1f);
+
+                actor.prepareForSave();
+                ActorData tOriginalData = actor.data;
+                ActorData tCloneData = new ActorData();
+
+                ActorTool.copyImportantData(tOriginalData, tCloneData, true);
+
+                tCloneData.created_time = World.world.getCurWorldTime();
+                tCloneData.id = World.world.map_stats.getNextId("unit");
+                tCloneData.name = $"Clone {actor.getName()}";
+                tCloneData.custom_name = tOriginalData.custom_name;
+                tCloneData.x = spawnTile.x;
+                tCloneData.y = spawnTile.y;
+
+                Actor clone = World.world.units.loadObject(tCloneData);
                 if (clone == null) continue;
 
-                EffectsLibrary.spawnAtTile("fx_smoke", spawnTile, 0.05f);
+                clone.created_time_unscaled = (double)Time.time;
 
-                ActorTool.copyUnitToOtherUnit(actor, clone, true);
-                PlayWavSound("shadow_clone_spawn.wav", spawnTile.posV3);
-                clone.addStatusEffect("shadow_clone", 20f);
+                foreach (ActorTrait tTrait in actor.getTraits())
+                {
+                    clone.addTrait(tTrait.id, false);
+                }
+                clone.addTrait("clone", false);
                 clone.removeTrait("shadow_clonej");
+
+                clone.data.cloneCustomDataFrom(actor.data);
+                clone.setReligion(actor.religion);
+                clone.setClan(actor.clan);
+                clone.setCulture(actor.culture);
+                clone.setSubspecies(actor.subspecies);
+                clone.joinLanguage(actor.language);
+                clone.setFamily(actor.family);
                 clone.kingdom = actor.kingdom;
                 clone.joinCity(actor.city);
-                clone.data.name = $"Clone {actor.data.name}";
-                clone.data.health = (int)(actor.getMaxHealth() * 0.40f);
+
+                if (tOriginalData.saved_items != null)
+                {
+                    foreach (long tID in tOriginalData.saved_items)
+                    {
+                        Item tItem = World.world.items.get(tID);
+                        if (tItem != null)
+                        {
+                            Item tNewItem = World.world.items.generateItem(tItem.getAsset(), null, null, 1, clone, 0, false);
+                            tNewItem.data.modifiers.Clear();
+                            tNewItem.data.modifiers.AddRange(tItem.data.modifiers);
+                            tNewItem.data.modifiers.Remove("eternal");
+                            tNewItem.initItem();
+                            clone.equipment.setItem(tNewItem, clone);
+                        }
+                    }
+                }
+                clone.setHealth((int)(actor.getMaxHealth() * 0.40f), false);
+                clone.setStamina(tOriginalData.stamina, false);
+                clone.setMana(tOriginalData.mana, false);
                 clone.data.level = actor.data.level;
                 clone.data.favorite = false;
+                clone.asset.can_be_favorited = false;
 
-                if (actor.has_attack_target)
-                {
-                    clone.attack_target = actor.attack_target;
-                    clone.beh_actor_target = actor.attack_target.a;
-                }
+                clone.addStatusEffect("shadow_clone", 12f);
+                clone.removeTrait("shadow_clonej");
+
+                clone.attack_target = actor.attack_target;
+                clone.beh_actor_target = actor.attack_target?.a;
 
                 float chakraShare = Mathf.Max(0f, ChakraSystem.GetCurrent(actor) / (maxClones + 1f));
                 ChakraSystem.SetCurrent(clone, chakraShare);
+
+                clone.applyRandomForce(1.5f, 2f);
+                EffectsLibrary.spawnAtTile("fx_smoke", spawnTile, 0.05f);
+                PlayWavSound("shadow_clone_spawn.wav", spawnTile.posV3);
+
                 spawned++;
             }
 
@@ -1895,13 +1672,11 @@ namespace ShinobiBox
             actor.addStatusEffect("kamui_intangibility", 6f);
             actor.addStatusEffect("invincible", 6f);
             actor.addStatusEffect("kamui_cooldown", 60f);
-            AddNatureProgressExp(actor, 10f);
             int currentUsage = 0;
 
             if (actor.hasTrait("mangekyo_sharingan"))
             {
-                actor.data.get("ms_usage", out currentUsage);
-                actor.data.set("ms_usage", currentUsage + 1);
+                ChakraSystem.AddMangekyoUsage(pSelf.a, 1);
             }
 
             PlayWavSound("kamui.wav", actor.current_tile.posV3);

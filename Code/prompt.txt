@@ -1,0 +1,35 @@
+Thank you for what you have done. Ill be taking over now and telling you everything to remove, then we'll go over everything to add. First things first, check the entire codebase for methods that do the same thing or duplicate methods and eradicate them, literally dupe anything, dupe patch, if statements, dupe code in different files, ddupe anything. If any code is using one of those dupe methods then you can change them to use one. Also look for duplicate if statements, if statements that do the same thing basically or just dont do anything at all. We will start with chakrasystem and chakraui. I need you to add a tailed beast chakra, and a sage chakra basestat, and then add them to traits you think could need them. You can use Jinchurikibox to help you figure out what do to with these new basestats, they should be similar to normal chakra with similar methods, its just the functionality of what they'll do will be different, if you can be creative with this please help becasue im not even sure. Next we are completely removing the Nature Exp functionality. Meaning the stat bar, and the things it does and its helper methods.
+Now for the files in the progressions files. I dont want to one by one go through all of them, but for any of these files, if there are code in other places that do what certain things in this file do, just the delete the thing in the progressions file, unless it actually makes more sense to leave it in there. For the  Sage mode progression theres a problem with like eveyr actor in a world getting it. My personal opinion though is to eradicate the current sage mode system completely, like everything, like the jutsus, what ever is affected by the traits and just copy down to the wire exactly how jinchurikiboxs works, just copy that. If they dont have a system for the units to get the sage mode though then maek one, and if you want to add thigns to it then add. for clanprogression.cs, isnt alot fo the code in their already done somewhere else? Like the ghanding out of traits based of clan, isnt most of it already in applytraitsonbirth in shinobi events.cs? if not dont you think you can just move them? if so delete, delete, delete. and move, move, move.
+
+ for jutsulibrary that will need alot of work, i dont know if i want to cahnge it myself or allow you to work on it.
+For main.cs remove the census thigny
+
+for ShinobiActors, it 100% needs work but im not even sure how we will work it. Also question is "requiredtraitsbyactor" or "ensureRequiredTraits" even needed. Another thing i want to mention for this is look at what i wrote for shinobikingdoms.cs. i basically want them civ and all, you can use the worldbox game files to perfect this.
+
+for shinobiconfig, i think it should be fine right now i cant really think of any config needed, unless you think somethign shoukld be added
+
+for shinobieffects, we can leave that for now, i want to maek cool effects for m,y tailed beast but i think i have to do that on my own time.
+
+For shinobievents.cs we will be doing some work, im almost a hundred percent sure jinchurikistresspatch might not be needed anymore. For the eye stealing thing do you think it can be done better or it should be left as is. For generatepersonality you can leave it as is till we have more to add to it, unless you want to delete the KaguyaCLan section of code in clan progression, and throw it in there for kaguya clan memebers only, but im not sure if that will go into apply traits on birth or generate personality. For the applytraitsonbirth, reduce the chances of the nature elements giving, and also make it so that its possible to get 4, but please reduce chances. IF theyre more things you see fit goign to applytraitsonbirth, go ahead.
+
+Shinobiitems is good as is.
+Shinobikingdoms.cs, the thing is im not 100% sure if its working 100% as i think. The thing is i want people like naruto, kakashi, sakura(basically any of the good guys) to be civ and when i say that i want them to be able to live with normal humans and their babies will be normal humans. and then the bad guys do their own thing and are not civ, and fight the good guys.
+
+for shinobiprogression.cs, we will do a deeper dive later, but for now what i see in there is alot of dupes, things that already might be done in other files, if you see that, remove it in either this file or the other file. try to fix up things that do nothing or things that do something but could be done much better.
+
+I htink shinobiprojectiles is fine i dont know what id do to make it better.
+
+For shinobistatus this is something i might have to go through myself, shinobitraits as well
+and shinobiworldlog is taking an ez break.
+
+For the en.json, go through everything. Look for whats not usde and eradicate it from the en.json, make sure to add the missing keys.
+
+Okayyy so that should be most of the removal/mini adds, dont know if theres more or this could be better but ill try to get in as much suggestions as psosible
+
+also if you can please review the mangekyo system make sure its properly walking and makses sense.
+
+Try to code in the same style as this mod so that things dont look weird.
+By the way keep in mind if you want to do something you arent 100% sure of , you can ask.
+Make sure you are reading verything im writing, and make sure to actually go through everything in all files.
+Remember im human, and you are ai, my brain is limited and yours is constantly expanding, so you can think faster and get more creative than me, so i want you to do your best with creative freedom, your ability to think faster, and your ability to know whats best for most, if i dont, then you probably do.
+the reason i add jinchurikibox here for you tos see is because jbox was a great naruto mod that was making its come back in developing but the devs got lazy and left it, and it doesmo st things bertter than my naruto mod shinobibox, so i try to mimick its systems, but it ahs alot of useless code aswell.

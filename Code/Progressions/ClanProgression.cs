@@ -6,6 +6,7 @@ namespace ShinobiBox
 {
     public static class ClanProgression
     {
+        #region Kaguya Clan
         public static bool Kaguya(BaseSimObject pTarget = null, WorldTile pTile = null)
         {
             if (pTarget == null || !pTarget.isAlive()) return false;
@@ -16,52 +17,18 @@ namespace ShinobiBox
 
             if (done) return false;
 
-            if (!a.hasTrait("shikotsumyaku") && Randy.randomChance(0.20f))
+            if (!a.hasTrait("shikotsumyaku") && Randy.randomChance(0.01f))
             {
                 a.addTrait("shikotsumyaku");
                 a.data.set("shiko_awk", true);
                 return true;
             }
             return false;
-            
+
         }
+        #endregion
 
-        public static bool Senju(BaseSimObject pTarget = null, WorldTile pTile = null)
-        {
-            if (pTarget == null || !pTarget.isAlive()) return false;
-            Actor a = pTarget.a;
-            int level = a.data.level;
-            bool done = false;
-
-            a.data.get("Senju_awakened", out done, false);
-
-            if (done) return false;
-
-            if (Randy.randomChance(0.04f) && !a.hasTrait("hashi_cells"))
-            {
-                a.addTrait("hashi_cells");
-
-                if (ShinobiConfig.EnableWorldTips)
-                {
-                    ShinobiWorldLogs.AddWorldLog("log_hashi_cells", "worldlog_hashi_cells", "ui/icons/hashirama_cells", a);
-                }
-                a.data.set("Senju_awakened", true);
-                return true;
-            }
-            else
-            {
-                a.addTrait("wood_release");
-
-                if (ShinobiConfig.EnableWorldTips)
-                {
-                    ShinobiWorldLogs.AddWorldLog("log_wood_release", "worldlog_wood_release", "ui/icons/wood_release", a);
-                }
-                a.data.set("Senju_awakened", true);
-                return true;
-            }
-            return false;
-        }
-
+        #region Hyuga Clan
         public static bool Hyuga(BaseSimObject pTarget = null, WorldTile pTile = null)
         {
             if (pTarget == null || !pTarget.isAlive()) return false;
@@ -79,7 +46,9 @@ namespace ShinobiBox
 
             return true;
         }
+        #endregion
 
+        #region Lee Clan
         public static bool Lee(BaseSimObject pTarget = null, WorldTile pTile = null)
         {
             if (pTarget == null || !pTarget.isAlive()) return false;
@@ -89,16 +58,24 @@ namespace ShinobiBox
             if (!a.hasTrait("lee_clan")) return false;
             bool done = false;
 
-            if (age >= 24 && !a.hasTrait("eight_inner_gates") && Randy.randomChance(0.10f))
+            // One-time roll when the unit becomes an adult. (This hook runs every few seconds, so a plain
+            // "1% chance each time" would give nearly every Lee unit the Eight Inner Gates within minutes.)
+            bool gatesRolled = false;
+            a.data.get("lee_gates_rolled", out gatesRolled, false);
+            if (age >= 18 && !gatesRolled)
             {
-                a.addTrait("eight_inner_gates");
-                return true;
+                a.data.set("lee_gates_rolled", true);
+                if (!a.hasTrait("eight_inner_gates") && Randy.randomChance(0.01f))
+                {
+                    a.addTrait("eight_inner_gates");
+                    return true;
+                }
             }
 
             a.data.get("EIG_awakened", out done, false);
             if (done) return false;
 
-            if (level >= 4 && !a.hasTrait("taijutsu_master"))
+            if (level >= 3 && !a.hasTrait("taijutsu_master"))
             {
                 a.addTrait("taijutsu_master");
                 a.data.set("EIG_awakened", true);
@@ -107,33 +84,33 @@ namespace ShinobiBox
 
             return false;
         }
+        #endregion
 
+        #region Otsutsuki Clan
         public static bool OtsutsukiBirth(BaseSimObject pTarget = null, WorldTile pTile = null)
         {
             if (pTarget == null || !pTarget.isAlive()) return false;
-            
             Actor a = pTarget.a;
+
+            if (!a.hasTrait("otsutsuki_clan")) return false;
+
             bool done = false;
             a.data.get("otsutsuki_birth_done", out done, false);
+            if (done) return false;
 
+            float roll = UnityEngine.Random.value;
 
-            if (Randy.randomChance(0.10f))
+            if (roll < 0.05f)
             {
                 a.addTrait("rinnegan");
-                a.data.set("otsutsuki_birth_done", true);
-                return true;
             }
-            else if (Randy.randomChance(0.10f))
+            else if (roll < 0.10f)
             {
                 a.addTrait("golden_byakugan");
-                a.data.set("otsutsuki_birth_done", true);
-                return true;
             }
-            else if (Randy.randomChance(0.10f) && a.hasTrait("hamura_chakra"))
+            else if (roll < 0.30f && a.hasTrait("06_hamura_chakra"))
             {
-                a.addTrait("Tenseigan");
-                a.data.set("otsutsuki_birth_done", true);
-                return true;
+                a.addTrait("tenseigan"); 
             }
             else
             {
@@ -142,8 +119,28 @@ namespace ShinobiBox
                 return true;
             }
 
-            return false;
+            a.data.set("otsutsuki_birth_done", true);
+            return true;
         }
+        #endregion
+
+        #region Chinoike Clan
+        public static bool Chinoike(BaseSimObject pTarget = null, WorldTile pTile = null)
+        {
+            if (pTarget == null || !pTarget.isAlive()) return false;
+            Actor a = pTarget.a;
+            bool done = false;
+
+            a.data.get("chinoike_awk", out done, false);
+
+            if (done) return false;
+
+            a.addTrait("ketsuryugan");
+            a.data.set("chinoike_awk", true);
+
+            return true;
+        }
+        #endregion
 
     }
 }

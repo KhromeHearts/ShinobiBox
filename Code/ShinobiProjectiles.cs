@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Linq;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace ShinobiBox
 
         private static void loadProjectiles()
         {
-            AddProjectileIfMissing(new ProjectileAsset
+            AddProjectile(new ProjectileAsset
             {
                 id = "projectile_ftg_kunai",
                 speed = 30f,
@@ -32,7 +33,7 @@ namespace ShinobiBox
                 world_actions = new AttackAction(FTGTeleport)
             });
 
-            AddProjectileIfMissing(new ProjectileAsset
+            AddProjectile(new ProjectileAsset
             {
                 id = "projectile_basic_kunai",
                 speed = 25f,
@@ -48,7 +49,7 @@ namespace ShinobiBox
                 can_be_collided = true
             });
 
-            AddProjectileIfMissing(new ProjectileAsset
+            AddProjectile(new ProjectileAsset
             {
                 id = "projectile_paper_bomb_kunai",
                 speed = 24f,
@@ -66,7 +67,7 @@ namespace ShinobiBox
                 world_actions = new AttackAction(PaperBombExplode)
             });
 
-            AddProjectileIfMissing(new ProjectileAsset
+            AddProjectile(new ProjectileAsset
             {
                 id = "projectile_rasenshuriken",
                 speed = 20f,
@@ -87,7 +88,7 @@ namespace ShinobiBox
                 world_actions = new AttackAction(RasenshurikenImpact)
             });
 
-            AddProjectileIfMissing(new ProjectileAsset
+            AddProjectile(new ProjectileAsset
             {
                 id = "projectile_wind_cutter",
                 speed = 28f,
@@ -104,7 +105,7 @@ namespace ShinobiBox
                 world_actions = new AttackAction(WindCutterImpact)
             });
 
-            AddProjectileIfMissing(new ProjectileAsset
+            AddProjectile(new ProjectileAsset
             {
                 id = "projectile_tailed_beast_bomb",
                 speed = 28f,
@@ -124,7 +125,7 @@ namespace ShinobiBox
                 world_actions = new AttackAction(TailedBeastBombImpact)
             });
 
-            AddProjectileIfMissing(new ProjectileAsset
+            AddProjectile(new ProjectileAsset
             {
                 id = "projectile_truth_seeking_orb",
                 speed = 24f,
@@ -145,7 +146,7 @@ namespace ShinobiBox
             });
         }
 
-        private static void AddProjectileIfMissing(ProjectileAsset asset)
+        private static void AddProjectile(ProjectileAsset asset)
         {
             if (asset == null || string.IsNullOrEmpty(asset.id)) return;
             if (AssetManager.projectiles.get(asset.id) != null) return;
@@ -159,7 +160,6 @@ namespace ShinobiBox
             if (pSelf.current_tile == null || pSelf.hasStatus("status_ability_cooldown")) return false;
 
             pSelf.addStatusEffect("status_ability_cooldown", 5f);
-            JutsuLibrary.AddNatureProgressExp(pSelf.a, 10f);
             EffectsLibrary.spawnAtTile("fx_explosion_small", destination, 0.3f);
             MapBox.instance.drop_manager.spawn(destination, "fire");
             return true;
@@ -177,7 +177,7 @@ namespace ShinobiBox
             {
                 pTarget.a.getHit(directDamage, true, AttackType.Other, pSelf?.a, true);
                 pTarget.a.addTrait("crippled");
-                pTarget.a.addStatusEffect("slow", 4f);
+                pTarget.a.addStatusEffect("slowness", 4f);
             }
 
             var nearbyUnits = Finder.getUnitsFromChunk(destination, 1);
@@ -188,7 +188,7 @@ namespace ShinobiBox
                 if (unit.current_tile == null || unit.current_tile.distanceTo(destination) > 2f) continue;
 
                 unit.a.getHit(90f, true, AttackType.Other, pSelf?.a, true);
-                unit.a.addStatusEffect("slow", 2f);
+                unit.a.addStatusEffect("slowness", 2f);
             }
 
             return true;
@@ -202,7 +202,7 @@ namespace ShinobiBox
             if (pTarget?.a != null && pTarget.a.isAlive())
             {
                 pTarget.a.getHit(75f, true, AttackType.Other, pSelf?.a, true);
-                pTarget.a.addStatusEffect("slow", 1.5f);
+                pTarget.a.addStatusEffect("slowness", 1.5f);
             }
 
             var nearbyUnits = Finder.getUnitsFromChunk(destination, 1);
@@ -288,7 +288,6 @@ namespace ShinobiBox
             if (pSelf.current_tile == null || pSelf.hasStatus("status_ability_cooldown")) return false;
 
             pSelf.addStatusEffect("status_ability_cooldown", 4f);
-            JutsuLibrary.AddNatureProgressExp(pSelf.a, 5f);
             EffectsLibrary.spawnAtTile("fx_teleport_yellow", pSelf.current_tile, 0.1f);
 
             pSelf.a.spawnOn(destination);
